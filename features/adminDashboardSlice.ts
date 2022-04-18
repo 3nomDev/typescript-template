@@ -25,6 +25,7 @@ type AdminDashboardState = {
   notifications: NotificationInterface[];
   dealers: DealerInterface[];
   dealerItem: DealerInterface;
+  paymentItem: any;
   states: StateInterface[];
   stats: StatsInterface;
   dashboardApplications: DashboardApplicationInterface[];
@@ -57,6 +58,7 @@ const initialState: AdminDashboardState = {
   error: false,
   errorMessage: '',
   contractsTypes: [],
+  paymentItem: null,
 };
 
 export const loadApprovedApplications = createAsyncThunk(
@@ -415,6 +417,47 @@ export const changeApplicationStatus = createAsyncThunk(
       );
       thunkApi.dispatch(loadApplication(payload.appid as unknown as string));
     }
+  }
+);
+
+export const loadPayments = createAsyncThunk(
+  'adminDashboard/loadPayments',
+  async () => {
+    const res = await fetch('https://tlcfin.prestoapi.com/api/payments', {
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        // body: JSON.stringify({
+        //   AccountNumber: '12345',
+        //   Amount: 5342,
+        //   ApplicationID: 53423243542,
+        //   ConfirmationNumber: 'C4242',
+        //   DateAdded: '02.12.2202',
+        //   DateProcessed: '02.12.2202',
+        //   ID: 35421435423,
+        //   LastUpdated: '02.12.2202',
+        //   PaymentGUID: 53424342,
+        //   PaymentMethod: 'Paypal',
+        //   ScheduledDate: '02.12.2202',
+        //   Status: 'Processing',
+        // }),
+      },
+    });
+
+    const result = await res.json();
+
+    return result;
+  }
+);
+
+export const loadPaymentItem = createAsyncThunk(
+  'adminDashboard/loadPaymentItem',
+  async (id: string) => {
+    const res = await fetch(`tlcfin.prestoapi.com/api/payments/${id}`);
+
+    const result = await res.json();
+
+    console.log(result);
   }
 );
 

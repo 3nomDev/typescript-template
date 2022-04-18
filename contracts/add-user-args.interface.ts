@@ -1,8 +1,5 @@
-import { NextRouter } from 'next/dist/client/router';
-
 export interface AddUserArgsInterface {
   payload: AddUserPayloadInterface;
-  router: NextRouter;
 }
 
 export interface AddUserPayloadInterface {

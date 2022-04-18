@@ -1,0 +1,226 @@
+.wrapper {
+    flex: 1;
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+.contentWrapper {
+    padding: 10px 20px;
+
+}
+
+.contentHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 0;
+}
+
+.contentTitle {
+    display: flex;
+    color: #154F85;
+    flex: 0 1 50%;
+    max-width: 50%;
+}
+
+.titleIcon {
+    height: 27px;
+    width: 27px;
+}
+
+.contentTitle h2 {
+    font-size: 24px;
+    padding-left: 20px;
+    font-weight: 700;
+}
+
+.dashboardBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #F2F2F2;
+    padding: 13px 17px;
+    margin-bottom: 23px;
+}
+
+.backButton {
+    cursor: pointer;
+    background: #fff;
+    border-color: #ccc;
+    color: #333333;
+    text-align: left;
+    padding: 9px 18px;
+    border-width: 0.1rem;
+}
+
+.backIcon {
+    padding-right: 10px;
+}
+
+
+
+.dashboardActions {
+    display: flex;
+    align-items: center;
+    border-right: 1px solid black;
+    padding: 0 20px;
+
+}
+
+.dashboardActions h4 {
+    padding-left: 15px;
+}
+
+.nav {
+    width: 100%;
+    background: #F9F9FB;
+    padding: 5px 10px  !important;
+    border: 0.1px solid #EBEAED;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 0;
+}
+
+.navItem {
+    display: block;
+    font-size: 0;
+    line-height: 0;
+    color: #9A9A9A;
+}
+
+.navItem button {
+    color: #495057;
+    background-color: #fff;
+    border-color: #dee2e6 #dee2e6 #fff;
+    width: 140px;
+    height: 55px;
+    border-radius: 8px;
+    font-size: 17px;
+    line-height: 1;
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.navItemInactive button {
+    background: #E6E6E6;
+    color: #9C9CA8;
+}
+.paymentDetailsWrapper {
+    padding: 10px;
+}
+
+.tabsRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.carDetails {
+    display: flex;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: #FAFAFF;
+    font-size: 24px;
+    line-height: 1;
+}
+
+.carDetailsHeader h5 {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.carDetailsHeader p {
+    font-size: 14px;
+}
+
+.carDetailsHeader {
+    flex: 1
+}
+
+.carDetailsPerks {
+    display: flex;
+    align-items: center;
+    margin: 0px 15px 10px 10px;
+}
+
+.carDetailsPerks p {
+    display: block;
+    padding-right: 20px;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.carDetailsPerks span {
+    font-size: 14px;
+
+}
+
+.carDetailsBody {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.carDetailsBody > div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.infoHistory {
+    display: flex;
+}
+
+.tableInfo {
+    padding: 15px;
+    border: 1px solid #EBEAED
+}
+
+.info {
+    min-width: 200px;
+}
+
+.info h4 {
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
+.infoBar {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.infoBar p {
+    padding-right: 25px;
+}
+
+.infoBar span {
+    font-weight: 700 ;
+}
+
+.paymentTable {
+    margin-left: 25px;
+    width: 100%;
+}
+
+.paymentTable h4 {
+    font-size: 25px;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 1130px) {
+    .paymentTable {
+        margin-left: 0;
+    }
+    .infoHistory {
+        flex-direction: column;
+    }
+
+    .tableInfo {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .tabsRow {
+        flex-direction: column;
+    }
+}

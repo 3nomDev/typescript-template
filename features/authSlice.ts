@@ -47,7 +47,7 @@ export const sendLoginRequest = createAsyncThunk(
 
 export const addUser = createAsyncThunk(
   'dashboard/addUser',
-  async ({ payload, router }: AddUserArgsInterface, thunkApi) => {
+  async ({ payload }: AddUserArgsInterface, thunkApi) => {
     const res = await fetch('https://tlcfin.prestoapi.com/api/addUser', {
       method: 'POST',
       headers: {
@@ -67,7 +67,6 @@ export const addUser = createAsyncThunk(
         })
       );
     }
-    router.push('/approved');
 
     return response[0].ApprovalCode;
   }
@@ -100,9 +99,11 @@ export const authSlice = createSlice({
     builder
       .addCase(sendLoginRequest.pending, (state) => {
         state.pending = true;
+        state.error = false;
       })
       .addCase(sendLoginRequest.fulfilled, (state, { payload }) => {
         state.pending = false;
+        state.error = false;
         state.user = payload;
         localStorage.setItem('accessToken', payload.token);
         localStorage.setItem('userInfo', JSON.stringify(payload));
@@ -118,7 +119,6 @@ export const authSlice = createSlice({
       .addCase(addUser.rejected, (state) => {
         state.pending = false;
         state.error = true;
-        state.errorMessage = 'Adding user failed';
       })
       .addCase(addUser.fulfilled, (state, { payload }) => {
         state.approvalCode = payload;

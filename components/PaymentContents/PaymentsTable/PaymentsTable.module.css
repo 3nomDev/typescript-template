@@ -1,0 +1,31 @@
+.table {
+    border-collapse: separate;
+    border-spacing: 0 0.2rem;
+}
+
+.table thead {
+    vertical-align: middle;
+}
+
+
+.table thead tr th {
+    padding: 15px 30px;
+    font-size: 16px;
+    line-height: 1.21;
+    font-weight: 500;
+    background: #F9F9FB;
+    color: #717181;
+}
+
+.table tbody tr:first-child td {
+    border-top: 1rem solid #fff;
+}
+
+.table td {
+    border: 0;
+    vertical-align: middle;
+    line-height: 1.15;
+    background: #FAFAFF;
+    padding: 10px 10px 10px 30px;
+    font-size: 16px;
+}

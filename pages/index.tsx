@@ -4,9 +4,10 @@ import { useRouter } from 'next/router';
 import { ApplicationForm, Layout } from '../components';
 import { AddUserArgsInterface, AddUserPayloadInterface } from '../contracts';
 import { addUser, approvalCodeSelector } from '../features/authSlice';
+import { useAppDispatch } from '../app/hooks';
 
 const IndexPage: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const router = useRouter();
 
@@ -19,7 +20,9 @@ const IndexPage: React.FC = () => {
   }, []);
 
   const handleSubmit = (values: AddUserPayloadInterface): void =>
-    void dispatch(addUser({ payload: values, router }));
+    dispatch(addUser({ payload: values })).then((data) => {
+      if (data.meta.requestStatus === 'fulfilled') router.push('/approved');
+    });
   return (
     <Layout>
       <ApplicationForm onSubmit={handleSubmit} />

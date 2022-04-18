@@ -1,0 +1,44 @@
+.wrapper {
+    display: flex;
+    padding: 8px 15px;
+    border-radius: 8px;
+    background: #F8F8F8;
+    margin-right: 15px;
+
+}
+
+.iconWrapper {
+    display: flex;
+    flex: 0 0 6rem;
+    max-width: 60px;
+    height: 75px;
+    align-items: center;
+    justify-content: center;
+    border: 0.1rem solid #446EE2;
+    border-radius: 0.2rem;
+    background: rgba(68, 110, 226, 0.05);
+    color: #446EE2;
+    font-size: 36px;
+}
+
+.body {
+    padding: 0 20px;
+}
+
+.body span {
+    display: block;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 500;
+    color: #545469;
+    margin-bottom: 15px;
+}
+
+.body h1 {
+    display: block;
+    font-size: 22px;
+    line-height: 1;
+    font-weight: 900;
+    color: #446EE2;
+    letter-spacing: -0.014em;
+}
