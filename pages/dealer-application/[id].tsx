@@ -8,6 +8,7 @@ import {
   dealerDashboardSelector,
   loadApplicationItem,
 } from '../../features/dealerDashboardSlice';
+import { withAuth } from '../../hocs';
 
 const DealerApplication: FC = () => {
   const dispatch = useDispatch();
@@ -30,4 +31,4 @@ const DealerApplication: FC = () => {
   );
 };
 
-export default DealerApplication;
+export default withAuth(DealerApplication);

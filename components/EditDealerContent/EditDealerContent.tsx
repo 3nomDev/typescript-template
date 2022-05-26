@@ -5,6 +5,7 @@ import {
   faCar,
   faCheck,
   faCheckCircle,
+  faDollarSign,
   faFile,
   faFilePdf,
   faTimes,
@@ -27,6 +28,7 @@ import {
 import { DatePickerField } from '../DatePicker/DatePickerField';
 import { hasErrors } from '../../utils/hasErrors';
 import { ApplicationApproveModal } from '../ApplicationApproveModal/ApplicationApproveModal';
+import { PaymentsModal } from '../PaymentsModal/PaymentsModal';
 
 const validationSchema = Yup.object({
   FirstName: Yup.string().trim().required('First name is required'),
@@ -61,6 +63,7 @@ interface Props {
   onSubmit: OnEventFn;
   onChangeAppStatus: (id: number) => () => void;
   onApprove: (payload: Partial<ChangeApplicationStatusArgs>) => () => void;
+  onSchedulePayments: OnEventFn;
 }
 
 interface CustomFileProps {
@@ -92,9 +95,13 @@ export const EditDealerContent: FC<Props> = ({
   states,
   onChangeAppStatus,
   onSubmit,
+  onSchedulePayments,
   onApprove,
 }) => {
+  const isApproved = application?.Status === 'Approved';
+
   const [isApproveModalShown, setIsApproveModalShown] = useState(false);
+  const [isPaymentsModalShown, setIsPaymentsModalShown] = useState(false);
   const statusStyle = {
     'Awaiting Approval': styles.orange,
     Approved: styles.green,
@@ -102,13 +109,24 @@ export const EditDealerContent: FC<Props> = ({
     Incomplete: styles.red,
   }[application?.Status];
 
-  const toggleModal = (): void =>
+  const toggleApproveModal = (): void =>
     void setIsApproveModalShown(!isApproveModalShown);
+  const togglePaymentsModal = (): void =>
+    void setIsPaymentsModalShown(!isPaymentsModalShown);
 
   return (
     <div className={styles.wrapper}>
       {isApproveModalShown && (
-        <ApplicationApproveModal closeModal={toggleModal} onSave={onApprove} />
+        <ApplicationApproveModal
+          closeModal={toggleApproveModal}
+          onSave={onApprove}
+        />
+      )}
+      {isPaymentsModalShown && (
+        <PaymentsModal
+          onClose={togglePaymentsModal}
+          onSubmit={onSchedulePayments}
+        />
       )}
       <DealerHeader title="Admin" />
       {pending && (
@@ -199,12 +217,27 @@ export const EditDealerContent: FC<Props> = ({
                       >
                         <FontAwesomeIcon icon={faFile as IconProp} /> Incomplete
                       </div>
-                      <div
-                        className={cx(styles.approved, styles.button)}
-                        onClick={toggleModal}
-                      >
-                        <FontAwesomeIcon icon={faCheck as IconProp} /> Approve
-                      </div>
+                      {!isApproved && (
+                        <div
+                          className={cx(styles.approved, styles.button)}
+                          onClick={toggleApproveModal}
+                        >
+                          <FontAwesomeIcon icon={faCheck as IconProp} /> Approve
+                        </div>
+                      )}
+
+                      {isApproved && (
+                        <div
+                          className={cx(styles.payments, styles.button)}
+                          onClick={togglePaymentsModal}
+                        >
+                          <FontAwesomeIcon
+                            icon={faDollarSign as IconProp}
+                            className={styles.paymentIcon}
+                          />
+                          Payments
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className={styles.formWrapper}>
@@ -213,7 +246,7 @@ export const EditDealerContent: FC<Props> = ({
                       <div className={styles.formRow}>
                         <div className={styles.inputBox}>
                           <p>
-                            First name{' '}
+                            First name
                             <span className={styles.required}>*</span>
                           </p>
                           <Field

@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import cx from 'classnames';
+import { OnEventFn } from '@rnw-community/shared';
 import styles from './DashboardBox.module.css';
 import {
   DashboardApplicationInterface,
@@ -13,6 +14,7 @@ interface Props {
   text: string;
   count: number;
   type: DashboardBoxEnum;
+  onClick: OnEventFn;
 }
 
 export const getTextStyle = (type: DashboardBoxEnum): string => {
@@ -50,9 +52,15 @@ const getIconStyle = (type: DashboardBoxEnum): string => {
   }
 };
 
-export const DashboardBox: FC<Props> = ({ icon, text, count, type }) => {
+export const DashboardBox: FC<Props> = ({
+  icon,
+  text,
+  count,
+  type,
+  onClick,
+}) => {
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} onClick={onClick}>
       <div className={getIconStyle(type)}>
         <FontAwesomeIcon icon={icon} />
       </div>

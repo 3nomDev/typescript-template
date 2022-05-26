@@ -10,6 +10,7 @@ import {
   DocumentTypeInterface,
   LoadDealerArgsInterface,
   NotificationInterface,
+  SchedulePaymentPayloadInterface,
   StateInterface,
   StatsInterface,
   UpdateApplicationInterface,
@@ -254,6 +255,10 @@ export const loadDashboard = createAsyncThunk(
     });
     const result: DashboardApplicationInterface[] = await res.json();
 
+    if (JSON.stringify(result) === '{}') {
+      return [];
+    }
+
     return result;
   }
 );
@@ -458,6 +463,35 @@ export const loadPaymentItem = createAsyncThunk(
     const result = await res.json();
 
     console.log(result);
+  }
+);
+
+export const schedulePayment = createAsyncThunk(
+  'adminDashboard/schedulePayment',
+  async (payload: SchedulePaymentPayloadInterface, thunkApi) => {
+    const res = await fetch(
+      'https://tlcfin.prestoapi.com/api/schedulepayments',
+      {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }
+    );
+
+    const result = await res.json();
+
+    if (result) {
+      thunkApi.dispatch(
+        addNotification({
+          autoHideDuration: 6000,
+          message: 'Payments have been confirmed',
+          type: 'info',
+        })
+      );
+    }
   }
 );
 

@@ -13,11 +13,13 @@ import {
   loadContractTypes,
   loadDocumentTypes,
   loadStates,
+  schedulePayment,
   updateApplication,
 } from '../../../features/adminDashboardSlice';
 import {
   ApplicationInterface,
   ChangeApplicationStatusArgs,
+  SchedulePaymentPayloadInterface,
 } from '../../../contracts';
 import { userSelector } from '../../../features/authSlice';
 
@@ -65,11 +67,21 @@ const EditDealerPage: FC = () => {
         })
       );
     };
+  const handleSchedulePayments = (
+    payload: SchedulePaymentPayloadInterface
+  ): void =>
+    void dispatch(
+      schedulePayment({
+        ...payload,
+        ApplicationID: applicationItem.ApplicationID,
+      })
+    );
 
   return (
     <div className={styles.wrapper}>
       <AdminSidebar />
       <EditDealerContent
+        onSchedulePayments={handleSchedulePayments}
         onApprove={handleApprove}
         onChangeAppStatus={handleChangeAppStatus}
         onSubmit={handleSubmit}

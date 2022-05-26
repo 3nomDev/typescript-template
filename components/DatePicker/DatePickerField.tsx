@@ -21,7 +21,6 @@ export const DatePickerField: FC<GenericPropsInterface> = ({
       className={className}
       dateFormatCalendar="MMM yyyy"
       minDate={new Date(1990)}
-      maxDate={new Date()}
       showYearDropdown
       onChange={(val) => {
         setFieldValue(field.name, val);

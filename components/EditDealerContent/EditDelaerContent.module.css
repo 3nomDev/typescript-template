@@ -159,6 +159,13 @@
     font-size: 14px;
 }
 
+.payments {
+    background-color: #0c63e4;
+}
+
+.paymentIcon {
+    padding-right: 5px;
+}
 
 @media (max-width: 670px) {
     .formWrapper {
@@ -169,3 +176,4 @@
         flex-direction: column;
     }
 }
+

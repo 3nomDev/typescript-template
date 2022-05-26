@@ -1,0 +1,57 @@
+.wrapper {
+    position: absolute;
+    width: 320px;
+    z-index: 1;
+    top: 100px;
+    left: 48%;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    background-color: white;
+}
+
+.header {
+    padding: 15px;
+    color: white;
+    border-bottom: 1px solid #ededed;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.header span {
+    cursor: pointer;
+    color: black;
+}
+
+.cross {
+    font-size: 19px;
+    position: absolute;
+    right: 5px;
+    cursor: pointer;
+    color: black;
+    top: 5px;
+}
+
+.body {
+    padding: 15px
+}
+
+.body form {
+    display: flex;
+    flex-direction: column;
+}
+
+.select {
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.button {
+    background-color: #0c63e4;
+    display: block;
+    width: 100%;
+}
+
+.footer {
+    margin-top: 15px;
+}

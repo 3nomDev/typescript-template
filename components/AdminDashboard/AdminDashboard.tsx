@@ -30,16 +30,23 @@ export const AdminDashboard: FC<Props> = (props) => {
   const { stats, notifications, dashboardApplications } = props;
   const router = useRouter();
 
-  const incompleteApplications = dashboardApplications.filter(
-    (item) => item.StatusID === 5
-  );
-  const awaitingApproveApplications = dashboardApplications.filter(
-    (item) => item.StatusID === 1
-  );
+  console.log(dashboardApplications);
+  const incompleteApplications = [];
+  const awaitingApproveApplications = [];
+  // const incompleteApplications = dashboardApplications.filter(
+  //   (item) => item.StatusID === 5
+  // );
+  // const awaitingApproveApplications = dashboardApplications.filter(
+  //   (item) => item.StatusID === 1
+  // );
 
   const handleNavigate = (route: string) => () => void router.push(route);
   const handleEdit = (id: number) => () =>
     router.push(`/admin/application/${id}`);
+  const handleIncompleteClick = (): void =>
+    void router.push('/admin/incomplete');
+  const handleApprovedClick = (): void => void router.push('/admin/approved');
+  const handleAwaitingClick = (): void => void router.push('/admin/pending');
   return (
     <div className={styles.wrapper}>
       <DealerHeader title="Admin" />
@@ -54,18 +61,21 @@ export const AdminDashboard: FC<Props> = (props) => {
           <div className={styles.leftSide}>
             <div className={styles.boxWrapper}>
               <DashboardBox
+                onClick={handleAwaitingClick}
                 icon={faCheck as IconProp}
                 count={stats['Awaiting Approval Applications']}
                 text="Awaiting Review"
                 type={DashboardBoxEnum.Pending}
               />
               <DashboardBox
+                onClick={handleApprovedClick}
                 icon={faEdit as IconProp}
                 count={stats['Approved Applications']}
                 text="Approved applications"
                 type={DashboardBoxEnum.Success}
               />
               <DashboardBox
+                onClick={handleIncompleteClick}
                 icon={faMinusCircle as IconProp}
                 count={stats['Incomplete Applications']}
                 text="Incomplete Applications"

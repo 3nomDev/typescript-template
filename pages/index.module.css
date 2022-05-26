@@ -1,0 +1,22 @@
+.wrapper {
+    width: 300px;
+    margin: 100px auto;
+}
+
+.cellWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.inputValue {
+    border: 1px solid #0c63e4;
+    text-align: center;
+    width: 100%;
+}
+
+.cell{
+    width: 100px;
+    padding: 15px;
+    border: 1px solid black;
+}
