@@ -127,6 +127,8 @@ export const loadIncompleteApplications = createAsyncThunk(
       }
     );
     const response: ApplicationInterface[] = await res.json();
+
+    if (JSON.stringify(response) === '{}') return []
     return response;
   }
 );
