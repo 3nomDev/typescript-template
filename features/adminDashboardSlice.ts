@@ -14,6 +14,7 @@ import {
   StateInterface,
   StatsInterface,
   UpdateApplicationInterface,
+  ActiveAccountsInterface,
 } from '../contracts';
 import { RootState } from '../app/store';
 
@@ -36,6 +37,7 @@ type AdminDashboardState = {
   pending: boolean;
   error: boolean;
   errorMessage: string;
+  activeAccounts: ActiveAccountsInterface[];
 };
 
 const initialState: AdminDashboardState = {
@@ -60,6 +62,7 @@ const initialState: AdminDashboardState = {
   errorMessage: '',
   contractsTypes: [],
   paymentItem: null,
+  activeAccounts: [],
 };
 
 export const loadApprovedApplications = createAsyncThunk(
@@ -80,6 +83,32 @@ export const loadApprovedApplications = createAsyncThunk(
     return response;
   }
 );
+
+
+export const loadActiveAccounts = createAsyncThunk(
+  'adminDashboard/loadActiveAccounts',
+  async () => {
+  
+    const res = await fetch(
+     
+      'https://tlcfin.prestoapi.com/api/activeaccounts',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        // body: JSON.stringify({ userid: Number(userId) }),
+      }
+    );
+    const response: ActiveAccountsInterface[] = await res.json();
+    return response;
+  }
+
+);
+
+
+
 
 export const loadStates = createAsyncThunk(
   'adminDashboard/loadStates',
@@ -720,6 +749,20 @@ export const dealerDashboardSlice = createSlice({
       })
       .addCase(updateApplication.fulfilled, (state) => {
         state.pending = false;
+      })
+      .addCase(loadActiveAccounts.pending, (state) => {
+        console.log(state, "from pending")
+        state.pending = true;
+      })
+      .addCase(loadActiveAccounts.rejected, (state) => {
+        state.pending = false;
+        state.error = true;
+        state.errorMessage = 'loading accounts failed';
+      })
+      .addCase(loadActiveAccounts.fulfilled, (state, action) => {
+        console.log(state, "from ful", action.payload, "payload")
+        state.pending = false;
+        state.activeAccounts = action.payload;
       });
   },
 });
@@ -737,6 +780,10 @@ export const adminDashboardSelector = (state: RootState): AdminDashboardState =>
 export const approvedApplicationsSelector = (
   state: RootState
 ): ApplicationInterface[] => state.adminDashboard.approvedApplications;
+
+export const activeAccountsSelector = (
+  state: RootState
+): ActiveAccountsInterface[] => state.adminDashboard.activeAccounts;
 
 export const pendingApplicationsSelector = (
   state: RootState

@@ -102,11 +102,7 @@ export const CreateAppForm: FC<Props> = ({ states }) => {
               <div className={styles.formRow}>
                 <div className={styles.inputBox}>
                   <p>Your approval code</p>
-                  <Field
-                    name="approvalCode"
-                    className={styles.formInput}
-                    placeholder="Your approval code"
-                  />
+                  <Field name="approvalCode" placeholder="Your approval code" />
                 </div>
               </div>
               <h4 className={styles.label}>Personal details</h4>
@@ -559,7 +555,7 @@ export const CreateAppForm: FC<Props> = ({ states }) => {
                 </div>
               </div>
               <div className={styles.formFooter}>
-                <div onClick={submitForm}>Save</div>
+                <div>Save</div>
               </div>
             </Form>
           );

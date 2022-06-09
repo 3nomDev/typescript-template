@@ -63,6 +63,17 @@ export const AdminSidebar: FC = () => {
         </div>
       </Link>
 
+      <Link href="/admin/customer-list">
+        <div className={styles.link}>
+          <FontAwesomeIcon
+            icon={faMinusCircle as IconProp}
+            color="white"
+            className={styles.icon}
+          />
+          <p className={styles.text}>Customer List</p>
+        </div>
+      </Link>
+
       <Link href="/admin/dealers">
         <div className={styles.link}>
           <FontAwesomeIcon

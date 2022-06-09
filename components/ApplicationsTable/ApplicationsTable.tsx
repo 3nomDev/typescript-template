@@ -34,6 +34,8 @@ export const ApplicationsTable: FC<Props> = ({
 
   const dispatch = useDispatch();
 
+ 
+
   useEffect(() => {
     const result = applications.map((item) => {
       if (

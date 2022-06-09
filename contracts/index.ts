@@ -1,3 +1,5 @@
+import { fromPairs } from 'lodash';
+
 export * from './args';
 
 export * from './loginPayload.interface';
@@ -14,3 +16,4 @@ export * from './contract.interface';
 export * from './document-type.interface';
 export * from './update-application.interface';
 export * from './schedule-payment-payload.interface';
+export * from './active-accounts.interface';
