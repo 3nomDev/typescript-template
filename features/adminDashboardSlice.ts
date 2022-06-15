@@ -15,8 +15,14 @@ import {
   StatsInterface,
   UpdateApplicationInterface,
   ActiveAccountsInterface,
+  UserPaymentsInterface,
+  PaymentsInterface,
+  UserActiveAccountsInterface
+
+
 } from '../contracts';
 import { RootState } from '../app/store';
+
 
 import { addNotification } from './notifications/notificationSlice';
 
@@ -38,6 +44,9 @@ type AdminDashboardState = {
   error: boolean;
   errorMessage: string;
   activeAccounts: ActiveAccountsInterface[];
+  userActiveAccount:any;
+  userPayments:UserPaymentsInterface[];
+  payments: PaymentsInterface[];
 };
 
 const initialState: AdminDashboardState = {
@@ -63,6 +72,9 @@ const initialState: AdminDashboardState = {
   contractsTypes: [],
   paymentItem: null,
   activeAccounts: [],
+  userPayments:[],
+  payments:[],
+  userActiveAccount: {}
 };
 
 export const loadApprovedApplications = createAsyncThunk(
@@ -102,6 +114,27 @@ export const loadActiveAccounts = createAsyncThunk(
       }
     );
     const response: ActiveAccountsInterface[] = await res.json();
+    return response;
+  }
+
+);
+export const loadUserActiveAccount = createAsyncThunk(
+  'adminDashboard/loadUserActiveAccount',
+  async (id:string) => {
+  
+    const res = await fetch(
+     
+      `https://tlcfin.prestoapi.com/api/activeaccounts/${id}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        // body: JSON.stringify({ userid: Number(userId) }),
+      }
+    );
+    const response: UserActiveAccountsInterface = await res.json();
     return response;
   }
 
@@ -463,26 +496,34 @@ export const loadPayments = createAsyncThunk(
       method: 'GET',
       headers: {
         authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        // body: JSON.stringify({
-        //   AccountNumber: '12345',
-        //   Amount: 5342,
-        //   ApplicationID: 53423243542,
-        //   ConfirmationNumber: 'C4242',
-        //   DateAdded: '02.12.2202',
-        //   DateProcessed: '02.12.2202',
-        //   ID: 35421435423,
-        //   LastUpdated: '02.12.2202',
-        //   PaymentGUID: 53424342,
-        //   PaymentMethod: 'Paypal',
-        //   ScheduledDate: '02.12.2202',
-        //   Status: 'Processing',
-        // }),
+      
       },
     });
 
-    const result = await res.json();
+    const result: PaymentsInterface[] = await res.json();
 
     return result;
+  }
+);
+
+
+export const loadPaymentsByAppId = createAsyncThunk(
+  'adminDashboard/loadPaymentsByAppId',
+  async (id : string) => {
+    console.log(id)
+    const res = await fetch(`https://tlcfin.prestoapi.com/api/getpaymentsbyappid`, {
+      method: 'POST',
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+    
+      },  
+      body: JSON.stringify({ ApplicationID: Number(id) }),
+    
+    });
+    const response: UserPaymentsInterface[] = await res.json();
+  
+
+    return response;
   }
 );
 
@@ -763,7 +804,31 @@ export const dealerDashboardSlice = createSlice({
         console.log(state, "from ful", action.payload, "payload")
         state.pending = false;
         state.activeAccounts = action.payload;
-      });
+      })
+      .addCase(loadPaymentsByAppId.pending, (state,action) =>{
+        state.pending = true;
+       
+      })
+      .addCase(loadPaymentsByAppId.fulfilled, (state,action) =>{
+
+        state.pending = false;
+        state.userPayments = action.payload
+       
+      })
+      .addCase(loadUserActiveAccount.pending, (state) =>{
+        state.pending = true;
+      })
+      .addCase(loadUserActiveAccount.fulfilled, (state, action)=>{
+        state.pending = false;
+        state.userActiveAccount = action.payload
+      })
+      // .addCase(loadPayments.pending, (state)=>{
+      //   state.pending = true;
+      // })
+      // .addCase(loadPayments.fulfilled,(state, action) =>{
+      //   state.pending = false;
+      //   state.payments = action.payload
+      // })
   },
 });
 
@@ -780,6 +845,12 @@ export const adminDashboardSelector = (state: RootState): AdminDashboardState =>
 export const approvedApplicationsSelector = (
   state: RootState
 ): ApplicationInterface[] => state.adminDashboard.approvedApplications;
+
+export const userPaymentsSelector = (state: RootState): UserPaymentsInterface[] => 
+state.adminDashboard.userPayments;
+
+export const PaymentsSelector = (state: RootState): PaymentsInterface[] => 
+state.adminDashboard.payments;
 
 export const activeAccountsSelector = (
   state: RootState

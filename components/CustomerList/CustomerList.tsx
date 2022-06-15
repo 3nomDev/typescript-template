@@ -11,27 +11,33 @@ import Router, { useRouter } from 'next/router';
 import { DealerRow } from '../DealerRow/DealerRow';
 import { CustomerRow } from '../CustomerRow/CustomerRow';
 import { useDispatch, useSelector } from 'react-redux';
-import { activeAccountsSelector, loadActiveAccounts } from '../../features/adminDashboardSlice';
+import { activeAccountsSelector, loadActiveAccounts, userPaymentsSelector,adminDashboardSelector } from '../../features/adminDashboardSlice';
+import { Oval } from 'react-loader-spinner';
 
 
-// interface Props {
-//   data;
 
-// }
 
 export const CustomerList: FC = ()  => {
   const router = useRouter();
   const activeAccounts = useSelector(activeAccountsSelector);
+  const payments = useSelector(userPaymentsSelector);
   const dispatch = useDispatch();
-  console.log(activeAccounts)
+  const {
+    pending,
+ 
+  } = useSelector(adminDashboardSelector);
+  console.log(pending)
+  
+
+
   const handleRowEdit = (id: string) => () =>
   
   void router.push(`payments/${id}`);
  useEffect(() => void dispatch(loadActiveAccounts()), []);
   // const handleNavigate = (): void => Router.push('/admin/payments');
 
-  return  (
-    <div className={styles.wrapper}>
+
+  const loaded = (<div className={styles.wrapper}>
     <DealerHeader title="Admin" />
     <div className={styles.content}>
       <div className={styles.contentHeader}>
@@ -39,7 +45,7 @@ export const CustomerList: FC = ()  => {
           {/* <FontAwesomeIcon icon={icon} />  */}
           Clients
         </h2>
-        <span>Showing 2 results</span>
+        <span>Showing {activeAccounts.length} results</span>
       </div>
       {/* <SearchBar onChange={handleInputChange} inputValue={searchParam} /> */}
       <div className={styles.tableWrapper}>
@@ -56,6 +62,7 @@ export const CustomerList: FC = ()  => {
           </thead>
          
           <tbody className={styles.tableBody}>
+
             {activeAccounts.map((item) => (
               <CustomerRow
                 key={item.ID}
@@ -67,7 +74,22 @@ export const CustomerList: FC = ()  => {
         </table>
       </div>
     </div>
-  </div>
+  </div>)
+
+  const notLoaded = (<div className={styles.loaderWrapper}>
+    <Oval
+      secondaryColor="black"
+      wrapperClass={styles.loader}
+      width={80}
+      height={80}
+      color="black"
+    />
+  </div>)
+
+  return  (
+    <>
+    {!pending ? loaded : notLoaded}
+    </>
    );
 } 
   

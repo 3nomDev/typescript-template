@@ -10,6 +10,7 @@ interface Props extends Partial<ActiveAccountsInterface> {
 }
 
 export const CustomerRow: FC<Props>  = ({
+
   FirstName,
   LastName,
   ApplicationID,
@@ -22,6 +23,8 @@ export const CustomerRow: FC<Props>  = ({
 }) => {
 
 
+
+
     return (
         <tr className={styles.tableRow}>
           <td>{FirstName.concat(` ${LastName}`)}</td>
@@ -31,7 +34,7 @@ export const CustomerRow: FC<Props>  = ({
             className={styles.rowButton}
             onClick={onEditClick(ApplicationID.toString())}
           >
-            <FontAwesomeIcon icon={faArrowRight as IconProp} color="darkgrey" />
+            <FontAwesomeIcon icon={faArrowRight as IconProp} color="darkgrey" cursor="pointer"/>
           </td>
         </tr>
       );

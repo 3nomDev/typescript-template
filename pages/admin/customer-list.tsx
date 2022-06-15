@@ -9,7 +9,7 @@ import {
     approvedApplicationsSelector,
     activeAccountsSelector,
     loadActiveAccounts,
-    loadApprovedApplications,
+    loadApprovedApplications,userPaymentsSelector
   } from '../../features/adminDashboardSlice';
 
  
@@ -21,6 +21,10 @@ const Customerlist: FC = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const user = useSelector(userSelector);
+  const payments = useSelector(userPaymentsSelector);
+
+  console.log(payments , "from the customer list")
+
 //   const activeAccounts = useSelector(activeAccountsSelector);
   
 

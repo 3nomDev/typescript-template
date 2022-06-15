@@ -29,7 +29,7 @@ export const ApplicationsTable: FC<Props> = ({
   title,
 }) => {
   const [searchParam, setSearchParam] = useState<string>('');
-
+console.log(applications)
   const router = useRouter();
 
   const dispatch = useDispatch();

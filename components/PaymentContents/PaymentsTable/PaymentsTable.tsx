@@ -1,7 +1,33 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styles from './PaymentsTable.module.css';
+import {UserPaymentsInterface} from '../../../contracts/user-payments'
+import {
+  adminDashboardSelector,
+ 
+} from '../../../features/adminDashboardSlice';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
+
+
+
 
 export const PaymentsTable: FC = () => {
+const {
+  pending,
+  contractsTypes,
+  documentTypes,
+  states,
+  payments,
+  userPayments,
+  approvedApplications,
+  userActiveAccount
+} = useSelector(adminDashboardSelector);
+
+const {DateAdded} = userPayments
+
+const formatedDate = moment(DateAdded).format('MM/DD/YYYY')
+console.log(formatedDate)
+
   return (
     <table className={styles.table}>
       <thead>
@@ -15,22 +41,17 @@ export const PaymentsTable: FC = () => {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>23769 46934 43</td>
-          <td>785487657456 </td>
-          <td>9/13/2021</td>
-          <td>Online paypal </td>
-          <td>$250</td>
-          <td>Processing</td>
-        </tr>
-        <tr>
-          <td>23769 46934 43</td>
-          <td>785487657456 </td>
-          <td>9/13/2021</td>
-          <td>Online paypal </td>
-          <td>$250</td>
-          <td>Processing</td>
-        </tr>
+
+
+        {userPayments.length && userPayments.map(payment => (<tr>
+          <td>{payment.AccountNumber}</td>
+          <td>{payment.ConfirmationNumber}</td>
+          <td>{formatedDate}</td> 
+          <td>{payment.PaymentMethod}</td>
+          <td>${payment.Amount}</td>
+          <td>{payment.Status}</td>
+        </tr>))}
+     
       </tbody>
     </table>
   );

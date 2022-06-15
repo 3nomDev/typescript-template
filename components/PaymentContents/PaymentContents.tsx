@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowLeft,
@@ -14,14 +14,55 @@ import { DealerHeader } from '../DealerHeader/DealerHeader';
 import { PaymentTab } from './PaymentTab/PaymentTab';
 import { PaymentsTable } from './PaymentsTable/PaymentsTable';
 import { useAppDispatch } from '../../app/hooks';
-import { loadPayments } from '../../features/adminDashboardSlice';
+import {
+  adminDashboardSelector,
+  loadPayments,
+} from '../../features/adminDashboardSlice';
+import { UserPaymentsInterface } from '../../contracts/user-payments';
+import { useSelector } from 'react-redux';
+import * as CurrencyFormat from 'react-currency-format';
+// interface UserPaymentProp {
+//   userPayments: UserPaymentsInterface[]
+// }
 
-export const PaymentContents: FC = () => {
+interface Props {
+  amountRemaining:any
+  paymentsRemaining:any;
+}
+
+export const PaymentContents: FC<Props> = ({
+  amountRemaining,
+  paymentsRemaining
+}) => {
+  const { userActiveAccount, userPayments } = useSelector(adminDashboardSelector);
+
+  console.log(amountRemaining);
+  console.log(paymentsRemaining)
+
+  const weekly = userPayments.map(payment => payment.Amount)[0]
+  console.log(weekly)
+
+  const {
+    FirstName,
+    LastName,
+    VehicleMake,
+    VehicleModel,
+    VehicleYear,
+    AmountFinanced,
+    VehicleTransmission,
+    VehicleMileage,
+    PurchasePrice,
+    HowLong,
+    VehicleColor,
+    VehicleEngine,
+  } = userActiveAccount;
+
+
   const dispatch = useAppDispatch();
 
   const router = useRouter();
 
-  useEffect(() => void dispatch(loadPayments()), []);
+  // useEffect(() => void dispatch(loadPayments()), []);
 
   const handleBack = (): void => void router.back();
 
@@ -35,7 +76,7 @@ export const PaymentContents: FC = () => {
               icon={faCheck as IconProp}
               className={styles.titleIcon}
             />
-            <h2>5757 46347 3738</h2>
+            {/* <h2>{AccountNumber}</h2> */}
           </div>
         </div>
         <div className={styles.dashboardBar}>
@@ -47,7 +88,9 @@ export const PaymentContents: FC = () => {
               />
               Back
             </div>
-            <h4>Andrea Daniella</h4>
+            <h4>
+              {FirstName} {LastName}
+            </h4>
           </div>
         </div>
         <ul className={styles.nav}>
@@ -63,27 +106,30 @@ export const PaymentContents: FC = () => {
             <PaymentTab
               icon={faDollarSign as IconProp}
               text="Amount Financed"
-              value="$32,099"
+              value={<CurrencyFormat className={styles.currency} value={PurchasePrice}  displayType={'text'} thousandSeparator={true} prefix={'$'} />}
             />
             <PaymentTab
               icon={faDollarSign as IconProp}
               text="Total remaining"
-              value="$29,340"
+              value={<CurrencyFormat className={styles.currency} value={amountRemaining}  displayType={'text'} thousandSeparator={true} prefix={'$'} />}
             />
             <PaymentTab
               icon={faCreditCard as IconProp}
               text="Weekly term"
-              value="$278"
+              value={<CurrencyFormat className={styles.currency} value={weekly}  displayType={'text'} thousandSeparator={true} prefix={'$'} />}
             />
             <PaymentTab
               icon={faCreditCard as IconProp}
-              text="Payments remained"
-              value="98/wks"
+              text="Payments remaining"
+              value={<CurrencyFormat className={styles.currency} value={amountRemaining}  displayType={'text'} thousandSeparator={true} prefix={'$'} />}
             />
           </div>
           <div className={styles.carDetails}>
             <div className={styles.carDetailsHeader}>
-              <h5>2021 Toyota Camry SE</h5>
+              <h5>
+                {VehicleYear} {VehicleMake}
+                {VehicleModel}
+              </h5>
               <p>
                 <strong>VIN:</strong> 1GYS3NKL7MR437140
               </p>
@@ -92,22 +138,22 @@ export const PaymentContents: FC = () => {
               <div>
                 <div className={styles.carDetailsPerks}>
                   <p>Engine:</p>
-                  <span>2.5L</span>
+                  <span>{VehicleEngine}</span>
                 </div>
                 <div className={styles.carDetailsPerks}>
                   <p>Current Odometer:</p>
-                  <span>00000</span>
+                  <span>{VehicleMileage}</span>
                 </div>
               </div>
 
               <div>
                 <div className={styles.carDetailsPerks}>
                   <p>Exterior Color:</p>
-                  <span>Midnight Black Metallic</span>
+                  <span>{VehicleColor}</span>
                 </div>
                 <div className={styles.carDetailsPerks}>
                   <p>Interior Color:</p>
-                  <span>Black</span>
+                  <span>N/A</span>
                 </div>
               </div>
 
@@ -118,7 +164,7 @@ export const PaymentContents: FC = () => {
                 </div>
                 <div className={styles.carDetailsPerks}>
                   <p>Transmission:</p>
-                  <span>7 speed automatic </span>
+                  <span>{VehicleTransmission}</span>
                 </div>
               </div>
             </div>
@@ -129,43 +175,7 @@ export const PaymentContents: FC = () => {
               <div className={styles.tableInfo}>
                 <div className={styles.infoBar}>
                   <p>Car cost</p>
-                  <span>$32.548</span>
-                </div>
-                <div className={styles.infoBar}>
-                  <p>Car cost</p>
-                  <span>$32.548</span>
-                </div>
-                <div className={styles.infoBar}>
-                  <p>Car cost</p>
-                  <span>$32.548</span>
-                </div>
-                <div className={styles.infoBar}>
-                  <p>Car cost</p>
-                  <span>$32.548</span>
-                </div>
-                <div className={styles.infoBar}>
-                  <p>Car cost</p>
-                  <span>$32.548</span>
-                </div>
-                <div className={styles.infoBar}>
-                  <p>Car cost</p>
-                  <span>$32.548</span>
-                </div>
-                <div className={styles.infoBar}>
-                  <p>Car cost</p>
-                  <span>$32.548</span>
-                </div>
-                <div className={styles.infoBar}>
-                  <p>Car cost</p>
-                  <span>$32.548</span>
-                </div>
-                <div className={styles.infoBar}>
-                  <p>Car cost</p>
-                  <span>$32.548</span>
-                </div>
-                <div className={styles.infoBar}>
-                  <p>Car cost</p>
-                  <span>$32.548</span>
+                  <span><CurrencyFormat  value={PurchasePrice}  displayType={'text'} thousandSeparator={true} prefix={'$'} /></span>
                 </div>
               </div>
             </div>

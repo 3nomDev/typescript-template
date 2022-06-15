@@ -17,3 +17,6 @@ export * from './document-type.interface';
 export * from './update-application.interface';
 export * from './schedule-payment-payload.interface';
 export * from './active-accounts.interface';
+export * from './user-payments';
+export * from './paymentInterface';
+export * from './user-activeAccount.interface';

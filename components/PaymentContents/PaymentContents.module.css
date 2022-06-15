@@ -206,6 +206,15 @@
     margin-bottom: 10px;
 }
 
+.currency{
+    display: block !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+    color: #446EE2 !important;
+    letter-spacing: -0.014em !important;
+}
+
 @media (max-width: 1130px) {
     .paymentTable {
         margin-left: 0;

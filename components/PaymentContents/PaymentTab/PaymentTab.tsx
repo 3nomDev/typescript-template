@@ -7,7 +7,7 @@ import styles from './PaymentTab.module.css';
 interface Props {
   icon: IconProp;
   text: string;
-  value: string;
+  value: any;
 }
 
 export const PaymentTab: FC<Props> = ({ icon, text, value }) => {
