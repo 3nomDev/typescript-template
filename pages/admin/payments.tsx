@@ -6,7 +6,7 @@ const Payments: FC = () => {
   return (
     <div className={styles.wrapper}>
       <AdminSidebar />
-      <PaymentContents />
+      <PaymentContents amountRemaining={undefined} paymentsRemaining={undefined} />
     </div>
   );
 };
