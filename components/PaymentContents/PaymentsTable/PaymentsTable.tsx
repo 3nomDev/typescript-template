@@ -51,7 +51,7 @@ console.log(formatedDate)
           <td>{ moment(payment.ScheduledDate).format('MM/DD/YYYY')}</td> 
           <td>{payment.PaymentMethod}</td>
           <td>${payment.Amount}</td>
-          <td>{payment.Status}</td>
+          <td className={payment.Status.toLowerCase() === 'pending' ? styles.paymentPending : styles.paymentComplete}>{payment.Status}</td>
         </tr>))}
      
       </tbody>

@@ -31,3 +31,11 @@
     padding: 10px 10px 10px 30px;
     font-size: 16px;
 }
+
+.paymentPending {
+    color:rgb(230, 154, 14)
+}
+
+.paymentComplete {
+    color:green
+}
