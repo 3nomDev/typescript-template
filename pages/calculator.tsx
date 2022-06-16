@@ -20,7 +20,7 @@ const Calculator: FC = () => {
     if (mode === modeEnum.setSecondValue)
       setSecondValue(`${secondValue ?? ''}${value}`);
   };
-  const handleSign;
+  // const handleSign;
   return (
     <div className={styles.wrapper}>
       <div className={styles.inputValue}>{firstValue}</div>
