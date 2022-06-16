@@ -19,7 +19,7 @@ const IndexPage: React.FC = () => {
     }
   }, []);
 
-  const handleSubmit = (values: AddUserPayloadInterface): void =>
+  const handleSubmit = (values: AddUserPayloadInterface) =>
     dispatch(addUser({ payload: values })).then((data) => {
       if (data.meta.requestStatus === 'fulfilled') router.push('/approved');
     });
