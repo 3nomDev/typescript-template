@@ -36,4 +36,6 @@ export interface UserActiveAccountsInterface {
   VehicleYear: number;
   PurchasePrice:number;
   HowLong:string;
+  SalesTax:number;
+  TLCTrackerFee:number;
 }

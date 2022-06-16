@@ -22,7 +22,7 @@
 }
 
 .body {
-    padding: 0 20px;
+    padding: 0 52px;
 }
 
 .body span {
@@ -41,4 +41,8 @@
     font-weight: 900;
     color: #446EE2;
     letter-spacing: -0.014em;
+}
+
+span .paymentsRemaining{
+    font-size: 2em !important;
 }

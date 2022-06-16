@@ -8,17 +8,20 @@ interface Props {
   icon: IconProp;
   text: string;
   value: any;
+  className?: string;
 }
 
-export const PaymentTab: FC<Props> = ({ icon, text, value }) => {
+export const PaymentTab: FC<Props> = ({ icon, text, value,className }) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.iconWrapper}>
         <FontAwesomeIcon icon={icon} />
       </div>
       <div className={styles.body}>
-        <span>{text}</span>
-        <h1>{value}</h1>
+        <span >{text}</span>
+        <h1 >{value}</h1>
+       
+
       </div>
     </div>
   );

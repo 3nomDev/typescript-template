@@ -21,6 +21,7 @@ import {
 import { UserPaymentsInterface } from '../../contracts/user-payments';
 import { useSelector } from 'react-redux';
 import * as CurrencyFormat from 'react-currency-format';
+import moment from 'moment'
 // interface UserPaymentProp {
 //   userPayments: UserPaymentsInterface[]
 // }
@@ -36,8 +37,17 @@ export const PaymentContents: FC<Props> = ({
 }) => {
   const { userActiveAccount, userPayments } = useSelector(adminDashboardSelector);
 
-  console.log(amountRemaining);
-  console.log(paymentsRemaining)
+
+  let startPayment;
+  let lastPayment ;
+  let total;
+  let salesTax;
+
+  if(userPayments.length){
+   startPayment = userPayments && userPayments[0].ScheduledDate
+ lastPayment = userPayments && userPayments.slice(-1)[0].ScheduledDate
+  }
+ 
 
   const weekly = userPayments.map(payment => payment.Amount)[0]
   console.log(weekly)
@@ -55,8 +65,18 @@ export const PaymentContents: FC<Props> = ({
     HowLong,
     VehicleColor,
     VehicleEngine,
+    TLCTrackerFee,
+    SalesTax
   } = userActiveAccount;
 
+
+if(SalesTax === null){
+  salesTax = 0
+  total = 0 + PurchasePrice
+}
+else{
+  total = SalesTax + PurchasePrice 
+}
 
   const dispatch = useAppDispatch();
 
@@ -119,13 +139,14 @@ export const PaymentContents: FC<Props> = ({
               value={<CurrencyFormat className={styles.currency} value={weekly}  displayType={'text'} thousandSeparator={true} prefix={'$'} />}
             />
             <PaymentTab
+            className = {styles.paymentsRemaining}
               icon={faCreditCard as IconProp}
               text="Payments remaining"
-              value={<CurrencyFormat className={styles.currency} value={amountRemaining}  displayType={'text'} thousandSeparator={true} prefix={'$'} />}
+              value={<span className={styles.currency}>{paymentsRemaining + "/wks"}</span>}
             />
           </div>
           <div className={styles.carDetails}>
-            <div className={styles.carDetailsHeader}>
+            <div >
               <h5>
                 {VehicleYear} {VehicleMake}
                 {VehicleModel}
@@ -133,9 +154,7 @@ export const PaymentContents: FC<Props> = ({
               <p>
                 <strong>VIN:</strong> 1GYS3NKL7MR437140
               </p>
-            </div>
-            <div className={styles.carDetailsBody}>
-              <div>
+            </div><div>
                 <div className={styles.carDetailsPerks}>
                   <p>Engine:</p>
                   <span>{VehicleEngine}</span>
@@ -167,7 +186,9 @@ export const PaymentContents: FC<Props> = ({
                   <span>{VehicleTransmission}</span>
                 </div>
               </div>
-            </div>
+            {/* <div className={styles.carDetailsBody}>
+              
+            </div> */}
           </div>
           <div className={styles.infoHistory}>
             <div className={styles.info}>
@@ -176,6 +197,50 @@ export const PaymentContents: FC<Props> = ({
                 <div className={styles.infoBar}>
                   <p>Car cost</p>
                   <span><CurrencyFormat  value={PurchasePrice}  displayType={'text'} thousandSeparator={true} prefix={'$'} /></span>
+                </div>
+                <div className={styles.infoBar}>
+                  <p>Deposit:</p>
+                  {/* <span><CurrencyFormat  value={PurchasePrice}  displayType={'text'} thousandSeparator={true} prefix={'$'} /></span> */}
+                </div>
+                <div className={styles.infoBar}>
+                  <p>TLC/DMV Tracker:</p>
+                 {TLCTrackerFee ? <span><CurrencyFormat  value={SalesTax}  displayType={'text'} thousandSeparator={true} prefix={'$'} /></span> : <span>$0</span>}
+                  
+                </div>
+                <div className={styles.infoBar}>
+                  <p>Sales Tax:</p>
+                 {SalesTax ? <span><CurrencyFormat  value={SalesTax}  displayType={'text'} thousandSeparator={true} prefix={'$'} /></span> : <span>$0</span>}
+                </div>
+                <div className={styles.infoBar}>
+                  <p>Total:</p>
+                  <span><CurrencyFormat  value={total}  displayType={'text'} thousandSeparator={true} prefix={'$'} /></span>
+                </div>
+                <div className={styles.infoBar}>
+                  <p>Start Payment:</p>
+                  <span>{moment(startPayment).format('MM/DD/YYYY')}</span>
+                  {/* <span><CurrencyFormat  value={PurchasePrice}  displayType={'text'} thousandSeparator={true} prefix={'$'} /></span> */}
+                </div>
+                <div className={styles.infoBar}>
+                  <p>End Payment:</p>
+                  <span>{moment(lastPayment).format('MM/DD/YYYY')}</span>
+
+                  {/* <span><CurrencyFormat  value={PurchasePrice}  displayType={'text'} thousandSeparator={true} prefix={'$'} /></span> */}
+                </div>
+                <div className={styles.infoBar}>
+                  <p>IRR on deal at Inception (weekly):</p>
+                  {/* <span><CurrencyFormat  value={PurchasePrice}  displayType={'text'} thousandSeparator={true} prefix={'$'} /></span> */}
+                </div>
+                <div className={styles.infoBar}>
+                  <p>IRR on deal at Inception (Annual):</p>
+                  {/* <span><CurrencyFormat  value={PurchasePrice}  displayType={'text'} thousandSeparator={true} prefix={'$'} /></span> */}
+                </div>
+                <div className={styles.infoBar}>
+                  <p>IRR weighting factor:</p>
+                  {/* <span><CurrencyFormat  value={PurchasePrice}  displayType={'text'} thousandSeparator={true} prefix={'$'} /></span> */}
+                </div>
+                <div className={styles.infoBar}>
+                  <p>NETT present value:</p>
+                  {/* <span><CurrencyFormat  value={PurchasePrice}  displayType={'text'} thousandSeparator={true} prefix={'$'} /></span> */}
                 </div>
               </div>
             </div>

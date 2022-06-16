@@ -23,9 +23,11 @@ const {
   userActiveAccount
 } = useSelector(adminDashboardSelector);
 
-const {DateAdded} = userPayments
+const {ScheduledDate} = userPayments
+console.log(userPayments)
+console.log(ScheduledDate)
 
-const formatedDate = moment(DateAdded).format('MM/DD/YYYY')
+const formatedDate = moment(ScheduledDate).format('MM/DD/YYYY')
 console.log(formatedDate)
 
   return (
@@ -46,7 +48,7 @@ console.log(formatedDate)
         {userPayments.length && userPayments.map(payment => (<tr>
           <td>{payment.AccountNumber}</td>
           <td>{payment.ConfirmationNumber}</td>
-          <td>{formatedDate}</td> 
+          <td>{ moment(payment.ScheduledDate).format('MM/DD/YYYY')}</td> 
           <td>{payment.PaymentMethod}</td>
           <td>${payment.Amount}</td>
           <td>{payment.Status}</td>
