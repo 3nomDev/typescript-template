@@ -378,6 +378,28 @@ export const loadDocumentTypes = createAsyncThunk(
     return response;
   }
 );
+export const uploadDocument = createAsyncThunk(
+  'adminDashboard/uploadDocument',
+  async (data : any) => {
+    console.log(data , "file to upload")
+    // const res = await fetch(
+    //   'https://tlcfin.prestoapi.com/api/adddocument',
+    //   {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+    //     },
+    //     body:JSON.stringify(data),
+        
+    //   }
+    // );
+    // console.log(res)
+    // const response:  await res;
+
+    // return response;
+  }
+);
 
 export const generatePdf = createAsyncThunk(
   'adminDashboard/generatePdf',
@@ -821,6 +843,13 @@ export const dealerDashboardSlice = createSlice({
       .addCase(loadUserActiveAccount.fulfilled, (state, action)=>{
         state.pending = false;
         state.userActiveAccount = action.payload
+      })
+
+      .addCase(uploadDocument.pending,(state, action) =>{
+        state.pending = true
+      })
+      .addCase(uploadDocument.fulfilled,(state, action) =>{
+        state.pending = false
       })
       // .addCase(loadPayments.pending, (state)=>{
       //   state.pending = true;

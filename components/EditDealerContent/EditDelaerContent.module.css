@@ -49,6 +49,7 @@
     background: #F2F2F2;
     padding: 20px 15px;
     margin: 25px 0;
+    justify-content: space-between;
 }
 
 .backButton {
@@ -63,8 +64,9 @@
 
 .select {
     padding: 11.6px 10px;
-    border: 1px solid black;
-    width: 100%;
+    border: 1px solid #B2B2B2;
+    border-radius: 5px;
+   
 }
 
 .button {
@@ -124,8 +126,12 @@
     justify-content: space-between;
 }
 
+
+.formRow p{
+    color: #83786D;
+}
 .input {
-    border: 1px solid  black;
+    border: 1px solid #B2B2B2;
     padding: 10px 15px;
     width: 100%;
 }
@@ -150,8 +156,7 @@
 .form {
     display: flex;
     flex-direction: column;
-    max-width: 620px;
-
+   
 }
 
 .required {
@@ -165,6 +170,20 @@
 
 .paymentIcon {
     padding-right: 5px;
+}
+
+.personalDetails{
+    display: flex;
+    justify-content: space-between;
+    width: 75%;
+}
+
+.headerRight{
+    width: 50%;
+}
+
+.headerLeft{
+    width: 50%;
 }
 
 @media (max-width: 670px) {
