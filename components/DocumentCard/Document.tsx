@@ -87,16 +87,16 @@ export const Document: FC<Props> = ({ item }) => {
   //   }
   // };
 
-  const openFile = (document) => {
-    var w = window.open('about:blank');
-    setTimeout(function () {
-      //FireFox seems to require a setTimeout for this to work.
-      w.document.body.appendChild(w.document.createElement('iframe')).src =
-        document.Content;
-      w.document.getElementsByTagName('iframe')[0].style.width = '100%';
-      w.document.getElementsByTagName('iframe')[0].style.height = '100%';
-    }, 0);
-  };
+  // const openFile = (document) => {
+  //   var w = window.open('about:blank');
+  //   setTimeout(function () {
+  //     //FireFox seems to require a setTimeout for this to work.
+  //     w.document.body.appendChild(w.document.createElement('iframe')).src =
+  //       document.Content;
+  //     w.document.getElementsByTagName('iframe')[0].style.width = '100%';
+  //     w.document.getElementsByTagName('iframe')[0].style.height = '100%';
+  //   }, 0);
+  // };
 
   const handleInputChange = (e) => {
     setItemNote(e.target.value);
@@ -161,9 +161,9 @@ export const Document: FC<Props> = ({ item }) => {
       {showDenial && denialMessage}
       <p className={styles.header}>{item.Name}</p>
       <div className={styles.innerWrapper}>
-        <a onClick={getItemDocument} className={styles.documentName}>
+        {/* <a onClick={getItemDocument} className={styles.documentName}>
           {item.DocumentName}
-        </a>
+        </a> */}
         <p>{moment(item.DateAdded).format('MM/DD/YYYY')}</p>
         {item.ApprovedBy !== 0 ? (
           <div>
