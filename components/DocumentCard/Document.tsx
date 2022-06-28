@@ -72,20 +72,20 @@ export const Document: FC<Props> = ({ item }) => {
     }
   };
 
-  const getItemDocument = async () => {
-    const data = {
-      userid: userId,
-      ID: item.ID,
-    };
-    console.log(data);
-    const res = dispatch(getDocument(data));
-    const response :any = await res;
-    let fileToOpen = response.payload[0];
+  // const getItemDocument = async () => {
+  //   const data = {
+  //     userid: userId,
+  //     ID: item.ID,
+  //   };
+  //   console.log(data);
+  //   const res = dispatch(getDocument(data));
+  //   const response :any = await res;
+  //   let fileToOpen = response.payload[0];
 
-    if (fileToOpen) {
-      openFile(fileToOpen);
-    }
-  };
+  //   if (fileToOpen) {
+  //     openFile(fileToOpen);
+  //   }
+  // };
 
   const openFile = (document) => {
     var w = window.open('about:blank');
