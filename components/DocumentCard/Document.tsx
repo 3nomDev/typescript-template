@@ -79,7 +79,7 @@ export const Document: FC<Props> = ({ item }) => {
     };
     console.log(data);
     const res = dispatch(getDocument(data));
-    const response = await res;
+    const response :any = await res;
     let fileToOpen = response.payload[0];
 
     if (fileToOpen) {
