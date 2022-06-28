@@ -161,9 +161,9 @@ export const Document: FC<Props> = ({ item }) => {
       {showDenial && denialMessage}
       <p className={styles.header}>{item.Name}</p>
       <div className={styles.innerWrapper}>
-        {/* <a onClick={getItemDocument} className={styles.documentName}>
+        <a onClick={getItemDocument} className={styles.documentName}>
           {item.DocumentName}
-        </a> */}
+        </a>
         <p>{moment(item.DateAdded).format('MM/DD/YYYY')}</p>
         {item.ApprovedBy !== 0 ? (
           <div>

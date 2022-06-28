@@ -9,7 +9,7 @@ import * as Yup from 'yup';
 import { DealerHeader } from '../DealerHeader/DealerHeader';
 import 'react-datepicker/dist/react-datepicker.css';
 import styles from './CreateAppForm.module.css';
-import { DatePickerField } from '../DatePicker/DatePickerField';
+// import { DatePickerField } from '../DatePicker/DatePickerField';
 import { emptyApplication, StateInterface } from '../../contracts';
 
 interface Props {
@@ -226,7 +226,7 @@ export const CreateAppForm: FC<Props> = ({ states }) => {
               <div className={styles.formRow}>
                 <div className={styles.inputBox}>
                   <p>DOB</p>
-                  <DatePickerField name="DOB" className={styles.formInput} />
+                  {/* <DatePickerField name="DOB" className={styles.formInput} /> */}
                 </div>
               </div>
               <h4 className={styles.label}>Residence details</h4>

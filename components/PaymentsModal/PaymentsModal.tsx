@@ -3,7 +3,7 @@ import { Formik, Form, Field } from 'formik';
 import { OnEventFn } from '@rnw-community/shared';
 import { Button } from 'react-bootstrap';
 import styles from './PaymentsModal.module.css';
-import { DatePickerField } from '../DatePicker/DatePickerField';
+// import { DatePickerField } from '../DatePicker/DatePickerField';
 import { SchedulePaymentPayloadInterface } from '../../contracts';
 
 interface Props {
@@ -48,10 +48,10 @@ export const PaymentsModal: FC<Props> = ({ onClose, onSubmit }) => {
                 <span className={styles.fieldLabel}>Frequency</span>
                 <Field name="NumberOfPayments" className={styles.select} />
                 <span className={styles.fieldLabel}>Number Of Payments</span>
-                <DatePickerField
+                {/* <DatePickerField
                   name="FirstPaymentDate"
                   className={styles.select}
-                />
+                /> */}
                 <div className={styles.footer}>
                   <Button
                     variant="primary"

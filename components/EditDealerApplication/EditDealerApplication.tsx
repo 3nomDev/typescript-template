@@ -10,7 +10,7 @@ import { ApplicationInterface } from '../../contracts';
 import { DealerHeader } from '../DealerHeader/DealerHeader';
 import { updateApplication } from '../../features/dealerDashboardSlice';
 import { userSelector } from '../../features/authSlice';
-import { DatePickerField } from '../DatePicker/DatePickerField';
+// import { DatePickerField } from '../DatePicker/DatePickerField';
 import { MaskedInput } from '../MaskedInput/MaskedInput';
 
 const validationSchema = Yup.object({
@@ -366,10 +366,10 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
                   <label className={styles.formLabel} htmlFor="DOB">
                     DOB <span className={styles.asterisk}>*</span>
                   </label>
-                  <DatePickerField
+                  {/* <DatePickerField
                     name="DOB"
                     className={inputErrorStyle(DOBHasErrors)}
-                  />
+                  /> */}
                   {DOBHasErrors && (
                     <div className={styles.error}>{errors.DOB}</div>
                   )}

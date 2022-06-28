@@ -27,7 +27,7 @@ import {
   DocumentTypeInterface,
   StateInterface,
 } from '../../contracts';
-import { DatePickerField } from '../DatePicker/DatePickerField';
+// import { DatePickerField } from '../DatePicker/DatePickerField';
 import { hasErrors } from '../../utils/hasErrors';
 import { ApplicationApproveModal } from '../ApplicationApproveModal/ApplicationApproveModal';
 import { PaymentsModal } from '../PaymentsModal/PaymentsModal';
@@ -41,6 +41,8 @@ import { userSelector } from '../../features/authSlice';
 import { useSelector } from 'react-redux';
 import { NavItem } from 'react-bootstrap';
 import Document from '../DocumentCard/Document';
+
+
 
 const validationSchema = Yup.object({
   FirstName: Yup.string().trim().required('First name is required'),
@@ -111,6 +113,8 @@ export const EditDealerContent: FC<Props> = ({
   onSchedulePayments,
   onApprove,
 }) => {
+  // const { setFieldValue } = useFormikContext();
+
   const user = useSelector(userSelector);
   const documents = useSelector(documentsSelector);
 
@@ -414,10 +418,10 @@ export const EditDealerContent: FC<Props> = ({
                           <div className={styles.formRow}>
                             <div className={styles.inputBox}>
                               <p>Date of birth</p>
-                              <DatePickerField
+                              {/* <DatePickerField
                                 className={styles.input}
                                 name="DOB"
-                              />
+                              /> */}
                             </div>
                           </div>
                         </div>
