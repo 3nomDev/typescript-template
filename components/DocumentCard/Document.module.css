@@ -1,0 +1,159 @@
+.wrapper{
+    display: flex;
+    flex-direction: column;
+   
+    padding: .5rem;
+}
+
+.innerWrapper{
+    display: flex;
+    justify-content: space-between;
+    border: 0.1rem solid #A7A7A7;
+    border-radius: 0.6rem; margin-bottom: 0.5rem;
+    padding: .5rem;
+    align-items: center;
+   
+
+}
+
+.header{
+    margin-bottom: 0.5rem;
+    background-color: #FAFBFF;
+    padding: 0.7rem 2rem 0.7rem;
+    align-items: center;
+   
+    display: flex;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #154F85;
+}
+
+.checkMark{
+    color:#50D00D;
+    width: 2rem;
+    height: 1.5rem;
+    cursor: pointer;
+}
+
+.xmark{
+   color: red;
+   width: 2rem;
+    height: 1.5rem;
+    cursor: pointer;
+
+
+}
+.trash{
+   color: #6C63FF;
+   width: 2rem;
+    height: 1.5rem;
+    cursor: pointer;
+
+}
+
+.note{
+    color: #241ae4;
+    width: 2rem;
+     height: 1.5rem;  
+     cursor: pointer;
+
+}
+
+.documentName{
+    width: 30%;
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+}
+.popUpBackground{
+    background-color: #b7b4b4cc;
+    position: absolute;
+    height: 100vh;
+    top: 0;
+    width: 100vw;
+    left: 0;
+    display: flex;
+    z-index: 2;
+}
+
+.popup{
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    background-color: white;
+    z-index: 2;
+    height: 40%;
+    border-radius: 5px;
+    box-shadow: 0px 0px 7px 4px #959090;
+    
+}
+
+.denialNote{
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    background-color: white;
+    z-index: 2;
+    height: 40%;
+    border-radius: 5px;
+    box-shadow: 0px 0px 7px 4px #959090;
+    text-align: center; 
+}
+
+.denialNote h3{
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.denialNote h1{
+    margin-top: 2em;
+
+}
+
+.popupHeader{
+    padding: 1em;
+    border-bottom: 1px solid #ededed;
+    background: linear-gradient(to right, #1245b7, #5aa3e1);
+    color: white;
+   
+}
+
+
+.popUpBackground textarea{
+    width: 68%;
+    border: 1px solid gray;
+    margin: auto;
+    height: 45%;
+}
+
+.popup input{
+    margin-left: 15px;
+}
+
+.popupBtnContainer{
+    display: flex;
+    justify-content: center;
+   
+}
+
+.cancelBtn{
+    width: 25%;
+    background: #cac4c4;
+    padding: 2px;
+    margin: 10px;
+    border-radius: 5px;
+    height: 2.5em;
+}
+
+.saveBtn{
+    width: 25%;
+    background: #3a5ec0;
+    padding: 2px;
+    margin: 10px;
+    border-radius: 5px;
+    height: 2.5em;
+    color: white;
+}
+

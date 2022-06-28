@@ -20,3 +20,5 @@ export * from './active-accounts.interface';
 export * from './user-payments';
 export * from './paymentInterface';
 export * from './user-activeAccount.interface';
+export * from './document-interface';
+export * from './SingleDocument.interface';

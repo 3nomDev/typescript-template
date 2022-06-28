@@ -17,12 +17,11 @@ import {
   ActiveAccountsInterface,
   UserPaymentsInterface,
   PaymentsInterface,
-  UserActiveAccountsInterface
-
-
+  UserActiveAccountsInterface,
+  DocumentInterface,
+  SingleDocumentInterface
 } from '../contracts';
 import { RootState } from '../app/store';
-
 
 import { addNotification } from './notifications/notificationSlice';
 
@@ -44,9 +43,11 @@ type AdminDashboardState = {
   error: boolean;
   errorMessage: string;
   activeAccounts: ActiveAccountsInterface[];
-  userActiveAccount:any;
-  userPayments:UserPaymentsInterface[];
+  userActiveAccount: any;
+  userPayments: UserPaymentsInterface[];
   payments: PaymentsInterface[];
+  documents: DocumentInterface[];
+  document: SingleDocumentInterface;
 };
 
 const initialState: AdminDashboardState = {
@@ -72,9 +73,11 @@ const initialState: AdminDashboardState = {
   contractsTypes: [],
   paymentItem: null,
   activeAccounts: [],
-  userPayments:[],
-  payments:[],
-  userActiveAccount: {}
+  userPayments: [],
+  payments: [],
+  userActiveAccount: {},
+  documents: [],
+  document: null,
 };
 
 export const loadApprovedApplications = createAsyncThunk(
@@ -96,34 +99,25 @@ export const loadApprovedApplications = createAsyncThunk(
   }
 );
 
-
 export const loadActiveAccounts = createAsyncThunk(
   'adminDashboard/loadActiveAccounts',
   async () => {
-  
-    const res = await fetch(
-     
-      'https://tlcfin.prestoapi.com/api/activeaccounts',
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-        // body: JSON.stringify({ userid: Number(userId) }),
-      }
-    );
+    const res = await fetch('https://tlcfin.prestoapi.com/api/activeaccounts', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+      // body: JSON.stringify({ userid: Number(userId) }),
+    });
     const response: ActiveAccountsInterface[] = await res.json();
     return response;
   }
-
 );
 export const loadUserActiveAccount = createAsyncThunk(
   'adminDashboard/loadUserActiveAccount',
-  async (id:string) => {
-  
+  async (id: string) => {
     const res = await fetch(
-     
       `https://tlcfin.prestoapi.com/api/activeaccounts/${id}`,
       {
         method: 'GET',
@@ -137,11 +131,7 @@ export const loadUserActiveAccount = createAsyncThunk(
     const response: UserActiveAccountsInterface = await res.json();
     return response;
   }
-
 );
-
-
-
 
 export const loadStates = createAsyncThunk(
   'adminDashboard/loadStates',
@@ -190,7 +180,7 @@ export const loadIncompleteApplications = createAsyncThunk(
     );
     const response: ApplicationInterface[] = await res.json();
 
-    if (JSON.stringify(response) === '{}') return []
+    if (JSON.stringify(response) === '{}') return [];
     return response;
   }
 );
@@ -380,24 +370,64 @@ export const loadDocumentTypes = createAsyncThunk(
 );
 export const uploadDocument = createAsyncThunk(
   'adminDashboard/uploadDocument',
-  async (data : any) => {
-    console.log(data , "file to upload")
-    // const res = await fetch(
-    //   'https://tlcfin.prestoapi.com/api/adddocument',
-    //   {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-    //     },
-    //     body:JSON.stringify(data),
-        
-    //   }
-    // );
-    // console.log(res)
-    // const response:  await res;
+  async (data: any, thunkApi) => {
+    console.log(data);
+    let userid;
+    let appid;
+    if (data) {
+      userid = data.userID;
+      appid = data.ApplicationID;
+    }
 
-    // return response;
+    const res = await fetch('https://tlcfin.prestoapi.com/api/adddocument', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    const response = await res.json();
+
+    if (res.status === 200) {
+      thunkApi.dispatch(getDocuments({ userid: userid, ApplicationID: appid }));
+    }
+    return response;
+  }
+);
+export const getDocuments = createAsyncThunk(
+  'adminDashboard/getDocuments',
+  async (data: any) => {
+    console.log(Object.values(data));
+    const res = await fetch('https://tlcfin.prestoapi.com/api/getdocuments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    const response: DocumentInterface[] = await res.json();
+    return response;
+  }
+);
+export const getDocument = createAsyncThunk(
+  'adminDashboard/getDocument',
+  async (data: any) => {
+    console.log(Object.values(data));
+    const res = await fetch('https://tlcfin.prestoapi.com/api/getdocument', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+      body: JSON.stringify(data),
+    });
+
+    const response:SingleDocumentInterface = await res.json();
+    return response;
   }
 );
 
@@ -510,6 +540,37 @@ export const changeApplicationStatus = createAsyncThunk(
     }
   }
 );
+export const changeDocStatus = createAsyncThunk(
+  'adminDashboard/changeDocStatus',
+  async (payload: any, thunkApi) => {
+    let userid;
+    let appid;
+    if (payload) {
+      userid = payload.userid;
+      appid = payload.appid;
+    }
+
+    const response = await fetch(
+      'https://tlcfin.prestoapi.com/api/changedocstatus',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+    console.log(response);
+    const res = await response.json();
+    if (response.status === 200) {
+      thunkApi.dispatch(getDocuments({ userid: userid, ApplicationID: appid }));
+    }
+    console.log(res);
+
+    return res;
+  }
+);
 
 export const loadPayments = createAsyncThunk(
   'adminDashboard/loadPayments',
@@ -518,7 +579,6 @@ export const loadPayments = createAsyncThunk(
       method: 'GET',
       headers: {
         authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-      
       },
     });
 
@@ -528,22 +588,21 @@ export const loadPayments = createAsyncThunk(
   }
 );
 
-
 export const loadPaymentsByAppId = createAsyncThunk(
   'adminDashboard/loadPaymentsByAppId',
-  async (id : string) => {
-    console.log(id)
-    const res = await fetch(`https://tlcfin.prestoapi.com/api/getpaymentsbyappid`, {
-      method: 'POST',
-      headers: {
-        authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-    
-      },  
-      body: JSON.stringify({ ApplicationID: Number(id) }),
-    
-    });
+  async (id: string) => {
+    console.log(id);
+    const res = await fetch(
+      `https://tlcfin.prestoapi.com/api/getpaymentsbyappid`,
+      {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        body: JSON.stringify({ ApplicationID: Number(id) }),
+      }
+    );
     const response: UserPaymentsInterface[] = await res.json();
-  
 
     return response;
   }
@@ -802,6 +861,13 @@ export const dealerDashboardSlice = createSlice({
         state.errorMessage = 'Failed changing application status';
         state.error = true;
       })
+      .addCase(changeDocStatus.pending, (state) => {
+        state.pending = true;
+      })
+
+      .addCase(changeDocStatus.fulfilled, (state) => {
+        state.pending = false;
+      })
       .addCase(updateApplication.pending, (state) => {
         state.pending = true;
       })
@@ -814,7 +880,7 @@ export const dealerDashboardSlice = createSlice({
         state.pending = false;
       })
       .addCase(loadActiveAccounts.pending, (state) => {
-        console.log(state, "from pending")
+        console.log(state, 'from pending');
         state.pending = true;
       })
       .addCase(loadActiveAccounts.rejected, (state) => {
@@ -823,41 +889,51 @@ export const dealerDashboardSlice = createSlice({
         state.errorMessage = 'loading accounts failed';
       })
       .addCase(loadActiveAccounts.fulfilled, (state, action) => {
-        console.log(state, "from ful", action.payload, "payload")
+        console.log(state, 'from ful', action.payload, 'payload');
         state.pending = false;
         state.activeAccounts = action.payload;
       })
-      .addCase(loadPaymentsByAppId.pending, (state,action) =>{
-        state.pending = true;
-       
-      })
-      .addCase(loadPaymentsByAppId.fulfilled, (state,action) =>{
-
-        state.pending = false;
-        state.userPayments = action.payload
-       
-      })
-      .addCase(loadUserActiveAccount.pending, (state) =>{
+      .addCase(loadPaymentsByAppId.pending, (state, action) => {
         state.pending = true;
       })
-      .addCase(loadUserActiveAccount.fulfilled, (state, action)=>{
+      .addCase(loadPaymentsByAppId.fulfilled, (state, action) => {
         state.pending = false;
-        state.userActiveAccount = action.payload
+        state.userPayments = action.payload;
+      })
+      .addCase(loadUserActiveAccount.pending, (state) => {
+        state.pending = true;
+      })
+      .addCase(loadUserActiveAccount.fulfilled, (state, action) => {
+        state.pending = false;
+        state.userActiveAccount = action.payload;
       })
 
-      .addCase(uploadDocument.pending,(state, action) =>{
-        state.pending = true
+      .addCase(uploadDocument.pending, (state, action) => {
+        state.pending = true;
       })
-      .addCase(uploadDocument.fulfilled,(state, action) =>{
-        state.pending = false
+      .addCase(uploadDocument.fulfilled, (state, action) => {
+        state.pending = false;
       })
-      // .addCase(loadPayments.pending, (state)=>{
-      //   state.pending = true;
-      // })
-      // .addCase(loadPayments.fulfilled,(state, action) =>{
-      //   state.pending = false;
-      //   state.payments = action.payload
-      // })
+      .addCase(getDocuments.pending, (state) => {
+        state.pending = true;
+      })
+      .addCase(getDocuments.fulfilled, (state, action) => {
+        (state.pending = false), (state.documents = action.payload);
+      })
+      .addCase(getDocument.pending, (state) => {
+        state.pending = true;
+      })
+      .addCase(getDocument.fulfilled, (state, action) => {
+        state.pending = false;
+        state.document = action.payload;
+      });
+    // .addCase(loadPayments.pending, (state)=>{
+    //   state.pending = true;
+    // })
+    // .addCase(loadPayments.fulfilled,(state, action) =>{
+    //   state.pending = false;
+    //   state.payments = action.payload
+    // })
   },
 });
 
@@ -875,15 +951,22 @@ export const approvedApplicationsSelector = (
   state: RootState
 ): ApplicationInterface[] => state.adminDashboard.approvedApplications;
 
-export const userPaymentsSelector = (state: RootState): UserPaymentsInterface[] => 
-state.adminDashboard.userPayments;
+export const userPaymentsSelector = (
+  state: RootState
+): UserPaymentsInterface[] => state.adminDashboard.userPayments;
 
-export const PaymentsSelector = (state: RootState): PaymentsInterface[] => 
-state.adminDashboard.payments;
+export const PaymentsSelector = (state: RootState): PaymentsInterface[] =>
+  state.adminDashboard.payments;
 
 export const activeAccountsSelector = (
   state: RootState
 ): ActiveAccountsInterface[] => state.adminDashboard.activeAccounts;
+
+export const documentsSelector = (state: RootState): DocumentInterface[] =>
+  state.adminDashboard.documents;
+
+export const documentSelector = (state: RootState) =>
+  state.adminDashboard.document;
 
 export const pendingApplicationsSelector = (
   state: RootState

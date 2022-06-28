@@ -1,5 +1,6 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, Component, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Select from 'react-select';
 import {
   faArrowLeft,
   faCar,
@@ -15,6 +16,7 @@ import { Oval } from 'react-loader-spinner';
 import { cs, OnEventFn } from '@rnw-community/shared';
 import cx from 'classnames';
 import { Field, Form, Formik, useField, useFormikContext } from 'formik';
+import { useRouter } from 'next/router';
 import * as Yup from 'yup';
 import { DealerHeader } from '../DealerHeader/DealerHeader';
 import styles from './EditDelaerContent.module.css';
@@ -30,11 +32,15 @@ import { hasErrors } from '../../utils/hasErrors';
 import { ApplicationApproveModal } from '../ApplicationApproveModal/ApplicationApproveModal';
 import { PaymentsModal } from '../PaymentsModal/PaymentsModal';
 import { useDispatch } from 'react-redux';
-import { uploadDocument } from '../../features/adminDashboardSlice';
+import {
+  uploadDocument,
+  getDocuments,
+  documentsSelector,
+} from '../../features/adminDashboardSlice';
 import { userSelector } from '../../features/authSlice';
 import { useSelector } from 'react-redux';
-
-
+import { NavItem } from 'react-bootstrap';
+import Document from '../DocumentCard/Document';
 
 const validationSchema = Yup.object({
   FirstName: Yup.string().trim().required('First name is required'),
@@ -76,7 +82,6 @@ interface CustomFileProps {
   name: string;
 }
 
-
 // const FileInput: FC<CustomFileProps> = ({ name }) => {
 //   const { setFieldValue } = useFormikContext();
 //   const [field] = useField(name);
@@ -107,15 +112,16 @@ export const EditDealerContent: FC<Props> = ({
   onApprove,
 }) => {
   const user = useSelector(userSelector);
-const userId = user?.ID;
+  const documents = useSelector(documentsSelector);
+
+  console.log(documents);
+  const userId = user?.ID;
   const isApproved = application?.Status === 'Approved';
 
   const [isApproveModalShown, setIsApproveModalShown] = useState(false);
   const [isPaymentsModalShown, setIsPaymentsModalShown] = useState(false);
-  const [documentID, setdocumentID] = useState()
-const [documentToSend, setDocumentToSend] = useState({DocumentName: '', userID :userId})
-
-
+  const [documentName, setdocumentName] = useState();
+  const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId});
 
   const statusStyle = {
     'Awaiting Approval': styles.orange,
@@ -128,64 +134,58 @@ const [documentToSend, setDocumentToSend] = useState({DocumentName: '', userID :
     void setIsApproveModalShown(!isApproveModalShown);
   const togglePaymentsModal = (): void =>
     void setIsPaymentsModalShown(!isPaymentsModalShown);
-    const dispatch = useDispatch()
-    const uploadFile = (data) => {
- 
-      dispatch(uploadDocument(data))
-    }
-    
-    const decryptFile = (event) =>{
-      
-      let fileBlob = event.target.result
-      console.log(documentID)
-      // uploadFile(fileBlob)
-      console.log(documentToSend)
-    }
-    
-    const readFile = (event) =>{
-     
-      if(event.target.files && event.target.files[0]){
-        let file = event.target.files[0];
-        console.log(event.target.files[0].name);
-       setDocumentToSend({...documentToSend,DocumentName : event.target.files[0].name})
-      let reader = new FileReader();
-      reader.addEventListener("load",decryptFile);
-      // reader.readAsText(file);
-      reader.readAsDataURL(file);
-      // console.log(reader);
-      }
-      
-    }
+  const dispatch = useDispatch();
 
-    // upload() {
-    //   if (!fileBlob) {
-    //     alert("Please Upload File");
-    //   } else {
-    //     let data = {
-    //       userID: Number(this.user.ID),
-    //       ApplicationID: this.app.ApplicationID,
-    //       DocumentName: this.file.name,
-    //       Extension: this.file.type,
-    //       DocumentTypeID: this.selDocType,
-    //       Content: this.fileBlob,
-    //     };
-    //     this.$store.dispatch("uploadDocument", data).then(
-    //       (res) => {
-    //         console.log("attchments ", res);
-    //         if (res.length) {
-    //           this.selDocType = "";
-    //           this.documents.push(res[0]);
-    //           this.file = {};
-    //           document.getElementById("uploadCaptureInputFile").value = "";
-    //         }
-    //         // this.getAttachments(this.car.ID);
-    //       },
-    //       (err) => {
-    //         console.error(err);
-    //       }
-    //     );
-    //   }
-    // },
+  const router = useRouter();
+  const { id } = router.query;
+  const options = documentTypes.map((item) => ({
+    label: item.Name,
+    value: item.ID,
+  }));
+
+  const uploadFile = (document) => {
+    dispatch(uploadDocument(documentToSend));
+  };
+
+  useEffect(() => {
+    const data = { userid: userId, ApplicationID: id };
+    if (id && userId) dispatch(getDocuments(data));
+  }, [id]);
+
+  const decryptFile = (event) => {
+    let fileBlob = event.target.result;
+
+    let extension = fileBlob.substring(5, fileBlob.indexOf(','));
+
+    setDocumentToSend({
+      ...documentToSend,
+      Content: fileBlob,
+      ApplicationID: id,
+      Extension: extension,
+      DocumentName: name,
+    });
+  };
+  let name;
+  const readFile = (event) => {
+    name = event.target.files[0].name;
+
+    if (event.target.files && event.target.files[0]) {
+      let file = event.target.files[0];
+      let reader = new FileReader();
+      reader.addEventListener('load', decryptFile);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSelectOptionChange = (e) => {
+    setDocumentToSend({
+      ...documentToSend,
+
+      DocumentTypeID: e.value,
+    });
+  };
+
+  console.log(Object.keys(documentToSend).length)
 
   return (
     <div className={styles.wrapper}>
@@ -423,41 +423,64 @@ const [documentToSend, setDocumentToSend] = useState({DocumentName: '', userID :
                         </div>
                       </div>
 
+                      {documents.length && (
+                        <div className={styles.personalDetails}>
+                          <div className={styles.headerRight}>
+                            <h1 className={styles.rowTitle}>Documents</h1>
+                            <p>02</p>
+                          </div>
+                          <div className={styles.headerLeft}>
+                            {documents.length &&
+                              documents.map((item) => <Document item={item} />)}
+                          </div>
+                        </div>
+                      )}
+
                       <div className={styles.personalDetails}>
                         <div className={styles.headerRight}>
                           <h1 className={styles.rowTitle}>Upload documents</h1>
-                          <p>02</p>
+                          <p>03</p>
                         </div>
                         <div className={styles.headerLeft}>
                           {' '}
                           <div className={styles.formRow}>
                             <div className={styles.inputBox}>
                               <p>Document type</p>
-                              <Field
-                                as="select"
-                                className={styles.select}
-                                name="DocumentType"
-                                onChange = {(e) => setdocumentID(e.target.value)}
-                              >
-                                {documentTypes.map((item) => (
-                                  <option value={item.ID}>{item.Name}</option>
-                                ))}
-                              </Field>
-                            </div>
-                          </div>
-                          <div className={styles.formRow}>
-                            <div className={styles.inputBox}>
+                              <Select
+                                options={options}
+                                onChange={handleSelectOptionChange}
+                              />
+
                               <p>Select document</p>
-                              <input type="file" onChange={() => readFile(event)}/>
-                              {/* <FileInput name="Document" /> */}
+                              <input
+                                type="file"
+                                className="customUploadBtn"
+                                onChange={() => readFile(event)}
+                              />
+                              <br></br>
+<div className={styles.uploadBtnHolder}>
+  <button disabled={Object.keys(documentToSend).length < 6}
+                                className={styles.uploadBtn}
+                                onClick={uploadFile}
+                              >
+                                Upload
+                              </button>
+</div>
+                              
                             </div>
                           </div>
+                          {/* <div className={styles.formRow}>
+                            <div className={styles.inputBox}>
+                             
+                            
+                            </div>
+                          </div> */}
                         </div>
                       </div>
                       <div className={styles.personalDetails}>
                         <div className={styles.headerRight}>
                           <h1 className={styles.rowTitle}>Residence details</h1>
-                          <p>03</p>
+                          <p>04</p>
                         </div>
                         <div className={styles.headerLeft}>
                           <div className={styles.formRow}>
@@ -558,7 +581,7 @@ const [documentToSend, setDocumentToSend] = useState({DocumentName: '', userID :
                           <h1 className={styles.rowTitle}>
                             Employment details
                           </h1>{' '}
-                          <p>04</p>
+                          <p>05</p>
                         </div>
                         <div className={styles.headerLeft}>
                           <div className={styles.formRow}>
@@ -617,7 +640,7 @@ const [documentToSend, setDocumentToSend] = useState({DocumentName: '', userID :
                       <div className={styles.personalDetails}>
                         <div className={styles.headerRight}>
                           <h1 className={styles.rowTitle}>Vehicle details</h1>
-                          <p>05</p>
+                          <p>06</p>
                         </div>
                         <div className={styles.headerLeft}>
                           <div className={styles.formRow}>
