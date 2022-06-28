@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { useField, useFormikContext } from 'formik';
 import { StyleType } from '@rnw-community/shared';
-import {DatePicker} from "react-datepicker";
+import DatePicker from "react-datepicker";
 
 interface GenericPropsInterface {
   name: string;
