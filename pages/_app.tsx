@@ -8,6 +8,8 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 import './styles/global.css';
 import './index.css';
 import { Notifications } from '../features/notifications/components/Notifications';
+import  '../pages/styles/datepicker.css'
+import '../pages/styles/calendar.css'
 
 config.autoAddCss = false;
 

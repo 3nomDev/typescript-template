@@ -27,7 +27,7 @@ import {
   DocumentTypeInterface,
   StateInterface,
 } from '../../contracts';
-// import { DatePickerField } from '../DatePicker/DatePickerField';
+import { DatePickerField } from '../DatePicker/DatePickerField';
 import { hasErrors } from '../../utils/hasErrors';
 import { ApplicationApproveModal } from '../ApplicationApproveModal/ApplicationApproveModal';
 import { PaymentsModal } from '../PaymentsModal/PaymentsModal';
@@ -190,6 +190,7 @@ export const EditDealerContent: FC<Props> = ({
   };
 
   console.log(Object.keys(documentToSend).length)
+ 
 
   return (
     <div className={styles.wrapper}>
@@ -230,6 +231,7 @@ export const EditDealerContent: FC<Props> = ({
             }}
           >
             {({ submitForm, touched, errors, values }) => {
+              console.log(errors)
               const vinHasErrors = hasErrors(touched.VIN, errors.VIN);
               const firstNameHasErrors = hasErrors(
                 touched.FirstName,
@@ -418,10 +420,10 @@ export const EditDealerContent: FC<Props> = ({
                           <div className={styles.formRow}>
                             <div className={styles.inputBox}>
                               <p>Date of birth</p>
-                              {/* <DatePickerField
+                              <DatePickerField
                                 className={styles.input}
                                 name="DOB"
-                              /> */}
+                              />
                             </div>
                           </div>
                         </div>
