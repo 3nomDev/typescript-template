@@ -12,7 +12,7 @@ import Logo from '../assets/images/logo.png';
 import car from '../assets/images/img.png';
 import { hasErrors } from '../utils/hasErrors';
 import { LoginPayloadInterface } from '../contracts';
-import { 
+import {  
   authSelector,
   isAuthorizedSelector,
   sendLoginRequest,
