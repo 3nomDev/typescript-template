@@ -635,7 +635,7 @@ export const EditDealerContent: FC<Props> = ({
                               <Field
                                 type="number"
                                 name="YearsAtCurrentJob"
-                                className={styles.input}
+                                className={styles.input} 
                               />
                               
                             </div>
