@@ -642,7 +642,7 @@ export const EditDealerContent: FC<Props> = ({
                             <div className={styles.inputBox}>
                               <p>Monthly Income</p>
                               <Field
-                                type="number"
+                                type="number" 
                                 name="MonthlyIncome"
                                 placeholder="Monthly Income"
                                 className={styles.input}
