@@ -42,8 +42,6 @@ import { useSelector } from 'react-redux';
 import { NavItem } from 'react-bootstrap';
 import Document from '../DocumentCard/Document';
 
-
-
 const validationSchema = Yup.object({
   FirstName: Yup.string().trim().required('First name is required'),
   LastName: Yup.string().trim().required('Last name is required'),
@@ -125,7 +123,7 @@ export const EditDealerContent: FC<Props> = ({
   const [isApproveModalShown, setIsApproveModalShown] = useState(false);
   const [isPaymentsModalShown, setIsPaymentsModalShown] = useState(false);
   const [documentName, setdocumentName] = useState();
-  const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId});
+  const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
 
   const statusStyle = {
     'Awaiting Approval': styles.orange,
@@ -189,8 +187,7 @@ export const EditDealerContent: FC<Props> = ({
     });
   };
 
-  console.log(Object.keys(documentToSend).length)
- 
+  console.log(Object.keys(documentToSend).length);
 
   return (
     <div className={styles.wrapper}>
@@ -231,7 +228,7 @@ export const EditDealerContent: FC<Props> = ({
             }}
           >
             {({ submitForm, touched, errors, values }) => {
-              console.log(errors)
+              console.log(errors);
               const vinHasErrors = hasErrors(touched.VIN, errors.VIN);
               const firstNameHasErrors = hasErrors(
                 touched.FirstName,
@@ -249,14 +246,20 @@ export const EditDealerContent: FC<Props> = ({
               return (
                 <>
                   <div className={styles.title}>
-                    <div>
-                      <FontAwesomeIcon icon={faFile as IconProp} />
+                    <div className={styles.titleContent}>
+                      <FontAwesomeIcon
+                        icon={faFile as IconProp}
+                        className={styles.faFile}
+                      />
                       <span>{application?.ApplicationID}</span>
                       <span className={statusStyle}>{application?.Status}</span>
                       <span>{`${application?.FirstName} ${application?.LastName}`}</span>
                     </div>
                     <p>
-                      <FontAwesomeIcon icon={faCar as IconProp} />
+                      <FontAwesomeIcon
+                        icon={faCar as IconProp}
+                        className={styles.faCar}
+                      />
                       {application?.Dealership}
                     </p>
                   </div>
@@ -416,8 +419,6 @@ export const EditDealerContent: FC<Props> = ({
                                 placeholder="Driver license"
                               />
                             </div>
-                          </div>
-                          <div className={styles.formRow}>
                             <div className={styles.inputBox}>
                               <p>Date of birth</p>
                               <DatePickerField
@@ -426,6 +427,7 @@ export const EditDealerContent: FC<Props> = ({
                               />
                             </div>
                           </div>
+                        
                         </div>
                       </div>
 
@@ -455,6 +457,7 @@ export const EditDealerContent: FC<Props> = ({
                               <Select
                                 options={options}
                                 onChange={handleSelectOptionChange}
+                                className={styles.documentSelector}
                               />
 
                               <p>Select document</p>
@@ -462,17 +465,20 @@ export const EditDealerContent: FC<Props> = ({
                                 type="file"
                                 className="customUploadBtn"
                                 onChange={() => readFile(event)}
+                                style={{ width: '100%' }}
                               />
                               <br></br>
-<div className={styles.uploadBtnHolder}>
-  <button disabled={Object.keys(documentToSend).length < 6}
-                                className={styles.uploadBtn}
-                                onClick={uploadFile}
-                              >
-                                Upload
-                              </button>
-</div>
-                              
+                              <div className={styles.uploadBtnHolder}>
+                                <button
+                                  disabled={
+                                    Object.keys(documentToSend).length < 6
+                                  }
+                                  className={styles.uploadBtn}
+                                  onClick={uploadFile}
+                                >
+                                  Upload
+                                </button>
+                              </div>
                             </div>
                           </div>
                           {/* <div className={styles.formRow}>
@@ -560,15 +566,7 @@ export const EditDealerContent: FC<Props> = ({
                             </div>
                           </div>
                           <div className={styles.formRow}>
-                            <div className={styles.inputBox}>
-                              <p>Monthly Income</p>
-                              <Field
-                                type="number"
-                                name="MonthlyIncome"
-                                placeholder="Monthly Income"
-                                className={styles.input}
-                              />
-                            </div>
+                            
                             <div className={styles.inputBox}>
                               <p>Monthly Payment</p>
                               <Field
@@ -637,6 +635,16 @@ export const EditDealerContent: FC<Props> = ({
                               <Field
                                 type="number"
                                 name="YearsAtCurrentJob"
+                                className={styles.input}
+                              />
+                              
+                            </div>
+                            <div className={styles.inputBox}>
+                              <p>Monthly Income</p>
+                              <Field
+                                type="number"
+                                name="MonthlyIncome"
+                                placeholder="Monthly Income"
                                 className={styles.input}
                               />
                             </div>

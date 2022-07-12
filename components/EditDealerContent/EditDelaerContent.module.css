@@ -69,9 +69,11 @@
     padding: 1rem;
     border-radius: 5px;
     margin-top: 10px;
-
+max-width: 50%;
 
 }
+
+
 
 .uploadBtnHolder{
     text-align: center;
@@ -81,7 +83,12 @@
     padding: 11.6px 10px;
     border: 1px solid #B2B2B2;
     border-radius: 5px;
+    
    
+}
+
+.headerLeft .select{
+    width: 75%;
 }
 
 .button {
@@ -189,25 +196,116 @@
 
 .personalDetails{
     display: flex;
-    justify-content: space-between;
-    width: 75%;
+    justify-content: space-around;
+ 
 }
 
 .headerRight{
-    width: 50%;
+    width: 33.3%;
 }
 
 .headerLeft{
-    width: 50%;
+    width: 66.6%;
 }
 
-@media (max-width: 670px) {
+@media (max-width: 768px) {
+    .dashboardBar {
+        flex-direction: column;
+        justify-content: center;
+    }
+    .buttonContainer div {
+        /* width: 50%; */
+        width: 8rem;
+        height: 3rem;
+        display: flex;
+        font-size: 13px;
+        align-items: center;
+        text-align: left;
+        justify-content: center;
+        margin-left: 0 !important;
+        /* justify-content: space-evenly; */
+      
+    }
+    .buttonContainer {
+        justify-content: center;
+        margin-left: 0 !important;
+       
+    }
+    .buttonContainer svg{
+        margin-right: 10px;
+    }
+    .buttonContainer select {
+        font-size: 11px;
+        margin-right: 10px;
+    }
     .formWrapper {
         padding: 10px 15px;
+     
     }
 
     .formRow {
         flex-direction: column;
     }
+
+    .headerLeft{width: 100%;}
+    .headerRight{
+        width:100%;
+        text-align: center;
+
+    }
+
+    .personalDetails{
+        display: contents;
+    }
+
+    .titleContent{
+        display: flex;
+        flex-direction: column;
+       
+        align-items: center;
+        margin: 0 auto;
+    }
+
+    .titleContent span:nth-of-type(1)  {
+        border-right: none;
+    }
+
+    .faCar{
+        display: none;
+    }
+
+    .faFile{
+        display: none;
+    }
+   
+
+    .inputBox select{
+        width: 100%;
+    }
+
+    .backButton{
+        margin-bottom: 10px;
+    }
+}
+@media (min-width: 1440px) {
+    .formWrapper {
+        padding: 10px 15px;
+        
+    }
+
+    .formRow {
+     
+        width: 65%;
+    }
+
+    .headerLeft{
+        width: 91%;
+    }
+
+    .documentSelector{
+        width: 50%;
+    }
+
+    
 }
 

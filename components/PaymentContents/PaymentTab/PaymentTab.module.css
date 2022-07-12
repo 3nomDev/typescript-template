@@ -4,25 +4,34 @@
     border-radius: 8px;
     background: #F8F8F8;
     margin-right: 15px;
+    align-items: center;
+    width: 100%;
+    /* width: fit-content; */
 
 }
 
 .iconWrapper {
     display: flex;
     flex: 0 0 6rem;
-    max-width: 60px;
-    height: 75px;
+    max-width: 39px;
+    height: 46px;
     align-items: center;
     justify-content: center;
     border: 0.1rem solid #446EE2;
     border-radius: 0.2rem;
     background: rgba(68, 110, 226, 0.05);
     color: #446EE2;
-    font-size: 36px;
+    font-size: 28px;
+    margin-right: 10px;
 }
 
 .body {
-    padding: 0 52px;
+    /* flex: 1; */
+    /* justify-content: center;
+    display: flex;
+    flex-direction: column; */
+    margin:  0 auto;
+    text-align: center;
 }
 
 .body span {
@@ -45,4 +54,55 @@
 
 span .paymentsRemaining{
     font-size: 2em !important;
+}
+
+@media (max-width:764px){
+    .iconWrapper{
+        display: flex;
+    /* flex: 0 0 6rem; */
+    max-width: 39px;
+    height: 39px;
+    align-items: center;
+    justify-content: center;
+    border: 0.1rem solid #446EE2;
+    border-radius: 0.2rem;
+    background: rgba(68, 110, 226, 0.05);
+    color: #446EE2;
+    font-size: 30px;
+    /* width: 40px; */
+    padding: 10px;
+    }
+
+    .body h1{
+        display: block;
+    font-size: .5rem;
+    line-height: 1;
+    font-weight: 900;
+    color: #446EE2;
+    letter-spacing: -0.014em;
+    }
+    .wrapper{
+        margin-right: 0;
+    }
+}
+
+@media (max-width:1024px){
+    .body h1{
+        font-size: 10px;
+    }
+
+    .body{
+        padding: 0 10px;
+            text-align: center;
+    width: 100%;
+    }
+
+    .wrapper{
+        margin-bottom: 10px;
+    }
+
+    .iconWrapper{
+        width: 20px;
+    }
+
 }

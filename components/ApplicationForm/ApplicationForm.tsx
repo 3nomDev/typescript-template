@@ -6,7 +6,7 @@ import { cs, OnEventFn, StyleType } from '@rnw-community/shared';
 import cx from 'classnames';
 import styles from './ApplicationForm.module.css';
 import { hasErrors } from '../../utils/hasErrors';
-// import { DatePickerField } from '../DatePicker/DatePickerField';
+import { DatePickerField } from '../DatePicker/DatePickerField';
 import { MaskedInput } from '../MaskedInput/MaskedInput';
 
 const validationSchema = Yup.object({
@@ -150,10 +150,10 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
                   </div>
                   <div className={styles.inputContainer}>
                     <label htmlFor="DOB">DOB</label>
-                    {/* <DatePickerField
+                    <DatePickerField
                       name="DOB"
                       className={inputErrorStyle(DOBHasErrors)}
-                    /> */}
+                    />
                     {DOBHasErrors && (
                       <div className={styles.error}>{errors.DOB}</div>
                     )}

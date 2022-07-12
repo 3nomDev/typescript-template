@@ -1,4 +1,4 @@
-.wrapper {
+/* .wrapper {
     flex: 1;
     height: 100vh;
     overflow-y: scroll;
@@ -6,14 +6,42 @@
 
 .contents {
     padding: 20px;
-    max-width: 670px;
+    display: flex;
+    flex-direction: column;
+ 
 }
 
+.infoHolder{
+    width: 100%;
+    display: flex;
+}
+.titleContent{
+    
+}
+
+.titleContent h2{
+    color: rgb(21, 79, 133);
+    font-size: 2rem;
+}
+.faCar{
+    margin-right : 10px;
+}
 
 .infoContainer {
     text-align: center;
     display: flex;
-    flex-direction: column
+    flex-direction: column;
+    width: 50%;
+
+}
+
+.infoContainerLeft{
+    width: 50%;
+    justify-content: center;
+   
+    height: 100vh;
+    margin-right: 10px;
+    text-align: center;
 }
 
 .infoBar {
@@ -66,4 +94,105 @@
 
 .loader {
     margin: 100px auto;
+} */
+
+.wrapper{
+    flex: 1;
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+.contents{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.infoContainer{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.infoContainerLeft{
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   margin: 0 auto;
+}
+
+.infoContainerRight{
+    
+}
+
+.infoKey {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 17px;
+    line-height: 1.13;
+    color: #83786D;
+}
+.infoBar {
+    background: #F8F8F8;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+   
+}
+
+.infoValue {
+    font-size: 20px;
+    line-height: 1.24;
+    color: #333333;
+    font-weight: 500;
+}
+
+.titleContent{
+    margin-bottom: 15px;
+}
+
+.titleContent h2{
+    color: rgb(21, 79, 133);
+    font-size: 2rem;
+}
+.faCar{
+    margin-right : 10px;
+}
+
+.dealerInfoLogo{
+    margin: 0 auto;
+}
+
+
+@media (min-width:1024px){
+    .infoContainer{
+        flex-direction: row;
+    }
+
+    .infoContainerLeft{
+        width: 50%;
+        padding: 20px
+    }
+
+    .infoContainerRight{
+        width: 50%;
+    }
+
+    .dealerImg{
+        display: flex;
+        width: 100%;
+      
+      
+       justify-content: center;
+    }
+
+    .dealerInfoLogo{
+        display: flex;
+        width: 100%;
+      
+      
+       justify-content: center;
+    }
 }

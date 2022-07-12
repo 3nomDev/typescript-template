@@ -1,5 +1,6 @@
 .wrapper {
     display: flex;
+    
   
 }
 
@@ -86,22 +87,22 @@
 }
 
 @media (max-width: 830px) {
-    .wrapper {
+    /* .wrapper {
         flex-direction: column;
         padding: 20px 20px;
     }
     .dealersContainer {
         width: 100%;
         margin-left: 0;
-    }
+    } */
 }
 
 @media (max-width: 400px) {
-    .wrapper {
+    /* .wrapper {
         padding: 20px 10px;
     }
 
     .wrapper img {
         width: 150px;
-    }
+    } */
 }

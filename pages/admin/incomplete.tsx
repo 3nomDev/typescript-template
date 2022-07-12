@@ -11,6 +11,8 @@ import {
 } from '../../features/adminDashboardSlice';
 import { withAuth } from '../../hocs';
 import { DashboardBoxEnum } from '../../contracts';
+import {faMonitorHeartRate, faFileSignature, faFileCheck, faFileExclamation} from '@fortawesome/pro-regular-svg-icons'
+
 
 const Incomplete: FC = () => {
   const dispatch = useDispatch();
@@ -24,7 +26,7 @@ const Incomplete: FC = () => {
       <AdminSidebar />
       <ApplicationsTable
         type={DashboardBoxEnum.Failed}
-        icon={faEdit as IconProp}
+        icon={faFileExclamation as IconProp}
         applications={incompleteApplications}
         title="Applications Incomplete"
       />

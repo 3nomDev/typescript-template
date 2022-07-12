@@ -3,6 +3,7 @@
     flex-direction: column;
    
     padding: .5rem;
+    width: fit-content;
 }
 
 .innerWrapper{
@@ -157,3 +158,27 @@
     color: white;
 }
 
+
+@media (max-width:425px){
+     .innerWrapper{
+        display: initial;
+  
+    border: 0.1rem solid #A7A7A7;
+    border-radius: 0.6rem;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    align-items: center;
+    text-align: center;
+    }
+
+   
+}
+
+@media (min-width:1440px){
+     /* .wrapper{
+        width: 65%;
+
+    } */
+    
+   
+}

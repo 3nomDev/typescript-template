@@ -1,6 +1,7 @@
 .react-date-picker {
     display: inline-flex;
     position: relative;
+    width: 100%;
   }
   .react-date-picker,
   .react-date-picker *,
@@ -23,7 +24,7 @@
   .react-date-picker__inputGroup {
     min-width: calc((4px * 3) +  0.54em * 8  +  0.217em * 2);
     flex-grow: 1;
-    padding: 0 2px;
+    padding: 10px 15px;
     box-sizing: content-box;
   }
   .react-date-picker__inputGroup__divider {

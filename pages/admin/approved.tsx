@@ -11,6 +11,8 @@ import {
   loadApprovedApplications,
 } from '../../features/adminDashboardSlice';
 import { DashboardBoxEnum } from '../../contracts';
+import {faMonitorHeartRate, faFileSignature, faFileCheck, faFileExclamation} from '@fortawesome/pro-regular-svg-icons'
+
 
 const Approved: FC = () => {
   const dispatch = useDispatch();
@@ -25,7 +27,7 @@ const Approved: FC = () => {
         type={DashboardBoxEnum.Success}
         title="Applications Approved"
         applications={approvedApplications}
-        icon={faCheck as IconProp}
+        icon={faFileCheck as IconProp}
       />
     </div>
   );

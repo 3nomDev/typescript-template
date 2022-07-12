@@ -67,6 +67,8 @@ export const PaymentContents: FC<Props> = ({
     VehicleEngine,
     TLCTrackerFee,
     SalesTax,
+    ApplicationID
+    
   } = userActiveAccount;
 
   let accountNumber = 0;
@@ -97,7 +99,7 @@ export const PaymentContents: FC<Props> = ({
               icon={faCheck as IconProp}
               className={styles.titleIcon}
             />
-            <h2>{accountNumber}</h2>
+            <h2>{ApplicationID}</h2>
           </div>
         </div>
         <div className={styles.dashboardBar}>
@@ -176,13 +178,16 @@ export const PaymentContents: FC<Props> = ({
           </div>
           <div className={styles.carDetails}>
             <div>
-              <h5>
-                {VehicleYear} {VehicleMake}
+              <div className={styles.carDetailsPerks}>
+                  <p>
+                {VehicleYear !== 0}  {VehicleMake}
                 {VehicleModel}
-              </h5>
-              <p>
-                <strong>VIN:</strong> 1GYS3NKL7MR437140
               </p>
+              <p>
+                Vin:
+              </p>
+              </div>
+            
             </div>
             <div>
               <div className={styles.carDetailsPerks}>

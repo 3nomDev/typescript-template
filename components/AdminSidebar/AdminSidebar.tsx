@@ -11,8 +11,12 @@ import {
   faInfoCircle,
   faMinusCircle,
   faUserPlus,
+  faHeartbeat,
+  faList
 } from '@fortawesome/fontawesome-free-solid';
+import {faMonitorHeartRate, faFileSignature, faFileCheck, faFileExclamation} from '@fortawesome/pro-regular-svg-icons'
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+
 import styles from '../Sidebar/sidebar.module.css';
 
 export const AdminSidebar: FC = () => {
@@ -23,7 +27,7 @@ export const AdminSidebar: FC = () => {
       <Link href="/admin">
         <div className={styles.link}>
           <FontAwesomeIcon
-            icon={faInfoCircle as IconProp}
+            icon={faMonitorHeartRate as IconProp}
             color="white"
             className={styles.icon1}
           />
@@ -33,7 +37,7 @@ export const AdminSidebar: FC = () => {
       <Link href="/admin/approved">
         <div className={styles.link}>
           <FontAwesomeIcon
-            icon={faCheck as IconProp}
+            icon={faFileCheck as IconProp}
             color="white"
             className={styles.icon}
           />
@@ -44,18 +48,18 @@ export const AdminSidebar: FC = () => {
       <Link href="/admin/pending">
         <div className={styles.link}>
           <FontAwesomeIcon
-            icon={faEdit as IconProp}
+            icon={faFileSignature as IconProp}
             color="white"
             className={styles.icon}
           />
-          <p className={styles.text}>Pending</p>
+          <p className={styles.text}>Awaiting Approval</p>
         </div>
       </Link>
 
       <Link href="/admin/incomplete">
         <div className={styles.link}>
           <FontAwesomeIcon
-            icon={faMinusCircle as IconProp}
+            icon={faFileExclamation as IconProp}
             color="white"
             className={styles.icon}
           />
@@ -66,7 +70,7 @@ export const AdminSidebar: FC = () => {
       <Link href="/admin/customer-list">
         <div className={styles.link}>
           <FontAwesomeIcon
-            icon={faMinusCircle as IconProp}
+            icon={faList as IconProp}
             color="white"
             className={styles.icon}
           />

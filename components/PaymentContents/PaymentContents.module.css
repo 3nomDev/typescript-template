@@ -219,7 +219,7 @@
     letter-spacing: -0.014em !important;
 }
 
-@media (max-width: 1130px) {
+@media (max-width: 768px) {
     .paymentTable {
         margin-left: 0;
     }
@@ -229,11 +229,49 @@
 
     .tableInfo {
         display: flex;
-        align-items: center;
+     
         flex-direction: column;
     }
 
-    .tabsRow {
+    .tabsRow  {
         flex-direction: column;
     }
+
+   
+    .carDetails{
+        display: flex;
+        flex-direction: column;
+        font-size: .8rem;
+        text-align: left;
+    }
+    .carDetails div{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .currency{
+        font-size: 1rem;
+    }
+
+    .nav{
+        justify-content: center;
+    }
+
+    .nav li{
+        margin-bottom: 10px;
+    }
+    
+   
+  
 }
+
+@media (max-width:1024px){
+    /* .tabsRow div{
+width: 25%;
+
+    } */
+    
+   
+}
+
