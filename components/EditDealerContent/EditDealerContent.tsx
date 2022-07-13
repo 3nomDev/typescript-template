@@ -41,6 +41,8 @@ import { userSelector } from '../../features/authSlice';
 import { useSelector } from 'react-redux';
 import { NavItem } from 'react-bootstrap';
 import Document from '../DocumentCard/Document';
+import {faFileAlt} from '@fortawesome/pro-regular-svg-icons'
+
 
 const validationSchema = Yup.object({
   FirstName: Yup.string().trim().required('First name is required'),
@@ -248,7 +250,7 @@ export const EditDealerContent: FC<Props> = ({
                   <div className={styles.title}>
                     <div className={styles.titleContent}>
                       <FontAwesomeIcon
-                        icon={faFile as IconProp}
+                        icon={faFileAlt as IconProp}
                         className={styles.faFile}
                       />
                       <span>{application?.ApplicationID}</span>

@@ -25,4 +25,5 @@ export interface ActiveAccountsInterface {
     ProfileTypeID: number;
     State: string;
     TAXID: string;
+    isShown;
 }

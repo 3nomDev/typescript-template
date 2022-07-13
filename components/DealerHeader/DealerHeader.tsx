@@ -10,6 +10,8 @@ import { NextRouter } from 'next/dist/client/router';
 import styles from './DealerHeader.module.css';
 import { logoutAction, userSelector } from '../../features/authSlice';
 import { NotificationBar } from '../NotificationBar/NotificationBar';
+import {faMonitorHeartRate} from '@fortawesome/pro-regular-svg-icons'
+
 import {
   loadNotifications,
   notificationsSelector,

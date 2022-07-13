@@ -5,6 +5,8 @@ import { useRouter } from 'next/router';
 import { withAuth } from '../../hocs';
 import { useDispatch, useSelector } from 'react-redux';
 import { userSelector } from '../../features/authSlice';
+import { DashboardBoxEnum } from '../../contracts';
+
 import {
     approvedApplicationsSelector,
     activeAccountsSelector,
@@ -14,7 +16,7 @@ import {
 
  
 
-const Customerlist: FC = () => {
+const Customerlist: FC= () => {
 
     const [activeAccountList, setActiveAccountList] = useState("");
     
@@ -32,7 +34,7 @@ const Customerlist: FC = () => {
     return (
         <div className={styles.wrapper}>
             <AdminSidebar />
-            <CustomerList  />
+            <CustomerList type={DashboardBoxEnum.Success} />
         </div>
     );
 };

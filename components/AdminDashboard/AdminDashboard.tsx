@@ -20,6 +20,7 @@ import {
   StatsInterface,
 } from '../../contracts';
 import { DashboardBar } from '../DashboardBar/DashboardBar';
+import {faMonitorHeartRate} from '@fortawesome/pro-regular-svg-icons'
 
 interface Props {
   stats: StatsInterface;
@@ -53,7 +54,7 @@ export const AdminDashboard: FC<Props> = (props) => {
       <div className={styles.dashboardWrapper}>
         <div className={styles.dashboardHeader}>
           <h2>
-            <FontAwesomeIcon icon={faInfoCircle as IconProp} />
+            <FontAwesomeIcon icon={faMonitorHeartRate as IconProp} color="#154F85" />
           </h2>
           <h2 className={styles.dashboardTitle}>Dashboard</h2>
         </div>

@@ -53,6 +53,8 @@ console.log(applications)
       }
       return { ...item, isShown: false };
     });
+
+    console.log(result)
     switch (type) {
       case DashboardBoxEnum.Success:
         dispatch(setApprovedApplicationsAction(result));

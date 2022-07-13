@@ -9,4 +9,6 @@
     height: 40px;
     border: .5px solid #ccc;
     border-radius: 5px;
+    width: 100%;
+    max-width: 16em;
 }

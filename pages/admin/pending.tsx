@@ -11,7 +11,7 @@ import {
 import { userSelector } from '../../features/authSlice';
 import { withAuth } from '../../hocs';
 import { DashboardBoxEnum } from '../../contracts';
-import {faMonitorHeartRate, faFileSignature, faFileCheck, faFileExclamation} from '@fortawesome/pro-regular-svg-icons'
+import {faMonitorHeartRate, faFileSignature, faFileCheck, faFileExclamation,} from '@fortawesome/pro-regular-svg-icons'
 
 
 const Pending: FC = () => {
@@ -27,7 +27,7 @@ const Pending: FC = () => {
       <AdminSidebar />
       <ApplicationsTable
         type={DashboardBoxEnum.Pending}
-        icon={faMonitorHeartRate as IconProp}
+        icon={faFileSignature as IconProp}
         applications={pendingApplications}
         title="Applications Awaiting Approval"
       />

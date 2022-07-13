@@ -20,13 +20,14 @@ export const CustomerRow: FC<Props>  = ({
   ID,
   CellPhone,
   EmailAddress,
+  isShown
 }) => {
 
 
-
+  if (!isShown) return null;
 
     return (
-        <tr className={styles.tableRow}>
+        <tr className={styles.tableRow} >
           <td>{FirstName.concat(` ${LastName}`)}</td>
           <td>{ApplicationID}</td>
           <td>{CellPhone}</td>

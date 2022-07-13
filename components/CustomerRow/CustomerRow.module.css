@@ -1,0 +1,15 @@
+.tableRow{
+    background-color: #FAFAFF;
+    height: 2em;
+    
+
+}
+
+.tableRow td{
+    font-size: .8rem;
+    font-weight: 400;
+    padding-left: 15px;
+    padding: 15px 0px 15px 35px;
+    background: #F9F9FB;
+}
+

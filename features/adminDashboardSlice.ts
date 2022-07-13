@@ -658,10 +658,17 @@ export const dealerDashboardSlice = createSlice({
     ) {
       state.approvedApplications = payload;
     },
+    setActiveCustomersAction(
+      state,
+      { payload }: PayloadAction<ActiveAccountsInterface[]>
+    ) {
+      state.activeAccounts = payload;
+    },
     setPendingApplicationsAction(
       state,
       { payload }: PayloadAction<ApplicationInterface[]>
     ) {
+      console.log(payload)
       state.pendingApplications = payload;
     },
     setIncompleteApplicationsAction(
@@ -891,7 +898,9 @@ export const dealerDashboardSlice = createSlice({
       .addCase(loadActiveAccounts.fulfilled, (state, action) => {
         console.log(state, 'from ful', action.payload, 'payload');
         state.pending = false;
-        state.activeAccounts = action.payload;
+        state.activeAccounts = action.payload
+        state.activeAccounts = state.activeAccounts.length && state.activeAccounts.map(item =>( {...item, isShown : true}));
+        
       })
       .addCase(loadPaymentsByAppId.pending, (state, action) => {
         state.pending = true;
@@ -942,6 +951,7 @@ export const {
   setApprovedApplicationsAction,
   setDealersAction,
   setPendingApplicationsAction,
+  setActiveCustomersAction
 } = dealerDashboardSlice.actions;
 
 export const adminDashboardSelector = (state: RootState): AdminDashboardState =>

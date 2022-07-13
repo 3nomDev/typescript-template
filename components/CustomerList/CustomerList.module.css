@@ -46,6 +46,8 @@
 
 .table {
   width: 100%;
+  border-collapse: separate;
+    border-spacing: 0 0.2rem;
 }
 
 .tableHeader th {
@@ -70,6 +72,7 @@
 }
 .table tbody {
   margin-top: 40px;
+  
 }
 
 .loaderWrapper {
