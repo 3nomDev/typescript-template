@@ -37,13 +37,14 @@
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
 }
 
 .navbar {
     display: flex;
-    width: 75%;
+    width: 61%;
     justify-content: space-around;
+    align-items: center;
 }
 
 .navbar span {

@@ -1,7 +1,63 @@
 .wrapper {
     padding: 100px 0;
-    margin: 0 auto;
+margin-left: 15em;
     display: flex;
+    /* margin: 0 auto; */
+}
+.wrapper h1{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.widget{
+    /* background: #FCF8F2; */
+    padding: 1.3rem 0 1rem;
+    margin-bottom: 1rem;  
+    max-width: 400px;
+    /* height: 400px; */
+}
+
+.widgetDiv{
+    background: #F8F8F8;
+    padding: 2rem 0.5rem 1.2rem;
+    text-align: center;
+  
+}
+
+
+
+.widgetDiv span{
+    color: #FF5900;
+
+}
+
+.widgetLeft{
+    padding: 10px;
+}
+
+.widget ul{
+    background: #FCF8F2;
+    margin-bottom: 10px;
+    padding: 10px 0;
+    
+
+}
+
+.widget ul li{
+    height: 3em;
+    align-items: center;
+    display: flex;
+  
+    text-align: center;
+    width: 100%;
+    justify-content: center;
+}
+
+.widget ul li:first-child{
+    background: #FFDECC;
+    color: #FF5900;
+    
+
 }
 
 .tabs {
@@ -20,6 +76,10 @@
     text-decoration: none;
     padding: 10px 5px;
     cursor: pointer;
+}
+.tab:active{
+    background-color: orange;
+    color: white;
 }
 
 .tab:hover {
@@ -53,7 +113,8 @@
 .input {
     margin-right:15px;
     padding: 5px 7px;
-    border: 1px solid black;
+    border: 0.1rem solid #B2B2B2;
+    height: 45px;
 }
 
 .errorInput {
@@ -79,32 +140,39 @@
     justify-content: flex-end;
     border-top: 1px solid #9A9A9A;
     padding: 2rem 0;
+    flex-direction: column;
 }
 
 .buttonContainer button:nth-child(1) {
     background-color: transparent;
     color: #9A9A9A;
-    width: 9rem;
-    margin-right: 2rem;
+    width: 100%;
     cursor: pointer;
+    color: #9A9797;
+    border: 0.2rem solid #9A9797;
+    margin-bottom: 1rem;
+    padding: 10px 15px;
+
 
 }
 
 
 .buttonContainer button:nth-child(2){
-    font-size: 25px;
+    
     color: #fff !important;
     border: 0.2rem solid #E6590D !important;
     text-transform: uppercase;
     background: #E6590D !important;
     display: inline-block;
     cursor: pointer;
+    padding: 10px 15px;
 
 }
 @media only screen and (max-width: 750px)  {
     .wrapper {
         min-width: 320px;
 padding: 0 !important;
+margin: 0 auto;
     }
     .row {
         flex-direction: column;
@@ -115,9 +183,27 @@ padding: 0 !important;
     .formWrapper {
         padding: 0 !important;
     }
-    .buttonContainer button:nth-child(2){
+    /* .buttonContainer button:nth-child(2){
         font-size: 15px;
 
+
+    } */
+
+  
+}
+
+@media (min-width:768px){
+    .buttonContainer{
+        flex-direction: row;
+    }
+
+    .buttonContainer  button:nth-child(1) {
+        width: 50%;
+        margin: 10px;
+    }
+    .buttonContainer  button:nth-child(2) {
+        width: 50%;
+        margin: 10px;
 
     }
 }
@@ -133,6 +219,7 @@ padding: 0 !important;
     .wrapper {
         flex-direction: column;
         padding: 20px 0;
+        margin: 0 auto;
     }
 
 }

@@ -53,8 +53,10 @@ export const Layout: FC = ({ children }) => {
           </div>
         </div>
         <div className={styles.container}>
-          <Image src={Logo} width={90} height={65} />
+        
+
           <div className={styles.navbar}>
+              <Image src={Logo} width={90} height={65} />
             <span>Home</span>
             <span>Inventory</span>
             <span>Financing info</span>

@@ -8,6 +8,10 @@ import styles from './ApplicationForm.module.css';
 import { hasErrors } from '../../utils/hasErrors';
 import { DatePickerField } from '../DatePicker/DatePickerField';
 import { MaskedInput } from '../MaskedInput/MaskedInput';
+import { faArrowRight } from '@fortawesome/fontawesome-free-solid';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+
 
 const validationSchema = Yup.object({
   FirstName: Yup.string().trim().required('First name is required'),
@@ -32,15 +36,21 @@ interface Props {
 export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.tabContainer}>
-        <div className={styles.tabs}>
-          <div className={styles.tab}>Eligibility check</div>
-          <div className={styles.tab}>Dealers</div>
+      <div className={styles.widget} >
+        <div className={styles.widgetLeft}>
+          <ul>
+            <li>Eligibility Check</li>
+            <li>Dealers</li>
+          </ul>
+          {/* <div className={styles.tab}>Eligibility check</div>
+          <div className={styles.tab}>Dealers</div> */}
+          <div className={styles.widgetDiv}><span >Need assistance call</span><br></br>
+(718)-506-9367</div>
         </div>
       </div>
       <div className={styles.formWrapper}>
         <span className={styles.formLabel}> Eligibility check</span> <br />
-        <p>Get pre-approved for an auto loan</p>
+        <h1>Get <strong>pre-approved</strong> for an auto loan</h1>
         <span className={styles.legalName}>
           Provide your legal name as it appears on your driver’s license.
         </span>
@@ -161,9 +171,9 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
                 </div>
                 <div className={styles.row}>
                   <div className={styles.inputContainer}>
-                    <p>Your monthly income and expenses</p>
+                    <h1>Your monthly income and expenses</h1>
                     <span>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                      Please enter your monthly income and total expenses below.
                     </span>
                   </div>
                 </div>
@@ -197,9 +207,9 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
                 </div>
                 <div className={styles.row}>
                   <div className={styles.inputContainer}>
-                    <p>Contact information</p>
+                    <h1>Contact information</h1>
                     <span>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                     Please enter your contact information below.
                     </span>
                   </div>
                 </div>
@@ -231,7 +241,7 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
 
                 <div className={styles.buttonContainer}>
                   <button type="button">Cancel</button>
-                  <button type="submit">Get Pre-approved</button>
+                  <button type="submit" className={styles.approvalBtn}>Get Pre-approved <FontAwesomeIcon icon={faArrowRight as IconProp} style={{fontSize:'20px'}}/> </button>
                 </div>
               </Form>
             );
