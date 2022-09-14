@@ -1,5 +1,7 @@
-import React, { FC, useState, Component, useEffect } from 'react';
+import React, { FC, useState, Component, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import Select from 'react-select';
 import {
   faArrowLeft,
@@ -10,8 +12,11 @@ import {
   faFile,
   faFilePdf,
   faTimes,
+  faChevronDown,
+  faCaretDown,
 } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+
 import { Oval } from 'react-loader-spinner';
 import { cs, OnEventFn } from '@rnw-community/shared';
 import cx from 'classnames';
@@ -36,13 +41,19 @@ import {
   uploadDocument,
   getDocuments,
   documentsSelector,
+  loadRejectionNotes,
+  rejectionsNotesSelector,
+  pendingSelector,
+  AddRejectionNote,
 } from '../../features/adminDashboardSlice';
 import { userSelector } from '../../features/authSlice';
 import { useSelector } from 'react-redux';
 import { NavItem } from 'react-bootstrap';
 import Document from '../DocumentCard/Document';
-import {faFileAlt} from '@fortawesome/pro-regular-svg-icons'
-
+import { faFileAlt } from '@fortawesome/pro-regular-svg-icons';
+import AdminNotes from '../AdminNotes/AdminNotes';
+import AddNotePopup from '../AddNote/AddNote';
+import { addNotification } from '../../features/notifications/notificationSlice';
 
 const validationSchema = Yup.object({
   FirstName: Yup.string().trim().required('First name is required'),
@@ -64,6 +75,8 @@ const validationSchema = Yup.object({
   HousingStatus: Yup.string(),
   HowLong: Yup.string(),
   MiddleName: Yup.string(),
+  VehicleColor: Yup.string().required('Color is required'),
+  SSN: Yup.string().required('SSN is required')
 });
 
 interface Props {
@@ -84,22 +97,6 @@ interface CustomFileProps {
   name: string;
 }
 
-// const FileInput: FC<CustomFileProps> = ({ name }) => {
-//   const { setFieldValue } = useFormikContext();
-//   const [field] = useField(name);
-
-//   return (
-//     <input
-//       type="file"
-//       className={styles.fileInput}
-//       onChange={(val) => {
-//         setFieldValue(field.name, val);
-//       }}
-//     />
-//   );
-
-// };
-
 export const EditDealerContent: FC<Props> = ({
   application,
   onBackPress,
@@ -113,12 +110,12 @@ export const EditDealerContent: FC<Props> = ({
   onSchedulePayments,
   onApprove,
 }) => {
-  // const { setFieldValue } = useFormikContext();
-
   const user = useSelector(userSelector);
   const documents = useSelector(documentsSelector);
+  const notes = useSelector(rejectionsNotesSelector);
+  const loading = useSelector(pendingSelector);
+  const ref = useRef();
 
-  console.log(documents);
   const userId = user?.ID;
   const isApproved = application?.Status === 'Approved';
 
@@ -126,6 +123,32 @@ export const EditDealerContent: FC<Props> = ({
   const [isPaymentsModalShown, setIsPaymentsModalShown] = useState(false);
   const [documentName, setdocumentName] = useState();
   const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
+  const [denialPopup, setDenialPopup] = useState(false);
+  const [notePopup, setNotePopup] = useState(false);
+  const [leaseDenialNote, setLeaseDenialNote] = useState('');
+  const [userDenialNote, setUserDenialNote] = useState('');
+  const [note, setNote] = useState('');
+  const [noteOptions, setNoteOptions] = useState('');
+  const [showNotes, setShowNotes] = useState(false);
+  const [leaseApproved, setLeaseApproved] = useState(false);
+  const [userApproved, setUserApproved] = useState(false);
+  const [showButtonDropdown, setShowButtonDropdown] = useState(false);
+  const [paymentProposal, setPaymentProposal] = useState({
+    Amount: '',
+    Frequency: '',
+    PaymentFrequency: '',
+    NumberOfPayments: '',
+  });
+  const [inputIsChecked, setInputIsChecked] = useState(false);
+
+  const [initialProposal] = useState({
+    Amount: '',
+    Frequency: '',
+    PaymentFrequency: '',
+    NumberOfPayments: '',
+  });
+
+  const [isProposal, setIsProposal] = useState(false);
 
   const statusStyle = {
     'Awaiting Approval': styles.orange,
@@ -142,6 +165,7 @@ export const EditDealerContent: FC<Props> = ({
 
   const router = useRouter();
   const { id } = router.query;
+
   const options = documentTypes.map((item) => ({
     label: item.Name,
     value: item.ID,
@@ -153,8 +177,36 @@ export const EditDealerContent: FC<Props> = ({
 
   useEffect(() => {
     const data = { userid: userId, ApplicationID: id };
-    if (id && userId) dispatch(getDocuments(data));
+    if (id && userId) {
+      dispatch(getDocuments(data));
+    }
   }, [id]);
+
+  useEffect(() => {
+    let noteData = {};
+    if (application !== null && id !== undefined && application !== undefined) {
+      noteData = { id: Number(id), status: application.StatusID };
+      dispatch(loadRejectionNotes(noteData));
+    }
+  }, []);
+
+  useEffect(() => {
+    const checkIfClickedOutside = (e) => {
+      if (
+        showButtonDropdown &&
+        ref.current &&
+        !ref.current.contains(e.target)
+      ) {
+        setShowButtonDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', checkIfClickedOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', checkIfClickedOutside);
+    };
+  }, [showButtonDropdown]);
 
   const decryptFile = (event) => {
     let fileBlob = event.target.result;
@@ -180,7 +232,6 @@ export const EditDealerContent: FC<Props> = ({
       reader.readAsDataURL(file);
     }
   };
-
   const handleSelectOptionChange = (e) => {
     setDocumentToSend({
       ...documentToSend,
@@ -189,10 +240,223 @@ export const EditDealerContent: FC<Props> = ({
     });
   };
 
-  console.log(Object.keys(documentToSend).length);
+  const handleLeaseDenialNoteChange = (e) => {
+    setLeaseDenialNote(e.target.value);
+  };
+  const handleUserDenialNoteChange = (e) => {
+    setUserDenialNote(e.target.value);
+  };
 
+  const handleLeaseApproved = (e) => {
+    if (e.target.checked) {
+      setLeaseApproved(true);
+    } else {
+      setLeaseApproved(false);
+    }
+  };
+  const handleUserApproved = (e) => {
+    if (e.target.checked) {
+      setUserApproved(true);
+    } else {
+      setUserApproved(false);
+    }
+  };
+
+  const handleNoteOptions = (e: any, key) => {
+   setNoteOptions(e.target.value)
+  };
+
+  const saveDenialNote = () => {
+    dispatch(onChangeAppStatus(4));
+    if (leaseDenialNote !== '' || userDenialNote !== '') {
+      let date = new Date().toISOString();
+      let data = {
+        ApplicationID: application.ApplicationID,
+        DateAdded: date,
+        Deleted: false,
+        LastUpdated: date,
+        LeaseApproved: leaseApproved,
+        LeaseNotes: leaseDenialNote,
+        StatusID: 4,
+        UpdatedBy: user.ID,
+        UserNotes: userDenialNote,
+        UserApproved: userApproved,
+      };
+      console.log(data);
+
+      dispatch(AddRejectionNote(data));
+      setLeaseApproved(false);
+      setUserApproved(false);
+      setUserDenialNote('');
+      setLeaseDenialNote('');
+      setDenialPopup(false);
+    } else {
+      return;
+    }
+  };
+
+  const saveNote = () => {
+    const approved = application.StatusID === 1 ? true : false;
+    if(!noteOptions){
+      dispatch(addNotification({
+        type: 'error',
+        message: 'Please pick what type of message this is',
+        autoHideDuration: 6000,
+      }))
+      return
+    }
+    if (note !== '' && noteOptions === 'Proposal') {
+      let date = new Date().toISOString();
+      let data = {
+        ApplicationID: application.ApplicationID,
+        DateAdded: date,
+        Deleted: false,
+        LastUpdated: date,
+        LeaseApproved: approved,
+        LeaseNotes: paymentProposal,
+        StatusID: application.StatusID,
+        UpdatedBy: user.ID,
+        UserNotes: '',
+        UserApproved: approved,
+      };
+
+      dispatch(AddRejectionNote(data));
+      setNote('');
+      setNotePopup(false);
+      setIsProposal(false);
+      setPaymentProposal(initialProposal);
+    } else if (note !== '' && noteOptions !== 'Lease') {
+      let date = new Date().toISOString();
+      let data = {
+        ApplicationID: application.ApplicationID,
+        DateAdded: date,
+        Deleted: false,
+        LastUpdated: date,
+        LeaseApproved: approved,
+        LeaseNotes: '',
+        StatusID: application.StatusID,
+        UpdatedBy: user.ID,
+        UserNotes: note,
+        UserApproved: approved,
+      };
+
+      dispatch(AddRejectionNote(data));
+      setNote('');
+      setNotePopup(false);
+    } else if (note !== '' && noteOptions === 'Lease') {
+      let date = new Date().toISOString();
+      let data = {
+        ApplicationID: application.ApplicationID,
+        DateAdded: date,
+        Deleted: false,
+        LastUpdated: date,
+        LeaseApproved: approved,
+        LeaseNotes: note,
+        StatusID: application.StatusID,
+        UpdatedBy: user.ID,
+        UserNotes: '',
+        UserApproved: approved,
+      };
+
+      dispatch(AddRejectionNote(data));
+      setNote('');
+      setNotePopup(false);
+    } else {
+      return;
+    }
+  };
+
+
+  const denailNotePopup = (
+    <div className={styles.popUpBackground}>
+      <div className={styles.popUpWrapper}>
+        <div className={styles.popup}>
+          <h2 className={styles.popupHeader}>Reason For Denying</h2>
+          <div className={styles.popUpTextArea}>
+            <label>User Notes</label>{' '}
+            <textarea onChange={handleUserDenialNoteChange} />
+          </div>
+          <div className={styles.popUpTextArea}>
+            <label>Lease Notes</label>{' '}
+            <textarea onChange={handleLeaseDenialNoteChange} />
+          </div>
+          <div className={styles.checkboxContainer}>
+            <div>
+              <input
+                type="checkbox"
+                name="Lease Approved"
+                value="checked"
+                onChange={(e) => handleLeaseApproved(e)}
+              />
+              <label>Lease Approved</label>
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                name="Lease Approved"
+                value="checked"
+                onChange={(e) => handleUserApproved(e)}
+              />
+              <label>User Approved</label>
+            </div>
+          </div>
+
+          <div className={styles.popupBtnContainer}>
+            <button
+              onClick={() => setDenialPopup(false)}
+              className={styles.cancelBtn}
+            >
+              Cancel
+            </button>
+
+            <button
+              onClick={saveDenialNote}
+              className={styles.saveBtn}
+              disabled={userDenialNote === '' && leaseDenialNote === ''}
+            >
+              Deny
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const buttonDropDown = (
+    <ul ref={ref}>
+      <li
+        onClick={() => {
+          setNotePopup(true);
+          setShowButtonDropdown(false);
+        }}
+      >
+        Add Note
+      </li>
+      <li
+        onClick={() => {
+          setDenialPopup(true);
+          setShowButtonDropdown(false);
+        }}
+      >
+        Deny with Note
+      </li>
+      <li
+        onClick={() => {
+          setShowNotes(true);
+          setShowButtonDropdown(false);
+        }}
+      >
+        View Notes
+      </li>
+    </ul>
+  );
+
+ 
   return (
     <div className={styles.wrapper}>
+      {showNotes && notes.length >0  && (
+        <AdminNotes notes={notes} setShowNotes={setShowNotes} />
+      )}
       {isApproveModalShown && (
         <ApplicationApproveModal
           closeModal={toggleApproveModal}
@@ -227,10 +491,10 @@ export const EditDealerContent: FC<Props> = ({
             initialValues={{
               ...application,
               DOB: new Date(application?.DOB ?? '2004-04-04T00:00:00'),
+              SSN:"***-**-" + application?.SSN,
             }}
           >
             {({ submitForm, touched, errors, values }) => {
-              console.log(errors);
               const vinHasErrors = hasErrors(touched.VIN, errors.VIN);
               const firstNameHasErrors = hasErrors(
                 touched.FirstName,
@@ -244,7 +508,17 @@ export const EditDealerContent: FC<Props> = ({
                 touched.EmailAddress,
                 errors.EmailAddress
               );
-
+              const colorHasErrors = hasErrors(
+                touched.VehicleColor,
+                errors.VehicleColor
+              );
+              const ssnHasErrors = hasErrors(
+           
+                errors.SSN,
+                values.SSN.includes('*')
+              );
+              onSubmit;
+console.log(errors.SSN)
               return (
                 <>
                   <div className={styles.title}>
@@ -257,73 +531,115 @@ export const EditDealerContent: FC<Props> = ({
                       <span className={statusStyle}>{application?.Status}</span>
                       <span>{`${application?.FirstName} ${application?.LastName}`}</span>
                     </div>
-                    <p>
-                      <FontAwesomeIcon
-                        icon={faCar as IconProp}
-                        className={styles.faCar}
-                      />
-                      {application?.Dealership}
-                    </p>
+                   
                   </div>
-                  <div className={styles.dashboardBar}>
-                    <div className={styles.backButton} onClick={onBackPress}>
-                      <FontAwesomeIcon icon={faArrowLeft as IconProp} /> Back
-                    </div>
-                    <div className={styles.buttonContainer}>
-                      <select className={styles.select}>
-                        {contractTypes.map((item) => (
-                          <option value={item.Name}>{item.Name}</option>
-                        ))}
-                      </select>
-                      <div
-                        className={cx(styles.generatePdf, styles.button)}
-                        onClick={onGeneratePdf}
-                      >
-                        <FontAwesomeIcon icon={faFilePdf as IconProp} />{' '}
-                        Generate pdf
+                  {notePopup && (
+                    <AddNotePopup
+                      setAddNote={setNotePopup}
+                      setNote={setNote}
+                      saveNote={saveNote}
+                      handleNoteOptions={handleNoteOptions}
+                      paymentProposal={paymentProposal}
+                      setPaymentProposal={setPaymentProposal}
+                      isProposal={isProposal}
+                      noteOptions={noteOptions}
+                      setIsProposal={setIsProposal}
+                      inputIsChecked={inputIsChecked}
+                      setInputIsChecked={setInputIsChecked}
+                    />
+                  )}
+                  {denialPopup && denailNotePopup}
+                  {documentTypes && !loading && (
+                    <div className={styles.dashboardBar}>
+                      <div className={styles.backButton} onClick={onBackPress}>
+                        <FontAwesomeIcon icon={faArrowLeft as IconProp} /> Back
                       </div>
-                      <div
-                        className={cx(styles.save, styles.button)}
-                        onClick={submitForm}
-                      >
-                        <FontAwesomeIcon icon={faCheckCircle as IconProp} />
-                        Save
-                      </div>
-                      <div
-                        className={cx(styles.decline, styles.button)}
-                        onClick={onChangeAppStatus(4)}
-                      >
-                        <FontAwesomeIcon icon={faTimes as IconProp} /> Decline
-                      </div>
-                      <div
-                        className={cx(styles.incomplete, styles.button)}
-                        onClick={onChangeAppStatus(1)}
-                      >
-                        <FontAwesomeIcon icon={faFile as IconProp} /> Incomplete
-                      </div>
-                      {!isApproved && (
+                      <div className={styles.buttonContainer}>
+                        <select className={styles.select}>
+                          {contractTypes.map((item) => (
+                            <option value={item.Name}>{item.Name}</option>
+                          ))}
+                        </select>
                         <div
-                          className={cx(styles.approved, styles.button)}
-                          onClick={toggleApproveModal}
-                        >
-                          <FontAwesomeIcon icon={faCheck as IconProp} /> Approve
-                        </div>
-                      )}
-
-                      {isApproved && (
-                        <div
-                          className={cx(styles.payments, styles.button)}
-                          onClick={togglePaymentsModal}
+                          className={cx(styles.generatePdf)}
+                          onClick={onGeneratePdf}
                         >
                           <FontAwesomeIcon
-                            icon={faDollarSign as IconProp}
-                            className={styles.paymentIcon}
-                          />
-                          Payments
+                            icon={faFilePdf as IconProp}
+                            className={styles.buttonIcon}
+                          />{' '}
+                          Generate pdf
                         </div>
-                      )}
+                        <div
+                          className={cx(styles.save, styles.button)}
+                          onClick={submitForm}
+                        >
+                          <FontAwesomeIcon
+                            icon={faCheckCircle as IconProp}
+                            className={styles.buttonIcon}
+                          />
+                          Save
+                        </div>
+                        <div className={styles.dropdownBtnWrapper}>
+                          <button
+                            className={styles.dropdownBtn}
+                            onClick={() =>
+                              setShowButtonDropdown(!showButtonDropdown)
+                            }
+                          >
+                            Note Options
+                            <FontAwesomeIcon
+                              icon={faCaretDown as IconProp}
+                              className={styles.dropdownBtnIcon}
+                            />
+                          </button>
+
+                          <div className={styles.dropdownPopup}>
+                            {showButtonDropdown && (
+                              <div className={styles.dropDownItems}>
+                                {' '}
+                                {buttonDropDown}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div
+                          className={cx(styles.incomplete, styles.button)}
+                          onClick={onChangeAppStatus(1)}
+                        >
+                          <FontAwesomeIcon
+                            icon={faFile as IconProp}
+                            className={styles.buttonIcon}
+                          />{' '}
+                          Incomplete
+                        </div>
+                        {!isApproved && (
+                          <div
+                            className={cx(styles.approved, styles.button)}
+                            onClick={toggleApproveModal}
+                          >
+                            <FontAwesomeIcon icon={faCheck as IconProp} />{' '}
+                            Approve
+                          </div>
+                        )}
+
+                        {isApproved && (
+                          <div
+                            className={cx(styles.payments, styles.button)}
+                            onClick={togglePaymentsModal}
+                          >
+                            <FontAwesomeIcon
+                              icon={faDollarSign as IconProp}
+                              className={styles.paymentIcon}
+                            />
+                            Payments
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  )}
+
                   <div className={styles.formWrapper}>
                     {/* <h1>Personal details</h1> */}
                     <Form className={styles.form}>
@@ -422,6 +738,15 @@ export const EditDealerContent: FC<Props> = ({
                               />
                             </div>
                             <div className={styles.inputBox}>
+                              <p>SSN</p>
+                              <Field
+                                className={styles.input}
+                                name="SSN"
+                                placeholder="Social Security"
+                              />
+                              {ssnHasErrors && (<div className={styles.error}>SSN is required </div>)}
+                            </div>
+                            <div className={styles.inputBox}>
                               <p>Date of birth</p>
                               <DatePickerField
                                 className={styles.input}
@@ -429,7 +754,6 @@ export const EditDealerContent: FC<Props> = ({
                               />
                             </div>
                           </div>
-                        
                         </div>
                       </div>
 
@@ -441,7 +765,9 @@ export const EditDealerContent: FC<Props> = ({
                           </div>
                           <div className={styles.headerLeft}>
                             {documents.length &&
-                              documents.map((item) => <Document item={item} />)}
+                              documents.map((item) => (
+                                <Document item={item} id={id} />
+                              ))}
                           </div>
                         </div>
                       )}
@@ -568,7 +894,6 @@ export const EditDealerContent: FC<Props> = ({
                             </div>
                           </div>
                           <div className={styles.formRow}>
-                            
                             <div className={styles.inputBox}>
                               <p>Monthly Payment</p>
                               <Field
@@ -637,14 +962,13 @@ export const EditDealerContent: FC<Props> = ({
                               <Field
                                 type="number"
                                 name="YearsAtCurrentJob"
-                                className={styles.input} 
+                                className={styles.input}
                               />
-                              
                             </div>
                             <div className={styles.inputBox}>
                               <p>Monthly Income</p>
                               <Field
-                                type="number" 
+                                type="number"
                                 name="MonthlyIncome"
                                 placeholder="Monthly Income"
                                 className={styles.input}
@@ -670,6 +994,9 @@ export const EditDealerContent: FC<Props> = ({
                                 name="VIN"
                                 className={styles.input}
                               />
+                              {vinHasErrors && (
+                                <div className={styles.error}>{errors.VIN}</div>
+                              )}
                             </div>
                           </div>
                           <div className={styles.formRow}>
@@ -686,7 +1013,7 @@ export const EditDealerContent: FC<Props> = ({
                               <p>Make</p>
                               <Field
                                 placeholder="Vehicle Make"
-                                type="number"
+                                type="text"
                                 name="VehicleMake"
                                 className={styles.input}
                               />
@@ -698,7 +1025,7 @@ export const EditDealerContent: FC<Props> = ({
                               <Field
                                 placeholder="Vehicle Model"
                                 className={styles.input}
-                                name="Model"
+                                name="VehicleModel"
                               />
                             </div>
                           </div>
@@ -739,9 +1066,18 @@ export const EditDealerContent: FC<Props> = ({
                               <p>Color</p>
                               <Field
                                 name="VehicleColor"
-                                className={styles.input}
+                                className={cs(
+                                  colorHasErrors,
+                                  styles.errorInput,
+                                  styles.input
+                                )}
                                 placeholder="Color"
                               />
+                              {colorHasErrors && (
+                                <div className={styles.error}>
+                                  {errors.VehicleColor}
+                                </div>
+                              )}
                             </div>
                           </div>
                           <div className={styles.formRow}>

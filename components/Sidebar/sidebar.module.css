@@ -15,9 +15,11 @@
 
 .icon {
     margin-right: 17px;
+    width: 30px;
 }
 .icon1 {
     margin-right: 10px;
+    width: 30px;
 }
 
 
@@ -25,6 +27,7 @@
     display: flex;
     margin-bottom: 1rem;
     cursor: pointer;
+    justify-content: flex-start;
 
 }
 
@@ -40,6 +43,8 @@
 .link:hover .text   {
     color: #6b737c;
 }
+
+
 
 
 

@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell, faChevronDown } from '@fortawesome/fontawesome-free-solid';
+import { faBell, faChevronDown,} from '@fortawesome/fontawesome-free-solid';
+
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
@@ -10,7 +11,7 @@ import { NextRouter } from 'next/dist/client/router';
 import styles from './DealerHeader.module.css';
 import { logoutAction, userSelector } from '../../features/authSlice';
 import { NotificationBar } from '../NotificationBar/NotificationBar';
-import {faMonitorHeartRate} from '@fortawesome/pro-regular-svg-icons'
+import {faMonitorHeartRate, faRightFromBracket} from '@fortawesome/pro-regular-svg-icons'
 
 import {
   loadNotifications,
@@ -71,7 +72,7 @@ export const DealerHeader: FC<Props> = ({ title = 'Dealer' }) => {
       </div>
       {isLogoutPanelExpanded && (
         <div onClick={handleLogout} className={styles.logoutPanel}>
-          Logout
+          <FontAwesomeIcon icon={faRightFromBracket as IconProp} className={styles.logOutIcon}/>Logout
         </div>
       )}
       {isNotificationPanelExpanded && (

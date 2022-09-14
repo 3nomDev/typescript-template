@@ -103,8 +103,18 @@ max-width: 50%;
 .generatePdf {
     background-color: #4c9de2;
     border-color: #4c9de2;
-
     color: white;
+    
+    width: 100%;
+    margin: 10px;
+    border-radius: 5px;
+    height: 3.5em;
+    color: white;
+    max-width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
 }
 
 .buttonContainer {
@@ -112,6 +122,7 @@ max-width: 50%;
     flex-wrap: wrap;
     align-items: center;
     margin-left: 30px;
+    width: 75%;
 }
 
 .save {
@@ -208,6 +219,161 @@ max-width: 50%;
     width: 66.6%;
 }
 
+.popUpBackground{
+    background-color: #b7b4b4cc;
+    position: absolute;
+    height: 100vh;
+    top: 0;
+    width: 100vw;
+    left: 0;
+    display: flex;
+    z-index: 2;
+}
+
+.popup{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 15rem;
+    background-color: white;
+    z-index: 2;
+  width: 80%;
+    border-radius: 15px;
+    box-shadow: 0px 0px 7px 4px #959090;
+    
+}
+
+.popUpWrapper{
+    width: 100%;
+    margin: 20px auto;
+    max-width: 600px;
+}
+.popupHeader{
+    padding: 1em;
+    border-bottom: 1px solid #ededed;
+    background: transparent linear-gradient(0deg, #58A2E1 0%, #4285D4 23%, #2A64C5 49%, #3251A8 100%) 0% 0% no-repeat padding-box;
+    color: white;
+    border-radius: 15px 15px 0px 0px;
+opacity: 1;
+text-align: center;
+font-weight: bold;
+   
+}
+.popUpBackground textarea{
+    width: 100%;
+    border: 1px solid #E0E0E0;
+    margin: 0 auto;
+    border-radius: 5px;
+    height: 100px;
+}
+
+.popUpTextArea{
+    padding: 20px;
+    font-weight: bold;
+}
+
+.popup input{
+    margin-left: 15px;
+}
+
+.popupBtnContainer{
+    display: flex;
+    justify-content: center;
+   
+}
+
+
+.checkboxContainer{
+    display: flex;
+    justify-content: center;
+}
+
+.checkboxContainer input{
+    margin-right: 10px;
+}
+
+.cancelBtn{
+    width: 25%;
+    background: #9A9A9A;
+    padding: 2px;
+    margin: 10px;
+    border-radius: 5px;
+    height: 2.5em;
+    color: white;
+
+}
+
+.saveBtn{
+    width: 25%;
+    background: #3a5ec0;
+    padding: 2px;
+    margin: 10px;
+    border-radius: 5px;
+    height: 2.5em;
+    color: white;
+}
+
+.dropdownBtnWrapper{
+    width: 25%;
+    background: #3a5ec0;
+    padding: 25px 0;
+    margin: 10px;
+    border-radius: 5px;
+    height: 2.5em;
+    color: white;
+    max-width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.dropdownBtn{
+  
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    position: absolute;
+    align-items: center;
+   
+}
+
+.dropdownBtnIcon{
+    margin-left: 15px;
+}
+
+.buttonIcon{
+    margin-right: 10px;
+}
+
+
+.dropDownItems{
+    position: relative;
+    top: 55px;
+    background: white;
+    color: black;
+    border-radius: 7px;
+    box-shadow: 0px 0px 5px 3px grey;
+    height: fit-content;
+
+    
+}
+
+.dropdownPopup{
+    width: 100%;
+    margin-top: 5%;
+   
+}
+
+.dropdownPopup ul{
+    cursor: pointer;
+    text-align: center;
+
+}
+
+
+
+
 @media (max-width: 768px) {
     .dashboardBar {
         flex-direction: column;
@@ -216,7 +382,7 @@ max-width: 50%;
     .buttonContainer div {
         /* width: 50%; */
         width: 8rem;
-        height: 3rem;
+    
         display: flex;
         font-size: 13px;
         align-items: center;
@@ -285,6 +451,12 @@ max-width: 50%;
 
     .backButton{
         margin-bottom: 10px;
+    }
+}
+
+@media (min-width:1024px){
+    .dropDownItems{
+        top:65px
     }
 }
 @media (min-width: 1440px) {

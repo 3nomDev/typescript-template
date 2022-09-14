@@ -39,8 +39,8 @@ export const DealerRow: FC<Props> = ({
       <td>{ApplicationID}</td>
       <td>{CellPhone}</td>
       <td>
-        {VehicleMake}
-        {VehicleModel}
+        {VehicleMake}{" "}
+        {VehicleModel}{" "}
         {VehicleYear}
       </td>
       <td>{PurchasePrice}</td>

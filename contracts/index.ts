@@ -22,3 +22,5 @@ export * from './paymentInterface';
 export * from './user-activeAccount.interface';
 export * from './document-interface';
 export * from './SingleDocument.interface';
+export * from './rejectionNote.interface';
+export * from './rejection_notes.interface'

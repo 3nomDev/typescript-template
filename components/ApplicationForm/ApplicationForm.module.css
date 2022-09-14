@@ -24,6 +24,10 @@ margin-left: 15em;
   
 }
 
+#addressSection{
+    flex-wrap: wrap !important;
+}
+
 
 
 .widgetDiv span{

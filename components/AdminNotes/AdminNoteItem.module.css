@@ -1,0 +1,26 @@
+.label{
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.noteWrapper{
+    padding: 15px;
+    border: 1px solid #E0E0E0;
+    margin: 15px;
+    border-radius: 15px;
+}
+
+.detailWrapper{
+    display: flex;
+   
+    justify-content: space-between;
+}
+
+.detailWrapper p{
+    width: 50%;
+    overflow-wrap: break-word;
+}
+
+.proposalKey{
+    font-weight: bold;
+}

@@ -12,6 +12,8 @@ import {
   setApprovedApplicationsAction,
   setIncompleteApplicationsAction,
   setPendingApplicationsAction,
+  setDeclinedApplicationsAction,
+  setConditionalApplicationsAction
 } from '../../features/adminDashboardSlice';
 import { SearchBar } from '../SearchBar/SearchBar';
 
@@ -34,7 +36,7 @@ console.log(applications)
 
   const dispatch = useDispatch();
 
- 
+ console.log(searchParam)
 
   useEffect(() => {
     const result = applications.map((item) => {
@@ -66,6 +68,12 @@ console.log(applications)
 
       case DashboardBoxEnum.Pending:
         dispatch(setPendingApplicationsAction(result));
+        break;
+      case DashboardBoxEnum.Conditional:
+        dispatch(setConditionalApplicationsAction(result));
+        break;
+      case DashboardBoxEnum.Declined:
+        dispatch(setDeclinedApplicationsAction(result));
         break;
 
       default:

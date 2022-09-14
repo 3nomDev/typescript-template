@@ -3,7 +3,7 @@
     flex-direction: column;
    
     padding: .5rem;
-    width: fit-content;
+    width: 100%;
 }
 
 .innerWrapper{
@@ -175,10 +175,10 @@
 }
 
 @media (min-width:1440px){
-     /* .wrapper{
+     .wrapper{
         width: 65%;
 
-    } */
+    }
     
    
 }

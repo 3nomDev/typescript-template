@@ -3,4 +3,5 @@ export interface StatsInterface {
   'Declined Applications': number;
   'Awaiting Approval Applications': number;
   'Incomplete Applications': number;
+  'Conditional Approval Applications': number;
 }

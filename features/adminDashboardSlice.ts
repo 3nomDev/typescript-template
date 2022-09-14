@@ -19,16 +19,21 @@ import {
   PaymentsInterface,
   UserActiveAccountsInterface,
   DocumentInterface,
-  SingleDocumentInterface
+  SingleDocumentInterface,
+  AddedRejectionNote,
+  RejectionNotesInterface
 } from '../contracts';
 import { RootState } from '../app/store';
 
 import { addNotification } from './notifications/notificationSlice';
 
+
 type AdminDashboardState = {
   approvedApplications: ApplicationInterface[];
   pendingApplications: ApplicationInterface[];
   incompleteApplications: ApplicationInterface[];
+  conditionalApplications: ApplicationInterface[];
+  declinedApplications: ApplicationInterface[];  
   notifications: NotificationInterface[];
   dealers: DealerInterface[];
   dealerItem: DealerInterface;
@@ -48,12 +53,18 @@ type AdminDashboardState = {
   payments: PaymentsInterface[];
   documents: DocumentInterface[];
   document: SingleDocumentInterface;
+ AddedRejectionNote : AddedRejectionNote;
+ RejectionNotes:RejectionNotesInterface[]
 };
 
 const initialState: AdminDashboardState = {
   approvedApplications: [],
   pendingApplications: [],
+  declinedApplications:[],
+  AddedRejectionNote:null,
+  RejectionNotes:[],
   incompleteApplications: [],
+  conditionalApplications:[],
   dealers: [],
   dealerItem: null,
   states: [],
@@ -64,6 +75,7 @@ const initialState: AdminDashboardState = {
     'Approved Applications': 0,
     'Awaiting Approval Applications': 0,
     'Declined Applications': 0,
+    'Conditional Approval Applications': 0,
   },
   dashboardApplications: [],
   applicationItem: null,
@@ -85,6 +97,44 @@ export const loadApprovedApplications = createAsyncThunk(
   async (userId: string) => {
     const res = await fetch(
       'https://tlcfin.prestoapi.com/api/getapprovedapplications',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        body: JSON.stringify({ userid: Number(userId) }),
+      }
+    );
+    const response: ApplicationInterface[] = await res.json();
+    return response;
+  }
+);
+export const loadDeclinedApplications = createAsyncThunk(
+  'adminDashboard/loadDeclinedApplications',
+  async (userId: string) => {
+    console.log(userId)
+    const res = await fetch(
+      'https://tlcfin.prestoapi.com/api/getdeniedapplications',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        body: JSON.stringify({ userid: Number(userId) }),
+       
+      }
+    );
+    const response: ApplicationInterface[] = await res.json();
+    return response;
+  }
+);
+export const loadConditionalApplications = createAsyncThunk(
+  'adminDashboard/loadConditionalApplications',
+  async (userId: string) => {
+    const res = await fetch(
+      'https://tlcfin.prestoapi.com/api/getconditionalapplications',
       {
         method: 'POST',
         headers: {
@@ -140,6 +190,47 @@ export const loadStates = createAsyncThunk(
       method: 'GET',
     });
     const results: StateInterface[] = await res.json();
+
+    return results;
+  }
+);
+export const loadRejectionNotes = createAsyncThunk(
+  'adminDashboard/loadRejectionNotes',
+  async (data:{}) => {
+    console.log('********************getting notes', data)
+    const res = await fetch('https://tlcfin.prestoapi.com/api/notes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+      body: JSON.stringify(data),
+    });
+    const results: RejectionNotesInterface[] = await res.json();
+
+    return results;
+  }
+);
+export const AddRejectionNote = createAsyncThunk(
+  'adminDashboard/AddedRejectionNote',
+  async (data:any, thunkApi) => {
+
+let noteData = { id: Number(data.ApplicationID), status: data.StatusID };
+  
+    const res = await fetch('https://tlcfin.prestoapi.com/api/addnote', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+      body: JSON.stringify(data),
+    });
+    ;
+    const results: RejectionNotesInterface[] = await res.json();
+
+    if(res.status === 200){
+          thunkApi.dispatch(loadRejectionNotes(noteData));
+    }
 
     return results;
   }
@@ -472,6 +563,7 @@ export const updateApplication = createAsyncThunk(
       PurchasePrice: payload.PurchasePrice,
       State: payload.State,
       VIN: payload.VIN,
+      SSN:payload.SSN,
       VehicleColor: payload.VehicleColor,
       VehicleEngine: payload.VehicleEngine,
       VehicleHorsePower: payload.VehicleHorsePower,
@@ -561,12 +653,12 @@ export const changeDocStatus = createAsyncThunk(
         body: JSON.stringify(payload),
       }
     );
-    console.log(response);
+  
     const res = await response.json();
     if (response.status === 200) {
       thunkApi.dispatch(getDocuments({ userid: userid, ApplicationID: appid }));
     }
-    console.log(res);
+  
 
     return res;
   }
@@ -591,7 +683,7 @@ export const loadPayments = createAsyncThunk(
 export const loadPaymentsByAppId = createAsyncThunk(
   'adminDashboard/loadPaymentsByAppId',
   async (id: string) => {
-    console.log(id);
+   
     const res = await fetch(
       `https://tlcfin.prestoapi.com/api/getpaymentsbyappid`,
       {
@@ -615,7 +707,7 @@ export const loadPaymentItem = createAsyncThunk(
 
     const result = await res.json();
 
-    console.log(result);
+   
   }
 );
 
@@ -658,6 +750,18 @@ export const dealerDashboardSlice = createSlice({
     ) {
       state.approvedApplications = payload;
     },
+    setConditionalApplicationsAction(
+      state,
+      { payload }: PayloadAction<ApplicationInterface[]>
+    ) {
+      state.conditionalApplications = payload;
+    },
+    setDeclinedApplicationsAction(
+      state,
+      { payload }: PayloadAction<ApplicationInterface[]>
+    ) {
+      state.declinedApplications = payload;
+    },
     setActiveCustomersAction(
       state,
       { payload }: PayloadAction<ActiveAccountsInterface[]>
@@ -668,7 +772,7 @@ export const dealerDashboardSlice = createSlice({
       state,
       { payload }: PayloadAction<ApplicationInterface[]>
     ) {
-      console.log(payload)
+     
       state.pendingApplications = payload;
     },
     setIncompleteApplicationsAction(
@@ -694,10 +798,32 @@ export const dealerDashboardSlice = createSlice({
           isShown: true,
         }));
       })
+      .addCase(loadConditionalApplications.pending, (state) => {
+        state.pending = true;
+      })
+      .addCase(loadConditionalApplications.fulfilled, (state, { payload }) => {
+        state.pending = false;
+        state.conditionalApplications = payload;
+        state.conditionalApplications = state.conditionalApplications.map((item) => ({
+          ...item,
+          isShown: true,
+        }));
+      })
       .addCase(loadApprovedApplications.rejected, (state, { payload }) => {
         state.pending = false;
         state.error = true;
         state.errorMessage = 'Loading applications failed';
+      })
+      .addCase(loadDeclinedApplications.pending, (state) =>{
+        state.pending = true
+      })
+      .addCase(loadDeclinedApplications.fulfilled, (state,{payload}) =>{
+        state.pending = true
+        state.declinedApplications = payload;
+        state.declinedApplications = state.declinedApplications.map((item) => ({
+          ...item,
+          isShown: true,
+        }));
       })
       .addCase(loadPendingApplications.pending, (state) => {
         state.pending = true;
@@ -772,10 +898,13 @@ export const dealerDashboardSlice = createSlice({
       })
       .addCase(loadStates.fulfilled, (state, { payload }) => {
         state.pending = false;
+    
+
         state.states = payload;
       })
       .addCase(loadStates.rejected, (state, { payload }) => {
         state.pending = false;
+        
         state.error = true;
         state.errorMessage = 'Loading states failed';
       })
@@ -839,10 +968,10 @@ export const dealerDashboardSlice = createSlice({
         state.applicationItem = payload;
       })
       .addCase(loadContractTypes.pending, (state) => {
-        state.pending = true;
+        // state.pending = true;
       })
       .addCase(loadContractTypes.rejected, (state) => {
-        state.error = true;
+        // state.error = true;
         state.errorMessage = 'Loading contracts types failed';
       })
       .addCase(loadContractTypes.fulfilled, (state, { payload }) => {
@@ -887,7 +1016,7 @@ export const dealerDashboardSlice = createSlice({
         state.pending = false;
       })
       .addCase(loadActiveAccounts.pending, (state) => {
-        console.log(state, 'from pending');
+        
         state.pending = true;
       })
       .addCase(loadActiveAccounts.rejected, (state) => {
@@ -896,7 +1025,7 @@ export const dealerDashboardSlice = createSlice({
         state.errorMessage = 'loading accounts failed';
       })
       .addCase(loadActiveAccounts.fulfilled, (state, action) => {
-        console.log(state, 'from ful', action.payload, 'payload');
+       
         state.pending = false;
         state.activeAccounts = action.payload
         state.activeAccounts = state.activeAccounts.length && state.activeAccounts.map(item =>( {...item, isShown : true}));
@@ -935,7 +1064,23 @@ export const dealerDashboardSlice = createSlice({
       .addCase(getDocument.fulfilled, (state, action) => {
         state.pending = false;
         state.document = action.payload;
-      });
+      })
+      .addCase(loadRejectionNotes.pending, (state) => {
+        state.pending = true;
+      
+      })
+      .addCase(loadRejectionNotes.fulfilled, (state, action) => {
+        state.pending = false;
+        state.RejectionNotes = action.payload;
+      })
+      .addCase(AddRejectionNote.pending, (state) => {
+        state.pending = true;
+        
+      })
+      .addCase(AddRejectionNote.fulfilled, (state) => {
+        state.pending = false;
+        
+      })
     // .addCase(loadPayments.pending, (state)=>{
     //   state.pending = true;
     // })
@@ -951,7 +1096,9 @@ export const {
   setApprovedApplicationsAction,
   setDealersAction,
   setPendingApplicationsAction,
-  setActiveCustomersAction
+  setActiveCustomersAction, 
+  setDeclinedApplicationsAction,
+  setConditionalApplicationsAction
 } = dealerDashboardSlice.actions;
 
 export const adminDashboardSelector = (state: RootState): AdminDashboardState =>
@@ -960,6 +1107,14 @@ export const adminDashboardSelector = (state: RootState): AdminDashboardState =>
 export const approvedApplicationsSelector = (
   state: RootState
 ): ApplicationInterface[] => state.adminDashboard.approvedApplications;
+
+export const declinedApplicationsSelector = (
+  state: RootState
+): ApplicationInterface[] => state.adminDashboard.declinedApplications;
+
+export const conditionalApplicationSelector = (
+  state: RootState
+): ApplicationInterface[] => state.adminDashboard.conditionalApplications;
 
 export const userPaymentsSelector = (
   state: RootState
@@ -990,6 +1145,10 @@ export const notificationsSelector = (
   state: RootState
 ): NotificationInterface[] => state.dashboard.notifications;
 
+export const rejectionsNotesSelector = (
+  state: RootState
+): RejectionNotesInterface[] => state.adminDashboard.RejectionNotes;
+
 export const stateSelector = (state: RootState): StateInterface[] =>
   state.adminDashboard.states;
 
@@ -998,5 +1157,11 @@ export const dealersSelector = (state: RootState): DealerInterface[] =>
 
 export const dealerItemSelector = (state: RootState): DealerInterface =>
   state.adminDashboard.dealerItem;
+
+
+export const pendingSelector = (state: RootState)  =>
+  state.adminDashboard.pending;
+
+
 
 export default dealerDashboardSlice.reducer;

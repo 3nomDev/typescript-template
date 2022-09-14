@@ -132,7 +132,7 @@ export const PaymentContents: FC<Props> = ({
               value={
                 <CurrencyFormat
                   className={styles.currency}
-                  value={PurchasePrice}
+                  value={AmountFinanced}
                   displayType={'text'}
                   thousandSeparator={true}
                   prefix={'$'}

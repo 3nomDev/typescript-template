@@ -1,0 +1,81 @@
+
+
+.notesContainer{
+    background-color: #b7b4b4cc;
+    position: absolute;
+    height: 100vh;
+    top: 0;
+    width: 100vw;
+    left: 0;
+    display: flex;
+    z-index: 2;
+}
+
+.notesHeaderContainer{
+   
+    width: 100%;
+}
+
+
+.notes{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    background-color: white;
+    z-index: 2;
+    height: 50%;
+    border-radius: 18px;
+    width: 80%;
+    box-shadow: 0px 0px 7px 4px #959090;
+    max-width: 500px;
+
+    
+}
+
+.noteItemHolder{
+   height: 100%;
+   overflow-y: scroll;
+}
+.notesHeader{
+    padding: 1em;
+    border-bottom: 1px solid #ededed;
+    background: transparent linear-gradient(0deg, #58A2E1 0%, #4285D4 23%, #2A64C5 49%, #3251A8 100%) 0% 0% no-repeat padding-box;
+
+    color: white;
+    border-radius: 16px 16px 0px 0px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+    
+}
+
+.notesHeader span{
+    float: right;
+    cursor: pointer;
+}
+.popUpBackground textarea{
+    width: 68%;
+    border: 1px solid gray;
+    margin: auto;
+    height: 45%;
+}
+
+.popup input{
+    margin-left: 15px;
+}
+
+.popupBtnContainer{
+    display: flex;
+    justify-content: center;
+   
+}
+
+.notes button{
+    width: 50%;
+    background: #3a5ec0;
+    padding: 20px auto;
+    margin: 10px auto;
+    border-radius: 5px;
+    height: 2.5em;
+    color: white;
+}

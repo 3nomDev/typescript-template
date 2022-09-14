@@ -1,0 +1,92 @@
+.popUpBackground{
+    background-color: #b7b4b4cc;
+    position: absolute;
+    height: 100vh;
+    top: 0;
+    width: 100vw;
+    left: 0;
+    display: flex;
+    z-index: 2;
+}
+
+.popup{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    margin-top: 15rem;
+    background-color: white;
+    z-index: 2;
+  width: 80%;
+    border-radius: 15px;
+    box-shadow: 0px 0px 7px 4px #959090;
+    
+}
+
+.popUpWrapper{
+    width: 100%;
+    margin: 20px auto;
+    max-width: 600px;
+}
+.popupHeader{
+    padding: 1em;
+    border-bottom: 1px solid #ededed;
+    background: transparent linear-gradient(0deg, #58A2E1 0%, #4285D4 23%, #2A64C5 49%, #3251A8 100%) 0% 0% no-repeat padding-box;
+    color: white;
+    border-radius: 15px 15px 0px 0px;
+opacity: 1;
+text-align: center;
+font-weight: bold;
+   
+}
+.popUpBackground textarea{
+    width: 100%;
+    border: 1px solid #E0E0E0;
+    margin: 0 auto;
+    border-radius: 5px;
+    height: 100px;
+}
+
+.popUpTextArea{
+    padding: 20px;
+    font-weight: bold;
+}
+
+.popup input{
+    margin-left: 15px;
+}
+
+.input{
+    border:1px solid gray;
+    border-radius: 5px;
+    margin-bottom: 5px;
+   outline: none;
+   padding-left: 2px;
+}
+
+.popupBtnContainer{
+    display: flex;
+    justify-content: center;
+   
+}
+
+.cancelBtn{
+    width: 25%;
+    background: #9A9A9A;
+    padding: 2px;
+    margin: 10px;
+    border-radius: 5px;
+    height: 2.5em;
+    color: white;
+
+}
+
+.saveBtn{
+    width: 25%;
+    background: #3a5ec0;
+    padding: 2px;
+    margin: 10px;
+    border-radius: 5px;
+    height: 2.5em;
+    color: white;
+}
+

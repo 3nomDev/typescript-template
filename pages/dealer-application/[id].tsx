@@ -7,20 +7,27 @@ import { EditDealerApplication, Sidebar } from '../../components';
 import {
   dealerDashboardSelector,
   loadApplicationItem,
+  
 } from '../../features/dealerDashboardSlice';
 import { withAuth } from '../../hocs';
+import { userSelector } from '../../features/authSlice';
 
 const DealerApplication: FC = () => {
   const dispatch = useDispatch();
-
+  const user = useSelector(userSelector);
   const { applicationItem } = useSelector(dealerDashboardSelector);
+const userid = user?.ID
+const statusId= applicationItem?.StatusID
+console.log(statusId)
 
   const router = useRouter();
+  console.log(applicationItem)
 
   const { id } = router.query;
+  const data = {appId: id, userId:userid}
 
   useEffect(
-    () => void (isString(id) && dispatch(loadApplicationItem(id as string))),
+    () => void (isString(id) && dispatch(loadApplicationItem(data))),
     [id]
   );
   return (

@@ -3,13 +3,7 @@ import styles from './Document.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Select from 'react-select';
 import {
-  faArrowLeft,
-  faCar,
-  faCheck,
-  faCheckCircle,
-  faDollarSign,
-  faFile,
-  faFilePdf,
+   faCheckCircle,
   faTimesCircle,
   faTrash,
   faCommentAlt,
@@ -28,10 +22,16 @@ import moment from 'moment';
 
 interface Props {
   item;
+  id;
+  profileType?;
 }
-export const Document: FC<Props> = ({ item }) => {
+export const Document: FC<Props> = ({ item, id, profileType }) => {
+
+
+
   const router = useRouter();
-  const { id } = router.query;
+  
+  const { appid } = router.query;
   const user = useSelector(userSelector);
   const { document } = useSelector(adminDashboardSelector);
   const dispatch = useDispatch();
@@ -77,7 +77,7 @@ export const Document: FC<Props> = ({ item }) => {
       userid: userId,
       ID: item.ID,
     };
-    console.log(data);
+   
     const res = dispatch(getDocument(data));
     const response :any = await res;
     let fileToOpen = response.payload[0];
@@ -169,17 +169,19 @@ export const Document: FC<Props> = ({ item }) => {
           <div>
             <h3>
               Approved by {item.ApprovedByName}{' '}
-              <FontAwesomeIcon
+              {/* <FontAwesomeIcon
                 icon={faTrash as IconProp}
                 className={styles.trash}
                 onClick={() => handleDocStatusChange('delete', item)}
-              />
+              /> */}
             </h3>
           </div>
         ) : (
+   
           <div>
+            
             {' '}
-            <FontAwesomeIcon
+            {profileType !== 'dealer' && <><FontAwesomeIcon
               icon={faCheckCircle as IconProp}
               className={styles.checkMark}
               onClick={() => handleDocStatusChange('approve', item)}
@@ -196,11 +198,14 @@ export const Document: FC<Props> = ({ item }) => {
                 onClick={() => handleDenialNote(item)}
               />
             )}
+            
             <FontAwesomeIcon
               icon={faTrash as IconProp}
               className={styles.trash}
               onClick={() => handleDocStatusChange('delete', item)}
-            />
+            /></>
+            }
+            
           </div>
         )}
       </div>

@@ -48,6 +48,7 @@ export const AdminDashboard: FC<Props> = (props) => {
     void router.push('/admin/incomplete');
   const handleApprovedClick = (): void => void router.push('/admin/approved');
   const handleAwaitingClick = (): void => void router.push('/admin/pending');
+  const handleConditionalClick = (): void => void router.push('/admin/conditional');
   return (
     <div className={styles.wrapper}>
       <DealerHeader title="Admin" />
@@ -64,7 +65,7 @@ export const AdminDashboard: FC<Props> = (props) => {
               <DashboardBox
                 onClick={handleAwaitingClick}
                 icon={faCheck as IconProp}
-                count={stats['Awaiting Approval Applications']}
+                count={stats['Pending Applications']}
                 text="Awaiting Review"
                 type={DashboardBoxEnum.Pending}
               />
@@ -80,6 +81,13 @@ export const AdminDashboard: FC<Props> = (props) => {
                 icon={faMinusCircle as IconProp}
                 count={stats['Incomplete Applications']}
                 text="Incomplete Applications"
+                type={DashboardBoxEnum.Failed}
+              />
+              <DashboardBox
+                onClick={handleConditionalClick}
+                icon={faMinusCircle as IconProp}
+                count={stats['Conditional Approval']}
+                text="Conditional Approval"
                 type={DashboardBoxEnum.Failed}
               />
             </div>

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { Field, Form, Formik } from 'formik';
 import 'react-datepicker/dist/react-datepicker.css';
 import * as Yup from 'yup';
@@ -11,7 +11,8 @@ import { MaskedInput } from '../MaskedInput/MaskedInput';
 import { faArrowRight } from '@fortawesome/fontawesome-free-solid';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-
+import { stateSelector, loadStates } from '../../features/adminDashboardSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const validationSchema = Yup.object({
   FirstName: Yup.string().trim().required('First name is required'),
@@ -27,6 +28,11 @@ const validationSchema = Yup.object({
   MonthlyExpense: Yup.number().required('Monthly expenses is required'),
   EmailAddress: Yup.string().trim().required('EmailAddress is required'),
   CellPhone: Yup.string().trim().required('Phone number is required'),
+  Address: Yup.string().required('Address is required'),
+  Address2: Yup.string(),
+  City: Yup.string().required('City is required'),
+  State: Yup.string().required('State is required'),
+  PostalCode: Yup.number().required('Postal code is required'),
 });
 
 interface Props {
@@ -34,9 +40,16 @@ interface Props {
 }
 
 export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
+  const dispatch = useDispatch();
+
+  const states = useSelector(stateSelector);
+
+  useEffect(() => void dispatch(loadStates()), []);
+
+
   return (
     <div className={styles.wrapper}>
-      <div className={styles.widget} >
+      <div className={styles.widget}>
         <div className={styles.widgetLeft}>
           <ul>
             <li>Eligibility Check</li>
@@ -44,13 +57,18 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
           </ul>
           {/* <div className={styles.tab}>Eligibility check</div>
           <div className={styles.tab}>Dealers</div> */}
-          <div className={styles.widgetDiv}><span >Need assistance call</span><br></br>
-(718)-506-9367</div>
+          <div className={styles.widgetDiv}>
+            <span>Need assistance call</span>
+            <br></br>
+            (718)-506-9367
+          </div>
         </div>
       </div>
       <div className={styles.formWrapper}>
         <span className={styles.formLabel}> Eligibility check</span> <br />
-        <h1>Get <strong>pre-approved</strong> for an auto loan</h1>
+        <h1>
+          Get <strong>pre-approved</strong> for an auto loan
+        </h1>
         <span className={styles.legalName}>
           Provide your legal name as it appears on your driver’s license.
         </span>
@@ -68,6 +86,11 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
             EmailAddress: '',
             CellPhone: '',
             Ip: '',
+            Address: '',
+            Address2: '',
+            City: '',
+            State: '',
+            PostalCode: '',
           }}
           onSubmit={(values) => onSubmit(values)}
         >
@@ -81,6 +104,10 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
               errors.LastName
             );
             const ssnHasErrors = hasErrors(touched.SSN, errors.SSN);
+            const addressHasErrors = hasErrors(touched.Address, errors.Address);
+            const cityHasErrors = hasErrors(touched.City, errors.City);
+            const stateHasErrors = hasErrors(touched.State, errors.State);
+            const postalCodeHasErrors = hasErrors(touched.PostalCode, errors.PostalCode);
             // @ts-ignore
             const DOBHasErrors = hasErrors(touched.DOB, errors.DOB);
             const MonthlyIncomeHasErrors = hasErrors(
@@ -145,7 +172,67 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
                     )}
                   </div>
                 </div>
+                <div className={styles.row} id={styles.addressSection}>
+                  <div className={styles.inputContainer}>
+                    <label htmlFor="Address">Address </label>
+                    <Field
+                      placeholder="Address"
+                      name="Address"
+                      type="text"
+                      className={inputErrorStyle(addressHasErrors)}
+                    />
+                    {addressHasErrors && (
+                      <div className={styles.error}>{errors.Address}</div>
+                    )}
+                  </div>
+                  <div className={styles.inputContainer}>
+                    <label htmlFor="Address2">Address 2</label>
+                    <Field
+                      placeholder="Address 2"
+                      name="Address2"
+                      type="text"
+                      className={styles.input}
+                    />
+                  </div>
+
+                  <div className={styles.inputContainer}>
+                    <label htmlFor="City">City</label>
+                    <Field
+                      name="City"
+                      type="text"
+                      placeholder="City"
+                      className={inputErrorStyle(cityHasErrors)}
+                    />
+                    {cityHasErrors && (
+                      <div className={styles.error}>{errors.City}</div>
+                    )}
+                  </div>
+                  <div className={styles.inputContainer}>
+                    <label htmlFor="State">State</label>
+                    <Field name="State" as="select"  className={inputErrorStyle(stateHasErrors)}>
+                      {states.map((item) => (
+                        <option value={item.Short}>{item.State}</option>
+                      ))}
+                    </Field>
+                    {stateHasErrors && (
+                      <div className={styles.error}>{errors.State}</div>
+                    )}
+                  </div>
+                  <div className={styles.inputContainer}>
+                    <label htmlFor="PostalCode">Postal Code</label>
+                    <Field
+                      name="PostalCode"
+                      type="text"
+                      placeholder="Posal Code"
+                      className={inputErrorStyle(postalCodeHasErrors)}
+                    />
+                    {postalCodeHasErrors && (
+                      <div className={styles.error}>{errors.City}</div>
+                    )}
+                  </div>
+                </div>
                 <div className={styles.row}>
+                  
                   <div className={styles.inputContainer}>
                     <label htmlFor="SSN">SSN#*</label>
                     <Field
@@ -158,15 +245,14 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
                       <div className={styles.error}>{errors.SSN}</div>
                     )}
                   </div>
-                  <div className={styles.inputContainer}>
-                    <label htmlFor="DOB">DOB</label>
-                    <DatePickerField
-                      name="DOB"
-                      className={inputErrorStyle(DOBHasErrors)}
-                    />
-                    {DOBHasErrors && (
-                      <div className={styles.error}>{errors.DOB}</div>
-                    )}
+                  <div className={styles.row}>
+                    <div className={styles.inputContainer}>
+                      <label htmlFor="DOB">DOB</label>
+                      <DatePickerField name="DOB" />
+                      {DOBHasErrors && (
+                        <div className={styles.error}>{errors.DOB}</div>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className={styles.row}>
@@ -208,9 +294,7 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
                 <div className={styles.row}>
                   <div className={styles.inputContainer}>
                     <h1>Contact information</h1>
-                    <span>
-                     Please enter your contact information below.
-                    </span>
+                    <span>Please enter your contact information below.</span>
                   </div>
                 </div>
                 <div className={styles.row}>
@@ -241,7 +325,13 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
 
                 <div className={styles.buttonContainer}>
                   <button type="button">Cancel</button>
-                  <button type="submit" className={styles.approvalBtn}>Get Pre-approved <FontAwesomeIcon icon={faArrowRight as IconProp} style={{fontSize:'20px'}}/> </button>
+                  <button type="submit" className={styles.approvalBtn}>
+                    Get Pre-approved{' '}
+                    <FontAwesomeIcon
+                      icon={faArrowRight as IconProp}
+                      style={{ fontSize: '20px' }}
+                    />{' '}
+                  </button>
                 </div>
               </Form>
             );

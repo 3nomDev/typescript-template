@@ -6,11 +6,18 @@
     border-bottom: .2rem solid #EAE8E8;
     justify-content: space-between;
     position: relative;
+    
 }
 
 .icon {
     font-size: 1.6rem;
     cursor: pointer;
+}
+
+.logOutIcon{
+    margin: 0 15px;
+  
+ 
 }
 
 .profileIcon {
@@ -51,6 +58,8 @@
     padding: .3rem;
     margin-right: 2rem;
     cursor: pointer;
+    box-shadow: 0px 2px 7px .8px rgb(136, 133, 133);
+    border-radius: 5px;
 }
 .notificationPanel {
     position: absolute;

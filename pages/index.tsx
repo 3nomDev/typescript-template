@@ -20,11 +20,13 @@ const IndexPage: React.FC = () => {
   }, []);
 
   const handleSubmit = (values: AddUserPayloadInterface) =>
+  // console.log(values)
     dispatch(addUser({ payload: values })).then((data) => {
       if (data.meta.requestStatus === 'fulfilled') router.push('/approved');
     });
   return (
     <Layout>
+
       <ApplicationForm onSubmit={handleSubmit} />
     </Layout>
   );

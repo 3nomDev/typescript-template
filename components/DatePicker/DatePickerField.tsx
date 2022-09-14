@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 interface GenericPropsInterface {
   name: string;
-  className: any;
+  className?: any;
 }
 
 export const DatePickerField: FC<GenericPropsInterface> = ({

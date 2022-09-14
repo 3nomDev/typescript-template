@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -14,22 +14,26 @@ import {
   faHeartbeat,
   faList
 } from '@fortawesome/fontawesome-free-solid';
-import {faMonitorHeartRate, faFileSignature, faFileCheck, faFileExclamation} from '@fortawesome/pro-regular-svg-icons'
+
+import {faMonitorHeartRate, faFileSignature, faFileCheck, faFileExclamation, faFileXmark, faFileCircleQuestion} from '@fortawesome/pro-regular-svg-icons'
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import styles from '../Sidebar/sidebar.module.css';
 
 export const AdminSidebar: FC = () => {
+
+
+  const [active, setActive] = useState(false)
   return (
     <div className={styles.wrapper}>
       <h3 className={styles.labelDesktop}>TLC Financing</h3>
       <h3 className={styles.labelMobile}>TLC</h3>
-      <Link href="/admin">
+      <Link href="/admin" onClick={() => setActive(true)} >
         <div className={styles.link}>
           <FontAwesomeIcon
             icon={faMonitorHeartRate as IconProp}
             color="white"
-            className={styles.icon1}
+            className={styles.icon}
           />
           <p className={styles.text}>Dashboard</p>
         </div>
@@ -59,11 +63,31 @@ export const AdminSidebar: FC = () => {
       <Link href="/admin/incomplete">
         <div className={styles.link}>
           <FontAwesomeIcon
-            icon={faFileExclamation as IconProp}
+            icon={faFileCircleQuestion as IconProp}
             color="white"
             className={styles.icon}
           />
           <p className={styles.text}>Incomplete</p>
+        </div>
+      </Link>
+      <Link href="/admin/declined">
+        <div className={styles.link}>
+          <FontAwesomeIcon
+            icon={faFileXmark as IconProp}
+            color="white"
+            className={styles.icon}
+          />
+          <p className={styles.text}>Declined Applications</p>
+        </div>
+      </Link>
+      <Link href="/admin/conditional">
+        <div className={styles.link}>
+          <FontAwesomeIcon
+            icon={faFileExclamation as IconProp}
+            color="white"
+            className={styles.icon}
+          />
+          <p className={styles.text}>Conditional Applications</p>
         </div>
       </Link>
 

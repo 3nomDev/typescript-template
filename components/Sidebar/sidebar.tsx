@@ -30,9 +30,10 @@ export const Sidebar: FC = () => {
           <FontAwesomeIcon
             icon={faFileAlt as IconProp}
             color="white"
-            className={styles.icon}
+           
+            className={styles.icon1}
           />
-          <p className={styles.text}> Application Status</p>
+          <p className={styles.text}>Application Status</p>
         </div>
       </Link>
 
@@ -41,9 +42,9 @@ export const Sidebar: FC = () => {
           <FontAwesomeIcon
             icon={faBell as IconProp}
             color="white"
-            className={styles.icon}
+            className={styles.icon1}
           />
-          <p className={styles.text}> Notifications</p>
+          <p className={styles.text}>Notifications</p>
         </div>
       </Link>
     </div>
