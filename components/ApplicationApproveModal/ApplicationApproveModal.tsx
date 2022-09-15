@@ -31,10 +31,11 @@ export const ApplicationApproveModal: FC<Props> = ({ closeModal, onSave }) => {
   };
 
   return (
-    <div className={styles.wrapper}>
+  <div className={styles.popUpBackground}>
+      <div className={styles.wrapper}>
       <div className={styles.header}>
         <h1>Approve application</h1>
-        <span onClick={closeModal}>X</span>
+        {/* <span onClick={closeModal}>X</span> */}
       </div>
       <div className={styles.content}>
         <div className={styles.row}>
@@ -90,5 +91,7 @@ export const ApplicationApproveModal: FC<Props> = ({ closeModal, onSave }) => {
         </div>
       </div>
     </div>
+  </div>
+  
   );
 };

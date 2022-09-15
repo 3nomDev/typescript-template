@@ -29,15 +29,17 @@ const EditDealerPage: FC = () => {
   const { applicationItem, pending, contractsTypes, documentTypes, states } =
     useSelector(adminDashboardSelector);
   const user = useSelector(userSelector);
+  const userid = user?.ID
 
   const dispatch = useDispatch();
 
   const { id } = router.query;
+  const data = {appId: id, userId:userid}
 
   useEffect(() => {
     if (isString(id)) {
       dispatch(loadContractTypes());
-      dispatch(loadApplication(id));
+      dispatch(loadApplication(data));
       dispatch(loadDocumentTypes());
       dispatch(loadStates());
     }

@@ -76,7 +76,11 @@ const validationSchema = Yup.object({
   HowLong: Yup.string(),
   MiddleName: Yup.string(),
   VehicleColor: Yup.string().required('Color is required'),
-  SSN: Yup.string().required('SSN is required')
+  SSN:Yup.string()
+  .required()
+  .matches(/^[0-9]+$/, 'Must be only digits')
+  .min(9, 'Must be exactly 9 digits')
+  .max(9, 'Must be exactly 9 digits'),
 });
 
 interface Props {
@@ -188,10 +192,11 @@ export const EditDealerContent: FC<Props> = ({
       noteData = { id: Number(id), status: application.StatusID };
       dispatch(loadRejectionNotes(noteData));
     }
-  }, []);
+  }, [application]);
 
   useEffect(() => {
     const checkIfClickedOutside = (e) => {
+      console.log('check click event ')
       if (
         showButtonDropdown &&
         ref.current &&
@@ -296,7 +301,7 @@ export const EditDealerContent: FC<Props> = ({
   };
 
   const saveNote = () => {
-    const approved = application.StatusID === 1 ? true : false;
+    const approved = application.StatusID === 3 ? true : false;
     if(!noteOptions){
       dispatch(addNotification({
         type: 'error',
@@ -513,12 +518,11 @@ export const EditDealerContent: FC<Props> = ({
                 errors.VehicleColor
               );
               const ssnHasErrors = hasErrors(
-           
-                errors.SSN,
-                values.SSN.includes('*')
+                touched.SSN,
+                errors.SSN
               );
               onSubmit;
-console.log(errors.SSN)
+
               return (
                 <>
                   <div className={styles.title}>
@@ -744,7 +748,7 @@ console.log(errors.SSN)
                                 name="SSN"
                                 placeholder="Social Security"
                               />
-                              {ssnHasErrors && (<div className={styles.error}>SSN is required </div>)}
+                              {ssnHasErrors && (<div className={styles.error}>{errors.SSN}</div>)}
                             </div>
                             <div className={styles.inputBox}>
                               <p>Date of birth</p>

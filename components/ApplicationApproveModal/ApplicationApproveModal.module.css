@@ -1,12 +1,28 @@
 .wrapper {
-    position: absolute;
-    width: 320px;
-    z-index: 1;
-    top: 100px;
-    left: 48%;
-    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    display: flex;
+    z-index: 2;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 15rem;
     background-color: white;
-    overflow-y: scroll;
+    border-radius: 18px;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+    width: 90%;
+    max-width: 413px;
+    
+}
+.popUpBackground{
+    background-color: #b7b4b4cc;
+    position: absolute;
+    height: 100vh;
+    top: 0;
+    width: 100vw;
+    left: 0;
+    display: flex;
+    z-index: 2;
 }
 
 
@@ -14,10 +30,17 @@
     padding: 15px;
     color: white;
     border-bottom: 1px solid #ededed;
-    background: linear-gradient(to right, #2bb712, #7be15a);
+    background: transparent linear-gradient(0deg, #58A2E1 0%, #4285D4 23%, #2A64C5 49%, #3251A8 100%) 0% 0% no-repeat padding-box;
     padding: 15px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center; 
+    font-weight: bold;
+
+    border-radius: 15px 15px 0px 0px;
+}
+
+.header h1{
+    text-align: center;
 }
 
 .header span {
@@ -30,18 +53,21 @@
     align-items: center;
     justify-content: space-between;
     height: 50%;
+    padding: 3rem
+
 }
 
 
 .circle {
     border-radius: 50%;
     padding: 5px;
-    width: 59px;
-    height: 49px;
+    width: 45px;
+    height: 41px;
+    align-items: center;
     text-align: center;
-    background: linear-gradient(to right, #2bb712, #7be15a);
+    background: transparent linear-gradient(0deg, #58A2E1 0%, #4285D4 23%, #2A64C5 49%, #3251A8 100%) 0% 0% no-repeat padding-box;
     color: white;
-    font-size: 26px;
+    font-size: 20px;
 }
 
 .checkbox {

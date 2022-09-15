@@ -351,6 +351,8 @@ const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
             initialValues={{
               ...initialValues,
               DOB: new Date(initialValues?.DOB ?? '2004-04-04T00:00:00'),
+              SSN:"***-**-" + initialValues?.SSN,
+
             }}
           >
             {({ errors, values, touched, submitForm, initialValues }) => {
