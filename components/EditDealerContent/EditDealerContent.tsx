@@ -196,7 +196,7 @@ export const EditDealerContent: FC<Props> = ({
 
   useEffect(() => {
     const checkIfClickedOutside = (e) => {
-      console.log('check click event ')
+
       if (
         showButtonDropdown &&
         ref.current &&
@@ -311,7 +311,15 @@ export const EditDealerContent: FC<Props> = ({
       return
     }
     if (note !== '' && noteOptions === 'Proposal') {
-      let date = new Date().toISOString();
+      if(paymentProposal.Frequency === ""){
+        dispatch(addNotification({
+          type: 'error',
+          message: 'Please pick a frequency',
+          autoHideDuration: 6000,
+        }))
+      }
+      else{
+         let date = new Date().toISOString();
       let data = {
         ApplicationID: application.ApplicationID,
         DateAdded: date,
@@ -330,6 +338,8 @@ export const EditDealerContent: FC<Props> = ({
       setNotePopup(false);
       setIsProposal(false);
       setPaymentProposal(initialProposal);
+      }
+     
     } else if (note !== '' && noteOptions !== 'Lease') {
       let date = new Date().toISOString();
       let data = {

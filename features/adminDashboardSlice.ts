@@ -1083,12 +1083,16 @@ export const dealerDashboardSlice = createSlice({
       .addCase(getDocument.pending, (state) => {
         state.pending = true;
       })
+
+      .addCase(getDocument.rejected,(state) =>{
+        state.pending = false;
+      })
       .addCase(getDocument.fulfilled, (state, action) => {
         state.pending = false;
         state.document = action.payload;
       })
       .addCase(loadRejectionNotes.pending, (state) => {
-        state.pending = true;
+        // state.pending = true;
       })
       .addCase(loadRejectionNotes.fulfilled, (state, action) => {
         state.pending = false;

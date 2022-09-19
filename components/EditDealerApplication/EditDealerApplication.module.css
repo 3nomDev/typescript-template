@@ -201,6 +201,7 @@ max-width: 50%;
     background: #154F85;
     border-color: #154F85;
     font-size: 1rem;
+    margin: 20px auto;
 }
 .addNoteButton{
     padding: 7px 17px;

@@ -4,6 +4,8 @@ import NoteCheckbox from '../NoteCheckbox';
 import styles from './AddNote.module.css';
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../features/authSlice';
+import Select from 'react-select';
+
 
 interface Props {
   handleNoteOptions: any;
@@ -48,6 +50,11 @@ const AddNotePopup: FC<Props> = ({
     names = ['Lease', 'User', 'Proposal'];
   }
 
+
+const frequencyOptions =['Choose Option' ,'Weekly','Monthly', 'Semi-Monthly' ]
+
+console.log(paymentProposal)
+
   return (
     <div className={styles.popUpBackground}>
       <div className={styles.popUpWrapper}>
@@ -79,8 +86,8 @@ const AddNotePopup: FC<Props> = ({
                 </div>
                 <div>
                   <label>Frequency:</label>
-                  <input
-                    type="text"
+                  <select
+                
                     className={styles.input}
 
                     onChange={(e) =>
@@ -89,7 +96,9 @@ const AddNotePopup: FC<Props> = ({
                         Frequency: e.target.value,
                       })
                     }
-                  />
+                  >
+                    {frequencyOptions.map(option => (<option value={option} onChange={() => console.log(option)}>{option}</option>))}
+                  </select>
                 </div>
                 <div>
                   <label>Payment Frequency:</label>{' '}
@@ -136,7 +145,7 @@ const AddNotePopup: FC<Props> = ({
 
           <div className={styles.popupBtnContainer}>
             <button
-              onClick={() => setAddNote(false)}
+              onClick={() => {setAddNote(false); setIsProposal(false)}}
               className={styles.cancelBtn}
             >
               Cancel

@@ -237,7 +237,7 @@ const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
   let mostRecent = notes[notes.length - 1];
 
   const saveNote = () => {
-    const approved = application.StatusID === 1 ? true : false;
+    const approved = application.StatusID === 3 ? true : false;
     noteData = { id: application.ApplicationID, status: application.StatusID };
     if (!noteOptions) {
       dispatch(
@@ -249,7 +249,28 @@ const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
       );
       return;
     }
-    if (note !== '' && noteOptions !== 'Lease') {
+
+if (note !== '' && !mostRecent ){
+  let date = new Date().toISOString();
+  let data = {
+    ApplicationID: application.ApplicationID,
+    DateAdded: date,
+    Deleted: false,
+    LastUpdated: date,
+    LeaseApproved: null,
+    LeaseNotes: '',
+    StatusID: application.StatusID,
+    UpdatedBy: user.ID,
+    UserNotes: note,
+    UserApproved: null,
+  };
+
+  dispatch(AddNote(data));
+  setNote('');
+  setAddNote(false);
+}
+    
+   else if (note !== '' && noteOptions !== 'Lease') {
       let date = new Date().toISOString();
       let data = {
         ApplicationID: application.ApplicationID,
@@ -775,6 +796,7 @@ const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
                             <Field
                               type="number"
                               name="HowLong"
+                              min="0"
                               placeholder="Time at this address"
                               className={styles.input}
                             />
@@ -790,6 +812,8 @@ const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
                             <p>Monthly Payment</p>
                             <Field
                               type="number"
+                              min="0"
+
                               name="MonthlyHousingPayment"
                               placeholder="Monthly Housing Payment"
                               className={styles.input}
@@ -881,6 +905,8 @@ const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
                               type="number"
                               name="YearsAtCurrentJob"
                               className={styles.input}
+                              min="0"
+
                             />
                             {YearsAtCurrentJobHasErrors && (
                               <div className={styles.error}>

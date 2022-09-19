@@ -23,6 +23,7 @@ import {
   documentSelector,
   getIpAddress,
   ipAddressSelector,
+  loadApplications,
 } from '../../features/dealerDashboardSlice';
 import Select from 'react-select';
 import Document from '../DocumentCard/Document';
@@ -116,7 +117,7 @@ dispatch(getIpAddress())
     
   }, [id]);
 
-  console.log(new Date().getFullYear()-21)
+ 
 
   const decryptFile = (event) => {
     let fileBlob = event.target.result;
@@ -151,7 +152,7 @@ dispatch(getIpAddress())
     });
   };
 
-  console.log(documentToSend);
+
 
   const moveScreen = () => {
     if (typeof window !== 'undefined') {
@@ -201,6 +202,8 @@ dispatch(getIpAddress())
         SSN:values.SSN
       })
     );
+    dispatch(loadApplications(userId))
+    moveScreen();
     router.push("/dealership")
   };
 
@@ -636,6 +639,7 @@ dispatch(getIpAddress())
                           type="number"
                           name="YearsAtCurrentJob"
                           className={styles.input}
+                          min="0"
                         />
                         {yearsAtCompanyHasErrors && (
                           <div className={styles.error}>
@@ -650,6 +654,7 @@ dispatch(getIpAddress())
                           name="MonthlyIncome"
                           placeholder="Monthly Income"
                           className={styles.input}
+                          min="0"
                         />
                         {monthlyIncomeHasErrors && (
                           <div className={styles.error}>
