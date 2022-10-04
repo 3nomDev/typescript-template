@@ -23,6 +23,7 @@ export const DealerRow: FC<Props> = ({
   Status,
   onEditClick,
   isShown,
+  ApprovalCode
 }) => {
   if (!isShown) return null;
 
@@ -35,7 +36,8 @@ export const DealerRow: FC<Props> = ({
 
   return (
     <tr className={styles.tableRow}>
-      <td>{FirstName.concat(` ${LastName}`)}</td>
+      <td>{FirstName?.concat(` ${LastName}`)}</td>
+   {ApprovalCode &&    <td>{ApprovalCode}</td>}
       <td>{ApplicationID}</td>
       <td>{CellPhone}</td>
       <td>

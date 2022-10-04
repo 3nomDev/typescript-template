@@ -15,11 +15,14 @@ const AdminNoteItem = ({ note }) => {
   const createProposalData = (data) => {
     let content = [];
     for (const [key, value] of Object.entries(data)) {
-      content.push(
+      if(value){
+         content.push(
         <ol>
           <span className={styles.proposalKey}>{key} </span>: {value}
         </ol>
       );
+      }
+     
     }
     return content;
   };

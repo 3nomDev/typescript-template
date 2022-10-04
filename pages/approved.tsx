@@ -12,6 +12,8 @@ const Approved: FC = () => {
   const dispatch = useDispatch();
 
   const approvalCode = useSelector(approvalCodeSelector);
+
+  console.log(approvalCode)
   const applicationDealers = useSelector(applicationDealersSelector);
 
   useEffect(() => void dispatch(loadApplicationDealers()), []);
@@ -36,13 +38,11 @@ const Approved: FC = () => {
             <h1>Dealers</h1>
             <p>List of partner and affiliates.</p>
             <span>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+             *** Please save this approval code and bring to one of the dealers in the list below to get started. ***
             </span>
             <div className={styles.greyBar}>
-              Your approval code
-              {approvalCode && typeof approvalCode === 'number' && (
-                <p>{approvalCode}</p>
-              )}
+              Your approval code:
+             <p>{approvalCode}</p>
             </div>
           </div>
           <div className={styles.dealerContent}>

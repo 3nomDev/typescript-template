@@ -67,7 +67,7 @@ export const addUser = createAsyncThunk(
         })
       );
     }
-
+console.log(response)
     return response[0].ApprovalCode;
   }
 );

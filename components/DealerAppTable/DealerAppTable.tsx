@@ -15,9 +15,11 @@ import {
   setApplicationsAction,
 } from '../../features/dealerDashboardSlice';
 import { userSelector } from '../../features/authSlice';
+import AssignCustomerToDealer from '../AssignCustomerToDealer/AssignCustomerToDealer';
 
 export const DealerAppTable: FC = () => {
   const [searchParam, setSearchParam] = useState<string>('');
+  const [assignCustomer, setAssignCustomer] = useState(false)
 
   const dispatch = useDispatch();
 
@@ -37,6 +39,7 @@ export const DealerAppTable: FC = () => {
         item.VehicleModel.toLowerCase().includes(searchParam) ||
         String(item.VehicleYear).toLowerCase().includes(searchParam) ||
         item.VIN.toLowerCase().includes(searchParam) ||
+        item.ApprovalCode.toLowerCase().includes(searchParam) ||
         item.Status.toLowerCase().includes(searchParam)
       ) {
         return { ...item, isShown: true };
@@ -74,14 +77,19 @@ export const DealerAppTable: FC = () => {
           placeholder="Search..."
           value={searchParam}
           onChange={handleSearchChange}
-        />
+        /> <div>
+        <button onClick={() => setAssignCustomer(!assignCustomer)} className={styles.assignBtn}>Register Customer</button>
       </div>
+      </div>
+     
       <div className={styles.overflow}>
+        {assignCustomer && <AssignCustomerToDealer setAssignCustomer = {setAssignCustomer}/>}
         <table className={styles.table}>
           <thead>
             <tr className={styles.tableHeader}>
               <th>Name</th>
               <th>Approval code</th>
+              <th>App ID</th>
               <th>Phone</th>
               <th>Vehicle</th>
               <th>Amount</th>

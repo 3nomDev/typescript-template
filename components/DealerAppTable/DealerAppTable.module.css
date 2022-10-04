@@ -32,7 +32,10 @@
 .searchbarContainer {
     background-color: #f2f2f2;
     padding: 20px;
-
+    display: flex;
+    
+    flex-direction: column;
+    align-items: center;
 }
 .searchbar {
     border: 1px solid #ccc;
@@ -71,4 +74,18 @@ font-weight: 400;
 
 .overflow {
     overflow-x: auto;
+}
+
+.assignBtn{
+    background-color: #154F85;
+    color: white;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+@media (min-width:1024px){
+    .searchbarContainer{
+       flex-direction: row;
+    }
 }

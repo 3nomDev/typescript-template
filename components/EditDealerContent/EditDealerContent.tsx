@@ -76,11 +76,11 @@ const validationSchema = Yup.object({
   HowLong: Yup.string(),
   MiddleName: Yup.string(),
   VehicleColor: Yup.string().required('Color is required'),
-  SSN:Yup.string()
-  .required()
-  .matches(/^[0-9]+$/, 'Must be only digits')
-  .min(9, 'Must be exactly 9 digits')
-  .max(9, 'Must be exactly 9 digits'),
+  SSN: Yup.string()
+    .required()
+    .matches(/^[0-9]+$/, 'Must be only digits')
+    .min(9, 'Must be exactly 9 digits')
+    .max(9, 'Must be exactly 9 digits'),
 });
 
 interface Props {
@@ -140,7 +140,8 @@ export const EditDealerContent: FC<Props> = ({
   const [paymentProposal, setPaymentProposal] = useState({
     Amount: '',
     Frequency: '',
-    PaymentFrequency: '',
+    PaymentDay: '',
+    SecondPaymentDay: '',
     NumberOfPayments: '',
   });
   const [inputIsChecked, setInputIsChecked] = useState(false);
@@ -148,7 +149,7 @@ export const EditDealerContent: FC<Props> = ({
   const [initialProposal] = useState({
     Amount: '',
     Frequency: '',
-    PaymentFrequency: '',
+    PaymentDay: '',
     NumberOfPayments: '',
   });
 
@@ -196,7 +197,6 @@ export const EditDealerContent: FC<Props> = ({
 
   useEffect(() => {
     const checkIfClickedOutside = (e) => {
-
       if (
         showButtonDropdown &&
         ref.current &&
@@ -268,7 +268,10 @@ export const EditDealerContent: FC<Props> = ({
   };
 
   const handleNoteOptions = (e: any, key) => {
-   setNoteOptions(e.target.value)
+   if(e.target.value !== 'Proposal'){
+    setIsProposal(false)
+   }
+    setNoteOptions(e.target.value);
   };
 
   const saveDenialNote = () => {
@@ -302,44 +305,50 @@ export const EditDealerContent: FC<Props> = ({
 
   const saveNote = () => {
     const approved = application.StatusID === 3 ? true : false;
-    if(!noteOptions){
-      dispatch(addNotification({
-        type: 'error',
-        message: 'Please pick what type of message this is',
-        autoHideDuration: 6000,
-      }))
-      return
+    if (!noteOptions) {
+      dispatch(
+        addNotification({
+          type: 'error',
+          message: 'Please pick what type of message this is',
+          autoHideDuration: 6000,
+        })
+      );
+      return;
     }
     if (note !== '' && noteOptions === 'Proposal') {
-      if(paymentProposal.Frequency === ""){
-        dispatch(addNotification({
-          type: 'error',
-          message: 'Please pick a frequency',
-          autoHideDuration: 6000,
-        }))
-      }
-      else{
-         let date = new Date().toISOString();
-      let data = {
-        ApplicationID: application.ApplicationID,
-        DateAdded: date,
-        Deleted: false,
-        LastUpdated: date,
-        LeaseApproved: approved,
-        LeaseNotes: paymentProposal,
-        StatusID: application.StatusID,
-        UpdatedBy: user.ID,
-        UserNotes: '',
-        UserApproved: approved,
-      };
+      if (
+        paymentProposal.Frequency === '' ||
+        paymentProposal.Frequency === 'Choose Option'
+      ) {
+        dispatch(
+          addNotification({
+            type: 'error',
+            message: 'Please pick a frequency',
+            autoHideDuration: 6000,
+          })
+        );
+        return;
+      } else {
+        let date = new Date().toISOString();
+        let data = {
+          ApplicationID: application.ApplicationID,
+          DateAdded: date,
+          Deleted: false,
+          LastUpdated: date,
+          LeaseApproved: approved,
+          LeaseNotes: paymentProposal,
+          StatusID: application.StatusID,
+          UpdatedBy: user.ID,
+          UserNotes: '',
+          UserApproved: approved,
+        };
 
-      dispatch(AddRejectionNote(data));
-      setNote('');
-      setNotePopup(false);
-      setIsProposal(false);
-      setPaymentProposal(initialProposal);
+        dispatch(AddRejectionNote(data));
+        setNote('');
+        setNotePopup(false);
+        setIsProposal(false);
+        setPaymentProposal(initialProposal);
       }
-     
     } else if (note !== '' && noteOptions !== 'Lease') {
       let date = new Date().toISOString();
       let data = {
@@ -380,6 +389,10 @@ export const EditDealerContent: FC<Props> = ({
       return;
     }
   };
+
+  const calcFinanced = (num1, num2) =>{
+    return num1- num2;
+  }
 
 
   const denailNotePopup = (
@@ -466,10 +479,9 @@ export const EditDealerContent: FC<Props> = ({
     </ul>
   );
 
- 
   return (
     <div className={styles.wrapper}>
-      {showNotes && notes.length >0  && (
+      {showNotes && notes.length > 0 && (
         <AdminNotes notes={notes} setShowNotes={setShowNotes} />
       )}
       {isApproveModalShown && (
@@ -506,10 +518,16 @@ export const EditDealerContent: FC<Props> = ({
             initialValues={{
               ...application,
               DOB: new Date(application?.DOB ?? '2004-04-04T00:00:00'),
-              SSN:"***-**-" + application?.SSN,
+              SSN: '***-**-' + application?.SSN,
             }}
           >
-            {({ submitForm, touched, errors, values }) => {
+            {({ submitForm, touched, errors, values, setFieldValue }) => {
+                  useEffect(()=>{
+                
+                    setFieldValue("AmountFinanced", calcFinanced(values?.PurchasePrice, values?.DepositFloat)) 
+                   
+     
+                   },[values.DepositFloat, touched.DepositFloat, setFieldValue])
               const vinHasErrors = hasErrors(touched.VIN, errors.VIN);
               const firstNameHasErrors = hasErrors(
                 touched.FirstName,
@@ -527,10 +545,7 @@ export const EditDealerContent: FC<Props> = ({
                 touched.VehicleColor,
                 errors.VehicleColor
               );
-              const ssnHasErrors = hasErrors(
-                touched.SSN,
-                errors.SSN
-              );
+              const ssnHasErrors = hasErrors(touched.SSN, errors.SSN);
               onSubmit;
 
               return (
@@ -545,7 +560,6 @@ export const EditDealerContent: FC<Props> = ({
                       <span className={statusStyle}>{application?.Status}</span>
                       <span>{`${application?.FirstName} ${application?.LastName}`}</span>
                     </div>
-                   
                   </div>
                   {notePopup && (
                     <AddNotePopup
@@ -758,7 +772,9 @@ export const EditDealerContent: FC<Props> = ({
                                 name="SSN"
                                 placeholder="Social Security"
                               />
-                              {ssnHasErrors && (<div className={styles.error}>{errors.SSN}</div>)}
+                              {ssnHasErrors && (
+                                <div className={styles.error}>{errors.SSN}</div>
+                              )}
                             </div>
                             <div className={styles.inputBox}>
                               <p>Date of birth</p>

@@ -103,7 +103,8 @@ console.log(applications)
             <thead className={styles.tableHeader}>
               <tr>
                 <th>Name</th>
-                <th>Approval code</th>
+            {applications[0]?.ApprovalCode &&  <th>Approval Code</th>}
+                <th>App ID</th>
                 <th>Phone</th>
                 <th>Vehicle</th>
                 <th>Amount</th>

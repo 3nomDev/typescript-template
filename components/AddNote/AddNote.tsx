@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 import { userSelector } from '../../features/authSlice';
 import Select from 'react-select';
 
-
 interface Props {
   handleNoteOptions: any;
   setAddNote;
@@ -30,12 +29,10 @@ const AddNotePopup: FC<Props> = ({
   setPaymentProposal,
   isProposal,
   setIsProposal,
-  noteOptions
-
+  noteOptions,
 }) => {
   const user = useSelector(userSelector);
 
-  console.log(noteOptions)
   const handleformchange = (e) => {
     if (e.target.checked) {
       setIsProposal(true);
@@ -50,10 +47,20 @@ const AddNotePopup: FC<Props> = ({
     names = ['Lease', 'User', 'Proposal'];
   }
 
-
-const frequencyOptions =['Choose Option' ,'Weekly','Monthly', 'Semi-Monthly' ]
-
-console.log(paymentProposal)
+  const frequencyOptions = ['Choose Option', 'Weekly', 'BI-Weekly', 'Monthly'];
+  const days = 30;
+  const dayOfWeek = [
+    'Choose Option',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+  ];
+  let dayOptions = ['Choose Option'];
+  for (let i = 1; i <= days; i++) {
+    dayOptions.push(i.toString());
+  }
 
   return (
     <div className={styles.popUpBackground}>
@@ -65,7 +72,10 @@ console.log(paymentProposal)
               <>
                 {' '}
                 <label>Message</label>{' '}
-                <textarea className={styles.input} onChange={(e) => setNote(e.target.value)} />
+                <textarea
+                  className={styles.input}
+                  onChange={(e) => setNote(e.target.value)}
+                />
               </>
             )}
             {isProposal && (
@@ -75,7 +85,7 @@ console.log(paymentProposal)
                   <input
                     type="text"
                     className={styles.input}
-                 autoFocus
+                    autoFocus
                     onChange={(e) =>
                       setPaymentProposal({
                         ...paymentProposal,
@@ -87,9 +97,7 @@ console.log(paymentProposal)
                 <div>
                   <label>Frequency:</label>
                   <select
-                
                     className={styles.input}
-
                     onChange={(e) =>
                       setPaymentProposal({
                         ...paymentProposal,
@@ -97,30 +105,89 @@ console.log(paymentProposal)
                       })
                     }
                   >
-                    {frequencyOptions.map(option => (<option value={option} onChange={() => console.log(option)}>{option}</option>))}
+                    {frequencyOptions.map((option) => (
+                      <option
+                        value={option}
+                        onChange={() => console.log(option)}
+                      >
+                        {option}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div>
-                  <label>Payment Frequency:</label>{' '}
-                  <input
-                    type="text"
+                  {paymentProposal.Frequency !== 'BI-Weekly' ? (
+                    <label>Payment Day:</label>
+                  ) : (
+                    <label>First Payment Day:</label>
+                  )}
+                  <select
                     className={styles.input}
-
                     onChange={(e) =>
                       setPaymentProposal({
                         ...paymentProposal,
-                        PaymentFrequency: e.target.value,
+                        PaymentDay: e.target.value,
                       })
                     }
-                  />
+                  >
+                    {paymentProposal.Frequency === 'Weekly'
+                      ? dayOfWeek.map((option) => (
+                          <option
+                            value={option}
+                            onChange={() => console.log(option)}
+                          >
+                            {option}
+                          </option>
+                        ))
+                      : dayOptions.map((option) => (
+                          <option
+                            value={option}
+                            onChange={() => console.log(option)}
+                          >
+                            {option}
+                          </option>
+                        ))}
+                  </select>
                 </div>
+
+                {paymentProposal.Frequency === 'BI-Weekly' && (
+                  <div>
+                    <label>Second Payment Day:</label>
+                    <select
+                      className={styles.input}
+                      onChange={(e) =>
+                        setPaymentProposal({
+                          ...paymentProposal,
+                          SecondPaymentDay: e.target.value,
+                        })
+                      }
+                    >
+                      {paymentProposal.Frequency === 'Weekly'
+                        ? dayOfWeek.map((option) => (
+                            <option
+                              value={option}
+                              onChange={() => console.log(option)}
+                            >
+                              {option}
+                            </option>
+                          ))
+                        : dayOptions.map((option) => (
+                            <option
+                              value={option}
+                              onChange={() => console.log(option)}
+                            >
+                              {option}
+                            </option>
+                          ))}
+                    </select>
+                  </div>
+                )}
                 <div>
                   {' '}
                   <label>Number of Payments:</label>
                   <input
                     type="text"
                     className={styles.input}
-
                     onChange={(e) =>
                       setPaymentProposal({
                         ...paymentProposal,
@@ -140,22 +207,20 @@ console.log(paymentProposal)
                   handleformchange={handleformchange}
                 />
               ))}
-         
           </div>
 
           <div className={styles.popupBtnContainer}>
             <button
-              onClick={() => {setAddNote(false); setIsProposal(false)}}
+              onClick={() => {
+                setAddNote(false);
+             {isProposal && setIsProposal(false);}
+              }}
               className={styles.cancelBtn}
             >
               Cancel
             </button>
 
-            <button
-              onClick={saveNote}
-              className={styles.saveBtn}
-             
-            >
+            <button onClick={saveNote} className={styles.saveBtn}>
               Save
             </button>
           </div>

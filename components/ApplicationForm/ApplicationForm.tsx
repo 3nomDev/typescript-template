@@ -42,7 +42,8 @@ interface Props {
 export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
   const dispatch = useDispatch();
 
-  const states = useSelector(stateSelector);
+  let states = useSelector(stateSelector);
+
 
   useEffect(() => void dispatch(loadStates()), []);
 

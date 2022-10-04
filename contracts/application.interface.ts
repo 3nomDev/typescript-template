@@ -5,6 +5,7 @@ export interface ApplicationInterface {
   AmountFinanced: number;
   ApplicationGUID: string;
   ApplicationID: number;
+  ApprovalCode:string;
   CellPhone: string;
   City: string;
   Consent: boolean;

@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Field, Form, Formik } from 'formik';
+import { Field, Form, Formik, useFormik } from 'formik';
 import * as Yup from 'yup';
 import cx from 'classnames';
 import { cs, StyleType } from '@rnw-community/shared';
@@ -104,6 +104,7 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
   let loggeduser = useSelector(userSelector);
   const user = useSelector(userSelector);
   const documents = useSelector(documentSelector);
+ 
   const userId = user?.ID;
   const statusStyle = {
     'Awaiting Approval': styles.orange,
@@ -115,7 +116,9 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
   
   const pending = useSelector(pendingSelector);
   useEffect(() => void dispatch(loadStates()), []);
+  
 const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
+
   console.log(initialValues);
   let noteData = {};
   // useEffect(() => {
@@ -127,6 +130,10 @@ const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
   //     dispatch(loadRejectionNotes(noteData));
   //   }
   // }, [application]);
+
+  const calcFinanced = (num1, num2) =>{
+    return num1- num2;
+  }
 
   const handleSubmit = (values: Partial<ApplicationInterface>): void => {
     console.log(values);
@@ -229,6 +236,7 @@ const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
   };
 
   const handleNoteOptions = (e: any) => {
+   
     if (e.target.checked) {
       setNoteOptions(e.target.value);
     }
@@ -369,14 +377,23 @@ if (note !== '' && !mostRecent ){
             validateOnBlur
             onSubmit={handleSubmit}
             enableReinitialize
+           
             initialValues={{
               ...initialValues,
               DOB: new Date(initialValues?.DOB ?? '2004-04-04T00:00:00'),
               SSN:"***-**-" + initialValues?.SSN,
+              // AmountFinanced : calcFinanced(initialValues?.PurchasePrice, initialValues?.DepositFloat)
 
             }}
           >
-            {({ errors, values, touched, submitForm, initialValues }) => {
+            {({ errors, values, touched, submitForm, initialValues, setFieldValue, validateOnChange }) => {
+
+              useEffect(()=>{
+                
+               setFieldValue("AmountFinanced", calcFinanced(values?.PurchasePrice, values?.DepositFloat)) 
+              
+
+              },[values.DepositFloat, touched.DepositFloat, setFieldValue])
               const firstNameHasErrors = hasErrors(
                 touched.FirstName,
                 errors.FirstName
@@ -779,6 +796,7 @@ if (note !== '' && !mostRecent ){
                               placeholder="Zip Code"
                               className={styles.select}
                             >
+                              <option value="">Choose an option</option>
                               <option value="Rent">Rent</option>
                               <option value="Own">Own</option>
                               <option value="ParentsBasement">
@@ -1084,6 +1102,8 @@ if (note !== '' && !mostRecent ){
                               name="DepositFloat"
                               className={styles.input}
                               placeholder="Deposit"
+                              validateOnBlur
+                             
                             />
                             {DepositHasErrors && (
                               <div className={styles.error}>
@@ -1099,6 +1119,8 @@ if (note !== '' && !mostRecent ){
                               name="AmountFinanced"
                               className={styles.input}
                               placeholder="Amount financed"
+                            
+                              
                             />
                             {AmountFinancedHasErrors && (
                               <div className={styles.error}>

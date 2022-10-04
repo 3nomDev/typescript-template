@@ -6,12 +6,11 @@ import {
   NotificationInterface,
   DocumentInterface,
   DocumentTypeInterface,
-  RejectionNotesInterface
+  RejectionNotesInterface,
 } from '../contracts';
 import { RootState } from '../app/store';
 import load = Simulate.load;
 import { addNotification } from './notifications/notificationSlice';
-
 
 type DashboardState = {
   applications: ApplicationInterface[];
@@ -20,10 +19,10 @@ type DashboardState = {
   pending: boolean;
   error: boolean;
   errorMessage: string;
-  remoteIp:{};
+  remoteIp: {};
   documents: DocumentInterface[];
   documentTypes: DocumentTypeInterface[];
-  RejectionNotes:RejectionNotesInterface[]
+  RejectionNotes: RejectionNotesInterface[];
 };
 
 const initialState: DashboardState = {
@@ -35,10 +34,8 @@ const initialState: DashboardState = {
   errorMessage: '',
   documentTypes: [],
   documents: [],
-  remoteIp:{},
-  RejectionNotes:[],
-
-
+  remoteIp: {},
+  RejectionNotes: [],
 };
 
 export const loadDocumentTypes = createAsyncThunk(
@@ -107,12 +104,10 @@ export const getDocuments = createAsyncThunk(
 export const getIpAddress = createAsyncThunk(
   'dashboard/getIpAddress',
   async () => {
-    
     const res = await fetch('https://api.ipify.org?format=json', {
       method: 'GET',
-  
     });
-const response = await res.json()
+    const response = await res.json();
     return response;
   }
 );
@@ -134,8 +129,8 @@ export const loadApplications = createAsyncThunk(
 
 export const loadApplicationItem = createAsyncThunk(
   'dashboard/loadApplicationItem',
-  async (data:any, thunkApi) => {
-    console.log( data)
+  async (data: any, thunkApi) => {
+    console.log(data);
     const res = await fetch('https://tlcfin.prestoapi.com/api/application', {
       method: 'POST',
       headers: {
@@ -145,14 +140,13 @@ export const loadApplicationItem = createAsyncThunk(
       body: JSON.stringify({ id: Number(data.appId || data.id) }),
     });
     const response: ApplicationInterface[] = await res.json();
-    console.log(response[0])
-    if(res.status === 200 && data.appId){
-    let dataToSend =   {userid: data.userId, ApplicationID: data?.appId}
-    let noteData ={id:data?.appId, status: response[0].StatusID}
-    console.log(noteData)
-      thunkApi.dispatch(getDocuments(dataToSend))
-      thunkApi. dispatch(loadRejectionNotes(noteData));
-      
+    console.log(response[0]);
+    if (res.status === 200 && data.appId) {
+      let dataToSend = { userid: data.userId, ApplicationID: data?.appId };
+      let noteData = { id: data?.appId, status: response[0].StatusID };
+      console.log(noteData);
+      thunkApi.dispatch(getDocuments(dataToSend));
+      thunkApi.dispatch(loadRejectionNotes(noteData));
     }
 
     return response[0];
@@ -161,8 +155,8 @@ export const loadApplicationItem = createAsyncThunk(
 
 export const updateApplication = createAsyncThunk(
   'dashboard/updateApplication',
-  async (payload:any, thunkApi) => {
-    console.log(payload)
+  async (payload: any, thunkApi) => {
+    console.log(payload);
     const res = await fetch(
       'https://tlcfin.prestoapi.com/api/updateapplication',
       {
@@ -176,10 +170,10 @@ export const updateApplication = createAsyncThunk(
     );
     const response: any[] = await res.json();
 
-    if(res.status === 200){
-      const appId = payload.ApplicationID
-      console.log(appId)
-      thunkApi.dispatch(loadApplicationItem({id:payload.ApplicationID}))
+    if (res.status === 200) {
+      const appId = payload.ApplicationID;
+      console.log(appId);
+      thunkApi.dispatch(loadApplicationItem({ id: payload.ApplicationID }));
     }
 
     if (response[0]?.Message === 'Success') {
@@ -196,18 +190,15 @@ export const updateApplication = createAsyncThunk(
 export const addApplication = createAsyncThunk(
   'dashboard/addApplication',
   async (payload: AddApplicationArgs, thunkApi) => {
-    console.log(payload)
-    const res = await fetch(
-      'https://tlcfin.prestoapi.com/api/addapplication',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-        body: JSON.stringify(payload),
-      }
-    );
+    console.log(payload);
+    const res = await fetch('https://tlcfin.prestoapi.com/api/addapplication', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+      body: JSON.stringify(payload),
+    });
     const response: any[] = await res.json();
 
     if (res.status === 200) {
@@ -241,11 +232,10 @@ export const loadNotifications = createAsyncThunk(
   }
 );
 
-
 export const loadRejectionNotes = createAsyncThunk(
   'dashboard/loadRejectionNotes',
-  async (data:{}) => {
-    console.log('********************getting notes', data)
+  async (data: {}) => {
+    console.log('********************getting notes', data);
     const res = await fetch('https://tlcfin.prestoapi.com/api/notes', {
       method: 'POST',
       headers: {
@@ -262,10 +252,10 @@ export const loadRejectionNotes = createAsyncThunk(
 
 export const AddNote = createAsyncThunk(
   'dashboard/AddNote',
-  async (data:any, thunkApi) => {
-   let noteData = { id: data.ApplicationID, status: data.StatusID };
+  async (data: any, thunkApi) => {
+    let noteData = { id: data.ApplicationID, status: data.StatusID };
 
-    console.log('********************sending note********************', data)
+    console.log('********************sending note********************', data);
     const res = await fetch('https://tlcfin.prestoapi.com/api/addnote', {
       method: 'POST',
       headers: {
@@ -274,19 +264,45 @@ export const AddNote = createAsyncThunk(
       },
       body: JSON.stringify(data),
     });
-    
+
     const results = await res.json();
-    console.log(results)
- if(res.status === 200){
- 
-  thunkApi.dispatch(loadRejectionNotes(noteData))
- }
+    console.log(results);
+    if (res.status === 200) {
+      thunkApi.dispatch(loadRejectionNotes(noteData));
+    }
     return results;
-   
   }
 );
+export const AssignToDealer = createAsyncThunk(
+  'dashboard/assignToDealer',
+  async (data: any, thunkApi) => {
+    console.log(data)
+    const res = await fetch('https://tlcfin.prestoapi.com/api/assigndealer', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+      body: JSON.stringify(data),
+    });
+ if (res.status === 200) {
+      thunkApi.dispatch(loadApplications(data.LastUpdatedBy));
+    }
+    if(res.status !== 200){
+      thunkApi.dispatch(
+        addNotification({
+          type: 'error',
+          message: 'Error with approval code',
+          autoHideDuration: 6000,
+        })
+      );
+    }
 
-
+    const results = await res.json();
+   
+    return results;
+  }
+);
 
 export const dealerDashboardSlice = createSlice({
   name: 'dashboard',
@@ -387,49 +403,55 @@ export const dealerDashboardSlice = createSlice({
         state.documentTypes = payload;
         // state.pending = false;
       })
-      .addCase(getDocuments.pending, (state) =>{
+      .addCase(getDocuments.pending, (state) => {
         // state.pending = true;
       })
-      .addCase(getDocuments.rejected, (state) =>{
+      .addCase(getDocuments.rejected, (state) => {
         state.error = true;
         state.errorMessage = 'Loading documents failed';
       })
-      .addCase(getDocuments.fulfilled, (state,{payload}) =>{
+      .addCase(getDocuments.fulfilled, (state, { payload }) => {
         state.pending = false;
-        state.documents = payload
+        state.documents = payload;
       })
-      .addCase(getIpAddress.pending, (state)=>{
-state.pending = true
-      })
-      .addCase(getIpAddress.fulfilled, (state,{ payload})=>{
-state.pending = false;
-state.remoteIp = payload.ip
-      })
-      .addCase(uploadDocument.pending, (state) =>{
+      .addCase(getIpAddress.pending, (state) => {
         state.pending = true;
       })
-      .addCase(uploadDocument.fulfilled, (state) =>{
+      .addCase(getIpAddress.fulfilled, (state, { payload }) => {
+        state.pending = false;
+        state.remoteIp = payload.ip;
+      })
+      .addCase(uploadDocument.pending, (state) => {
+        state.pending = true;
+      })
+      .addCase(uploadDocument.fulfilled, (state) => {
         state.pending = false;
       })
 
-      .addCase(loadRejectionNotes.pending, (state) =>{
+      .addCase(loadRejectionNotes.pending, (state) => {
         // state.pending = true
       })
-      .addCase(loadRejectionNotes.fulfilled, (state, {payload}) =>{
+      .addCase(loadRejectionNotes.fulfilled, (state, { payload }) => {
         // state.pending = false
-        state.RejectionNotes = payload
+        state.RejectionNotes = payload;
       })
       .addCase(AddNote.pending, (state) => {
         state.pending = true;
-        
       })
       .addCase(AddNote.fulfilled, (state) => {
         state.pending = false;
-        
       })
-      
+      .addCase(AssignToDealer.pending, (state) => {
+        state.pending = true;
+      })
+      .addCase(AssignToDealer.rejected, (state, action) => {
+        state.pending = false;
+        state.errorMessage = 'Error with approval code';
+      })
+      .addCase(AssignToDealer.fulfilled, (state) => {
+        state.pending = false;
+      });
   },
-  
 });
 
 export const { setApplicationsAction, setNotificationsAction } =
@@ -447,25 +469,19 @@ export const notificationsSelector = (
 
 export const singleApplicationSelector = (
   state: RootState
-) : ApplicationInterface => state.dashboard.applicationItem
+): ApplicationInterface => state.dashboard.applicationItem;
 
 export const documentTypesSelector = (
-  state:RootState
+  state: RootState
 ): DocumentTypeInterface[] => state.dashboard.documentTypes;
 
-export const documentSelector = (
-  state:RootState
-): DocumentInterface[] => state.dashboard.documents;
+export const documentSelector = (state: RootState): DocumentInterface[] =>
+  state.dashboard.documents;
 
-export const ipAddressSelector = (
-  state:RootState
-) => state.dashboard.remoteIp;
+export const ipAddressSelector = (state: RootState) => state.dashboard.remoteIp;
 
-export const notesSelector = (
-  state:RootState
-) => state.dashboard.RejectionNotes;
-export const pendingSelector = (
-  state:RootState
-) => state.dashboard.pending;
+export const notesSelector = (state: RootState) =>
+  state.dashboard.RejectionNotes;
+export const pendingSelector = (state: RootState) => state.dashboard.pending;
 
 export default dealerDashboardSlice.reducer;
