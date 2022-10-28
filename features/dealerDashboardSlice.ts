@@ -23,6 +23,7 @@ type DashboardState = {
   documents: DocumentInterface[];
   documentTypes: DocumentTypeInterface[];
   RejectionNotes: RejectionNotesInterface[];
+  VehicleInfo:[]
 };
 
 const initialState: DashboardState = {
@@ -36,6 +37,7 @@ const initialState: DashboardState = {
   documents: [],
   remoteIp: {},
   RejectionNotes: [],
+  VehicleInfo : []
 };
 
 export const loadDocumentTypes = createAsyncThunk(
@@ -105,6 +107,16 @@ export const getIpAddress = createAsyncThunk(
   'dashboard/getIpAddress',
   async () => {
     const res = await fetch('https://api.ipify.org?format=json', {
+      method: 'GET',
+    });
+    const response = await res.json();
+    return response;
+  }
+);
+export const getVehicleInfoByVin = createAsyncThunk(
+  'dashboard/getVehicleInfoByVin',
+  async (vin:string) => {
+    const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${vin}?format=json`, {
       method: 'GET',
     });
     const response = await res.json();
@@ -304,6 +316,8 @@ export const AssignToDealer = createAsyncThunk(
   }
 );
 
+
+
 export const dealerDashboardSlice = createSlice({
   name: 'dashboard',
   initialState,
@@ -357,10 +371,13 @@ export const dealerDashboardSlice = createSlice({
       })
       .addCase(loadApplicationItem.pending, (state) => {
         state.pending = true;
+        state.VehicleInfo = [];
       })
       .addCase(loadApplicationItem.fulfilled, (state, { payload }) => {
         // state.pending = false;
         state.applicationItem = payload;
+        state.VehicleInfo = [];
+
       })
       .addCase(loadApplicationItem.rejected, (state) => {
         state.pending = false;
@@ -450,7 +467,15 @@ export const dealerDashboardSlice = createSlice({
       })
       .addCase(AssignToDealer.fulfilled, (state) => {
         state.pending = false;
-      });
+      })
+      // .addCase(getVehicleInfoByVin.pending, (state) =>{
+      //   state.pending = true
+      // })
+      .addCase(getVehicleInfoByVin.fulfilled, (state, {payload}) =>{
+        // state.pending = false;
+        state.VehicleInfo = payload.Results[0]
+      })
+      
   },
 });
 
@@ -479,6 +504,8 @@ export const documentSelector = (state: RootState): DocumentInterface[] =>
   state.dashboard.documents;
 
 export const ipAddressSelector = (state: RootState) => state.dashboard.remoteIp;
+
+export const vehicleInfoSelector = (state: RootState) => state.dashboard.VehicleInfo;
 
 export const notesSelector = (state: RootState) =>
   state.dashboard.RejectionNotes;

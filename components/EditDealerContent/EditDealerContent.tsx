@@ -14,6 +14,8 @@ import {
   faTimes,
   faChevronDown,
   faCaretDown,
+  
+  
 } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
@@ -1020,7 +1022,7 @@ export const EditDealerContent: FC<Props> = ({
                                 <span className={styles.required}>*</span>
                               </p>
                               <Field
-                                type="number"
+                                type="string"
                                 name="VIN"
                                 className={styles.input}
                               />
@@ -1086,6 +1088,7 @@ export const EditDealerContent: FC<Props> = ({
                                 as="select"
                                 placeholder="Vehicle transmission"
                               >
+                                <option value=" ">Choose an option</option>
                                 <option value="automatic">Automatic</option>
                                 <option value="manual">Manual</option>
                               </Field>

@@ -23,6 +23,8 @@ import {
   AddNote,
   pendingSelector,
   documentSelector,
+  getVehicleInfoByVin,
+  vehicleInfoSelector,
 } from '../../features/dealerDashboardSlice';
 import { userSelector } from '../../features/authSlice';
 import { DatePickerField } from '../DatePicker/DatePickerField';
@@ -31,7 +33,7 @@ import Select from 'react-select';
 import { useRouter } from 'next/router';
 import { loadStates, stateSelector } from '../../features/adminDashboardSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserPlus } from '@fortawesome/fontawesome-free-solid';
+import { faUserPlus, faSearch } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import AdminNotes from '../AdminNotes/AdminNotes';
 import AddNotePopup from '../AddNote/AddNote';
@@ -97,29 +99,30 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
   const [addNote, setAddNote] = useState(false);
   const [note, setNote] = useState('');
   const [noteOptions, setNoteOptions] = useState('');
-  
+
   const states = useSelector(stateSelector);
   const application = useSelector(singleApplicationSelector);
   const notes = useSelector(notesSelector);
   let loggeduser = useSelector(userSelector);
   const user = useSelector(userSelector);
   const documents = useSelector(documentSelector);
- 
+  const vehicleDetails = useSelector(vehicleInfoSelector);
+
   const userId = user?.ID;
   const statusStyle = {
     'Awaiting Approval': styles.orange,
-    'Conditional Approval':styles.orange,
+    'Conditional Approval': styles.orange,
     Approved: styles.green,
     Declined: styles.red,
     Incomplete: styles.red,
   }[application?.Status];
-  
+
   const pending = useSelector(pendingSelector);
   useEffect(() => void dispatch(loadStates()), []);
-  
-const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
 
-  console.log(initialValues);
+  const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
+
+  console.log(vehicleDetails);
   let noteData = {};
   // useEffect(() => {
   //   if (application !== null && id !== undefined && application !== undefined) {
@@ -131,9 +134,9 @@ const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
   //   }
   // }, [application]);
 
-  const calcFinanced = (num1, num2) =>{
-    return num1- num2;
-  }
+  const calcFinanced = (num1, num2) => {
+    return num1 - num2;
+  };
 
   const handleSubmit = (values: Partial<ApplicationInterface>): void => {
     console.log(values);
@@ -236,7 +239,6 @@ const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
   };
 
   const handleNoteOptions = (e: any) => {
-   
     if (e.target.checked) {
       setNoteOptions(e.target.value);
     }
@@ -258,27 +260,25 @@ const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
       return;
     }
 
-if (note !== '' && !mostRecent ){
-  let date = new Date().toISOString();
-  let data = {
-    ApplicationID: application.ApplicationID,
-    DateAdded: date,
-    Deleted: false,
-    LastUpdated: date,
-    LeaseApproved: null,
-    LeaseNotes: '',
-    StatusID: application.StatusID,
-    UpdatedBy: user.ID,
-    UserNotes: note,
-    UserApproved: null,
-  };
+    if (note !== '' && !mostRecent) {
+      let date = new Date().toISOString();
+      let data = {
+        ApplicationID: application.ApplicationID,
+        DateAdded: date,
+        Deleted: false,
+        LastUpdated: date,
+        LeaseApproved: null,
+        LeaseNotes: '',
+        StatusID: application.StatusID,
+        UpdatedBy: user.ID,
+        UserNotes: note,
+        UserApproved: null,
+      };
 
-  dispatch(AddNote(data));
-  setNote('');
-  setAddNote(false);
-}
-    
-   else if (note !== '' && noteOptions !== 'Lease') {
+      dispatch(AddNote(data));
+      setNote('');
+      setAddNote(false);
+    } else if (note !== '' && noteOptions !== 'Lease') {
       let date = new Date().toISOString();
       let data = {
         ApplicationID: application.ApplicationID,
@@ -319,7 +319,10 @@ if (note !== '' && !mostRecent ){
     }
   };
 
-  console.log('*******************', pending);
+  const lookUpVehicle = (vin) => {
+    dispatch(getVehicleInfoByVin(vin));
+  };
+
   return (
     <div className={styles.wrapper}>
       {showNotes && notes.length && (
@@ -352,7 +355,6 @@ if (note !== '' && !mostRecent ){
                 <p>
                   {application?.FirstName} {application?.LastName}
                 </p>
-                
               </h1>
 
               <div>
@@ -377,23 +379,39 @@ if (note !== '' && !mostRecent ){
             validateOnBlur
             onSubmit={handleSubmit}
             enableReinitialize
-           
             initialValues={{
               ...initialValues,
               DOB: new Date(initialValues?.DOB ?? '2004-04-04T00:00:00'),
-              SSN:"***-**-" + initialValues?.SSN,
-              // AmountFinanced : calcFinanced(initialValues?.PurchasePrice, initialValues?.DepositFloat)
+              SSN: '***-**-' + initialValues?.SSN,
+              VIN:vehicleDetails.VIN ||  initialValues?.VIN,
+              VehicleYear:
+                vehicleDetails.ModelYear || initialValues?.VehicleYear,
+              VehicleMake: vehicleDetails.Make || initialValues?.VehicleMake,
+              VehicleModel: vehicleDetails.Model || initialValues?.VehicleModel,
+              VehicleEngine:
+                vehicleDetails.DisplacementL || initialValues?.VehicleEngine,
+              VehicleTransmission:
+                vehicleDetails.TransmissionStyle ||
+                initialValues?.VehicleTransmission,
 
+              // AmountFinanced : calcFinanced(initialValues?.PurchasePrice, initialValues?.DepositFloat)
             }}
           >
-            {({ errors, values, touched, submitForm, initialValues, setFieldValue, validateOnChange }) => {
-
-              useEffect(()=>{
-                
-               setFieldValue("AmountFinanced", calcFinanced(values?.PurchasePrice, values?.DepositFloat)) 
-              
-
-              },[values.DepositFloat, touched.DepositFloat, setFieldValue])
+            {({
+              errors,
+              values,
+              touched,
+              submitForm,
+              initialValues,
+              setFieldValue,
+              validateOnChange,
+            }) => {
+              useEffect(() => {
+                setFieldValue(
+                  'AmountFinanced',
+                  calcFinanced(values?.PurchasePrice, values?.DepositFloat)
+                );
+              }, [values.DepositFloat, touched.DepositFloat, setFieldValue]);
               const firstNameHasErrors = hasErrors(
                 touched.FirstName,
                 errors.FirstName
@@ -831,7 +849,6 @@ if (note !== '' && !mostRecent ){
                             <Field
                               type="number"
                               min="0"
-
                               name="MonthlyHousingPayment"
                               placeholder="Monthly Housing Payment"
                               className={styles.input}
@@ -924,7 +941,6 @@ if (note !== '' && !mostRecent ){
                               name="YearsAtCurrentJob"
                               className={styles.input}
                               min="0"
-
                             />
                             {YearsAtCurrentJobHasErrors && (
                               <div className={styles.error}>
@@ -962,10 +978,23 @@ if (note !== '' && !mostRecent ){
                               <span className={styles.required}>*</span>
                             </p>
                             <Field
-                              type="number"
+                              type="text"
                               name="VIN"
                               className={styles.input}
                             />
+                            {values.VIN !== '' ? (
+                              <FontAwesomeIcon
+                                onClick={() => lookUpVehicle(values.VIN)}
+                                icon={faSearch as IconProp}
+                                style={{ cursor: 'pointer' }}
+                              />
+                            ) : (
+                              <FontAwesomeIcon
+                                icon={faSearch as IconProp}
+                                color="red"
+                              />
+                            )}{' '}
+                            Look Up Info
                             {VINHasErrors && (
                               <div className={styles.error}>{errors.VIN}</div>
                             )}
@@ -1053,6 +1082,8 @@ if (note !== '' && !mostRecent ){
                               as="select"
                               placeholder="Vehicle transmission"
                             >
+                              <option value="">Choose an option</option>
+
                               <option value="automatic">Automatic</option>
                               <option value="manual">Manual</option>
                             </Field>
@@ -1103,7 +1134,6 @@ if (note !== '' && !mostRecent ){
                               className={styles.input}
                               placeholder="Deposit"
                               validateOnBlur
-                             
                             />
                             {DepositHasErrors && (
                               <div className={styles.error}>
@@ -1119,8 +1149,6 @@ if (note !== '' && !mostRecent ){
                               name="AmountFinanced"
                               className={styles.input}
                               placeholder="Amount financed"
-                            
-                              
                             />
                             {AmountFinancedHasErrors && (
                               <div className={styles.error}>
