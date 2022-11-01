@@ -81,7 +81,7 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
             MiddleName: '',
             LastName: '',
             SSN: '',
-            DOB: new Date(),
+            DOB: '',
             MonthlyIncome: 0,
             MonthlyExpense: 0,
             EmailAddress: '',
@@ -96,6 +96,8 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
           onSubmit={(values) => onSubmit(values)}
         >
           {({ errors, touched, initialValues, values }) => {
+
+            console.log(values)
             const firstNameHasErrors = hasErrors(
               touched.FirstName,
               errors.FirstName

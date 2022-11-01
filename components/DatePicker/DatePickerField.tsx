@@ -32,7 +32,7 @@ export const DatePickerField: FC<GenericPropsInterface> = ({
       minDate={new Date(1990)}
       value={field.value}
       onChange={onChange}
-      clearIcon
+      // clearIcon
     />
   );
 };
