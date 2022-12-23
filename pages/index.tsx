@@ -9,7 +9,7 @@ import {
   sendApprovalEmail,
 } from '../features/authSlice';
 // import { useAppDispatch } from '../app/hooks';
-import { emailtemplate } from './EmailTemplate';
+import { emailtemplate } from '../components/EmailTemplate';
 
 const IndexPage: React.FC = () => {
   const dispatch = useDispatch();
