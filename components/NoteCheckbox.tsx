@@ -4,11 +4,6 @@ import { userSelector } from '../features/authSlice';
 
 const NoteCheckbox = ({handleNoteOptions, name, handleformchange, index,}) => {
 
-
-
-
-
-
   return (
     <div>
     <input
@@ -17,7 +12,7 @@ const NoteCheckbox = ({handleNoteOptions, name, handleformchange, index,}) => {
     key={index}
     name='radioBtn'
 
-    onChange={(e) => {handleNoteOptions(e, index); {name === 'Proposal' ? handleformchange(e) : null}}}
+    onChange={(e) => {handleNoteOptions(e, index); {name === 'Propose Terms' ? handleformchange(e) : null}}}
   />
   <label>{name}</label>
   </div>

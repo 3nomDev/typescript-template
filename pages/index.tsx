@@ -3,11 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { ApplicationForm, Layout } from '../components';
 import { AddUserArgsInterface, AddUserPayloadInterface } from '../contracts';
-import { addUser, approvalCodeSelector } from '../features/authSlice';
-import { useAppDispatch } from '../app/hooks';
+import {
+  addUser,
+  approvalCodeSelector,
+  sendApprovalEmail,
+} from '../features/authSlice';
+// import { useAppDispatch } from '../app/hooks';
+import { emailtemplate } from './EmailTemplate';
 
 const IndexPage: React.FC = () => {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
   const router = useRouter();
 
@@ -18,15 +23,31 @@ const IndexPage: React.FC = () => {
       router.push('/approved');
     }
   }, []);
+  console.log(typeof approvalCode);
+ 
 
-  const handleSubmit = (values: AddUserPayloadInterface) =>
-  // console.log(values)
-    dispatch(addUser({ payload: values })).then((data) => {
-      if (data.meta.requestStatus === 'fulfilled') router.push('/approved');
-    });
+  const handleSubmit = async (values: AddUserPayloadInterface) => {
+    let response: any = await dispatch(addUser({ payload: values }));
+
+    if (response.meta.requestStatus === 'fulfilled') {
+      if (response[0].ApprovalCode === 'Account Exists') {
+        alert(response.ApprovalCode);
+        return;
+      } else {
+        const Email = response.meta.arg.payload.EmailAddress;
+
+        const finalTemplate = emailtemplate(approvalCode);
+        const payload = [Email, finalTemplate];
+
+        dispatch(sendApprovalEmail(payload));
+
+        router.push('/approved');
+      }
+    }
+  };
+
   return (
     <Layout>
-
       <ApplicationForm onSubmit={handleSubmit} />
     </Layout>
   );

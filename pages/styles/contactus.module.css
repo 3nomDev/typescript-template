@@ -1,0 +1,48 @@
+.formContainer {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.title {
+  text-align: center;
+  font-size: 34px;
+  margin: 20px;
+}
+
+.input {
+  width: 600px;
+  max-width: 100%;
+  border-bottom: 1px solid gray;
+  height: auto;
+  outline: none;
+  display: flex;
+}
+
+.inputBox {
+  padding: 20px;
+}
+
+
+.submitBtn{
+    width: fit-content;
+    margin: 0 auto;
+    padding:  0 20px;
+    border-radius: 10px;
+}
+
+.submitBtn:hover{
+background-color: rgb(35, 71, 138);
+box-shadow: 0px 0px 4px 2px black;
+color: white;
+}
+
+.textArea{
+    width: 600px;
+    max-width: 100%;
+    border-bottom: 1px solid gray;  
+    display: flex;
+    outline:none
+}

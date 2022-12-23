@@ -67,8 +67,40 @@ export const addUser = createAsyncThunk(
         })
       );
     }
-console.log(response)
+
     return response[0].ApprovalCode;
+  }
+);
+export const sendApprovalEmail = createAsyncThunk(
+  'dashboard/sendApprovalEmail',
+  async (payload: any, thunkApi) => {
+   let email;
+    if(payload.fromContact === true){
+      email = payload.emailMessage
+    }
+    else {
+      email = {
+      ToAddress:payload[0],
+      FromAddress:'admin@tlc.com',
+      FromDisplayName:'Tony Montana',
+    Subject:'Approval Code',
+    Body:payload[1],
+    APIKey:process.env.NEXT_PUBLIC_EMAILAPIKEY,
+    cc:"",
+    bcc:""
+    }
+    }
+ 
+    const res = await fetch('https://sendmail.3nom.com/SendEmail', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        
+      },
+      body: JSON.stringify(email),
+    });
+    const response: [] = await res.json();
+return response
   }
 );
 

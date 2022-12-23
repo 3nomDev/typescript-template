@@ -26,7 +26,7 @@ const validationSchema = Yup.object({
   DOB: Yup.date().max(new Date(2004, 1, 1)).required(),
   MonthlyIncome: Yup.number().required('Monthly income is required'),
   MonthlyExpense: Yup.number().required('Monthly expenses is required'),
-  EmailAddress: Yup.string().trim().required('EmailAddress is required'),
+  EmailAddress: Yup.string().trim().required('Email Address is required'),
   CellPhone: Yup.string().trim().required('Phone number is required'),
   Address: Yup.string().required('Address is required'),
   Address2: Yup.string(),
@@ -61,7 +61,7 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
           <div className={styles.widgetDiv}>
             <span>Need assistance call</span>
             <br></br>
-            (718)-506-9367
+           <a href="tel:718-506-9367">(718)-506-9367</a> 
           </div>
         </div>
       </div>
@@ -97,7 +97,6 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
         >
           {({ errors, touched, initialValues, values }) => {
 
-            console.log(values)
             const firstNameHasErrors = hasErrors(
               touched.FirstName,
               errors.FirstName
@@ -302,7 +301,7 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
                 </div>
                 <div className={styles.row}>
                   <div className={styles.inputContainer}>
-                    <label htmlFor="EmailAddress">EmailAddress</label>
+                    <label htmlFor="EmailAddress">Email Address</label>
                     <Field
                       placeholder="EmailAddress"
                       name="EmailAddress"

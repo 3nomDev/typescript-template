@@ -78,11 +78,11 @@ const validationSchema = Yup.object({
   HowLong: Yup.string(),
   MiddleName: Yup.string(),
   VehicleColor: Yup.string().required('Color is required'),
-  SSN: Yup.string()
-    .required()
-    .matches(/^[0-9]+$/, 'Must be only digits')
-    .min(9, 'Must be exactly 9 digits')
-    .max(9, 'Must be exactly 9 digits'),
+  // SSN: Yup.string()
+  //   .required()
+  //   .matches(/^[0-9]+$/, 'Must be only digits')
+  //   .min(9, 'Must be exactly 9 digits')
+  //   .max(9, 'Must be exactly 9 digits'),
 });
 
 interface Props {
@@ -270,7 +270,7 @@ export const EditDealerContent: FC<Props> = ({
   };
 
   const handleNoteOptions = (e: any, key) => {
-   if(e.target.value !== 'Proposal'){
+   if(e.target.value !== 'Propose Terms'){
     setIsProposal(false)
    }
     setNoteOptions(e.target.value);
@@ -317,7 +317,7 @@ export const EditDealerContent: FC<Props> = ({
       );
       return;
     }
-    if (note !== '' && noteOptions === 'Proposal') {
+    if (note !== '' && noteOptions === 'Propose Terms') {
       if (
         paymentProposal.Frequency === '' ||
         paymentProposal.Frequency === 'Choose Option'
@@ -351,7 +351,7 @@ export const EditDealerContent: FC<Props> = ({
         setIsProposal(false);
         setPaymentProposal(initialProposal);
       }
-    } else if (note !== '' && noteOptions !== 'Lease') {
+    } else if (note !== '' && noteOptions !== 'Vehicle') {
       let date = new Date().toISOString();
       let data = {
         ApplicationID: application.ApplicationID,
@@ -369,7 +369,7 @@ export const EditDealerContent: FC<Props> = ({
       dispatch(AddRejectionNote(data));
       setNote('');
       setNotePopup(false);
-    } else if (note !== '' && noteOptions === 'Lease') {
+    } else if (note !== '' && noteOptions === 'Vehicle') {
       let date = new Date().toISOString();
       let data = {
         ApplicationID: application.ApplicationID,
@@ -481,6 +481,8 @@ export const EditDealerContent: FC<Props> = ({
     </ul>
   );
 
+  
+
   return (
     <div className={styles.wrapper}>
       {showNotes && notes.length > 0 && (
@@ -524,6 +526,8 @@ export const EditDealerContent: FC<Props> = ({
             }}
           >
             {({ submitForm, touched, errors, values, setFieldValue }) => {
+
+
                   useEffect(()=>{
                 
                     setFieldValue("AmountFinanced", calcFinanced(values?.PurchasePrice, values?.DepositFloat)) 

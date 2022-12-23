@@ -7,6 +7,8 @@ interface Props {
 }
 
 const AdminNoteItem = ({ note }) => {
+
+  console.log(note)
   let data;
   if (note?.LeaseNotes.includes(':')) {
     data = JSON.parse(note?.LeaseNotes);
@@ -31,12 +33,12 @@ const AdminNoteItem = ({ note }) => {
     <div className={styles.noteWrapper}>
       <div className={styles.detailWrapper}>
         <span className={styles.label}>
-          {!data ? 'Lease Note:' : 'Proposal'}
+          {!data ? 'Vehicle Note:' : 'Propose Terms'}
         </span>
         <p>{!data ? note.LeaseNotes : createProposalData(data)}</p>
       </div>
       <div className={styles.detailWrapper}>
-        <span className={styles.label}>User Note:</span>
+        <span className={styles.label}>Personal Note:</span>
         <p>{note.UserNotes}</p>
       </div>
       <div className={styles.detailWrapper}>
