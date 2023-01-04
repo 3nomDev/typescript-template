@@ -27,11 +27,14 @@ const IndexPage: React.FC = () => {
  
 
   const handleSubmit = async (values: AddUserPayloadInterface) => {
-    let response: any = await dispatch(addUser({ payload: values }));
+    try {
+      let response: any = await dispatch(addUser({ payload: values }));
 
     if (response.meta.requestStatus === 'fulfilled') {
-      if (response[0].ApprovalCode === 'Account Exists') {
-        alert(response.ApprovalCode);
+  
+      
+      if (response.payload === 'Account Exists') {
+        alert("This account already exists");
         return;
       } else {
         const Email = response.meta.arg.payload.EmailAddress;
@@ -44,6 +47,10 @@ const IndexPage: React.FC = () => {
         router.push('/approved');
       }
     }
+    } catch (error) {
+      console.log(error)
+    }
+    
   };
 
   return (
