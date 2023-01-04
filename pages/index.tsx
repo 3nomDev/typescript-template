@@ -23,34 +23,29 @@ const IndexPage: React.FC = () => {
       router.push('/approved');
     }
   }, []);
-  console.log(typeof approvalCode);
- 
 
+  console.log(approvalCode);
   const handleSubmit = async (values: AddUserPayloadInterface) => {
     try {
       let response: any = await dispatch(addUser({ payload: values }));
+      console.log(response);
 
-    if (response.meta.requestStatus === 'fulfilled') {
-  
-      
-      if (response.payload === 'Account Exists') {
-        alert("This account already exists");
-        return;
-      } else {
-        const Email = response.meta.arg.payload.EmailAddress;
+      if (response.meta.requestStatus === 'fulfilled') {
+        if (response.payload === 'Account Exists') {
+          return;
+        } else {
+          const Email = response.meta.arg.payload.EmailAddress;
+          const finalTemplate = emailtemplate(response.payload);
+          const payload = [Email, finalTemplate];
 
-        const finalTemplate = emailtemplate(approvalCode);
-        const payload = [Email, finalTemplate];
+          dispatch(sendApprovalEmail(payload));
 
-        dispatch(sendApprovalEmail(payload));
-
-        router.push('/approved');
+          router.push('/approved');
+        }
       }
-    }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-    
   };
 
   return (
