@@ -49,7 +49,8 @@ console.log(applications)
         item.VehicleModel.toLowerCase().includes(searchParam) ||
         String(item.VehicleYear).toLowerCase().includes(searchParam) ||
         item.VIN.toLowerCase().includes(searchParam) ||
-        item.Status.toLowerCase().includes(searchParam)
+        item.Status.toLowerCase().includes(searchParam)||
+        item.ApprovalCode.toLowerCase().includes(searchParam)
       ) {
         return { ...item, isShown: true };
       }
@@ -110,7 +111,8 @@ console.log(applications)
                 <th>Amount</th>
                 <th>VIN</th>
                 <th>Status</th>
-                <th />
+                <th>Date Submitted</th>
+                <th/>
               </tr>
             </thead>
             <tbody className={styles.tableBody}>

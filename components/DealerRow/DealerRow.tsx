@@ -4,7 +4,7 @@ import { faArrowRight } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import styles from './DealerRow.module.css';
 import { ApplicationInterface } from '../../contracts';
-
+import moment from 'moment'
 interface Props extends Partial<ApplicationInterface> {
   onEditClick: (id: string) => () => void;
 }
@@ -23,7 +23,8 @@ export const DealerRow: FC<Props> = ({
   Status,
   onEditClick,
   isShown,
-  ApprovalCode
+  ApprovalCode,
+  DateAdded
 }) => {
   if (!isShown) return null;
 
@@ -48,6 +49,7 @@ export const DealerRow: FC<Props> = ({
       <td>{PurchasePrice}</td>
       <td>{VIN}</td>
       <td className={statusStyle}>{Status}</td>
+      <td >{moment(DateAdded).format('MM/DD/YYYY')}</td>
       <td
         className={styles.rowButton}
         onClick={onEditClick(ApplicationID.toString())}
