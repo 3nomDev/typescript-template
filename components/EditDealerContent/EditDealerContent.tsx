@@ -14,6 +14,7 @@ import {
   faTimes,
   faChevronDown,
   faCaretDown,
+  faSearch,
   
   
 } from '@fortawesome/fontawesome-free-solid';
@@ -56,6 +57,7 @@ import { faFileAlt } from '@fortawesome/pro-regular-svg-icons';
 import AdminNotes from '../AdminNotes/AdminNotes';
 import AddNotePopup from '../AddNote/AddNote';
 import { addNotification } from '../../features/notifications/notificationSlice';
+import { getVehicleInfoByVin, vehicleInfoSelector } from '../../features/dealerDashboardSlice';
 
 const validationSchema = Yup.object({
   FirstName: Yup.string().trim().required('First name is required'),
@@ -147,6 +149,8 @@ export const EditDealerContent: FC<Props> = ({
     NumberOfPayments: '',
   });
   const [inputIsChecked, setInputIsChecked] = useState(false);
+  const vehicleDetails = useSelector(vehicleInfoSelector);
+
 
   const [initialProposal] = useState({
     Amount: '',
@@ -396,6 +400,10 @@ export const EditDealerContent: FC<Props> = ({
     return num1- num2;
   }
 
+  const lookUpVehicle = (vin) => {
+    dispatch(getVehicleInfoByVin(vin));
+  };
+
 
   const denailNotePopup = (
     <div className={styles.popUpBackground}>
@@ -523,6 +531,17 @@ export const EditDealerContent: FC<Props> = ({
               ...application,
               DOB: new Date(application?.DOB ?? '2004-04-04T00:00:00'),
               SSN: '***-**-' + application?.SSN,
+              VIN:vehicleDetails.VIN ||  application?.VIN,
+              VehicleYear:
+                vehicleDetails.ModelYear || application?.VehicleYear,
+              VehicleMake: vehicleDetails.Make || application?.VehicleMake,
+              VehicleModel: vehicleDetails.Model || application?.VehicleModel,
+              VehicleEngine:
+                vehicleDetails.DisplacementL || application?.VehicleEngine,
+              VehicleTransmission:
+                vehicleDetails.TransmissionStyle ||
+                application?.VehicleTransmission,
+
             }}
           >
             {({ submitForm, touched, errors, values, setFieldValue }) => {
@@ -1030,6 +1049,18 @@ export const EditDealerContent: FC<Props> = ({
                                 name="VIN"
                                 className={styles.input}
                               />
+                                {values.VIN !== '' ? (
+                              <FontAwesomeIcon
+                                onClick={() => lookUpVehicle(values.VIN)}
+                                icon={faSearch as IconProp}
+                                style={{ cursor: 'pointer' }}
+                              />
+                            ) : (
+                              <FontAwesomeIcon
+                                icon={faSearch as IconProp}
+                                color="red"
+                              />
+                            )}
                               {vinHasErrors && (
                                 <div className={styles.error}>{errors.VIN}</div>
                               )}

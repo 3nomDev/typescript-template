@@ -30,7 +30,7 @@ export const DealerAppTable: FC = () => {
 
   useEffect(() => void dispatch(loadApplications(user?.ID)), []);
   useEffect(() => {
-    const result = applications.map((item) => {
+    const result = applications?.map((item) => {
       if (
         item.FirstName.toLowerCase().includes(searchParam) ||
         item.LastName.toLowerCase().includes(searchParam) ||
@@ -68,7 +68,7 @@ export const DealerAppTable: FC = () => {
         </div>
 
         <h5 className={styles.applicants}>
-          Showing {applications.length} Results
+          Showing {applications?.length} Results
         </h5>
       </div>
       <div className={styles.searchbarContainer}>

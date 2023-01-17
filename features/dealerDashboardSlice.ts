@@ -343,7 +343,7 @@ export const dealerDashboardSlice = createSlice({
       .addCase(loadApplications.fulfilled, (state, { payload }) => {
         state.pending = false;
         state.applications = payload;
-        state.applications = state.applications.map((item) => ({
+        state.applications = state.applications.length && state.applications.map((item) => ({
           ...item,
           isShown: true,
         }));
