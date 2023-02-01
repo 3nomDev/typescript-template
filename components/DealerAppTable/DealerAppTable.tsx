@@ -95,6 +95,7 @@ export const DealerAppTable: FC = () => {
               <th>Amount</th>
               <th>VIN</th>
               <th>Status</th>
+              <th >Date</th>
               <th />
             </tr>
           </thead>

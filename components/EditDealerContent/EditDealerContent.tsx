@@ -1160,7 +1160,7 @@ export const EditDealerContent: FC<Props> = ({
                             <div className={styles.inputBox}>
                               <p>Deposit</p>
                               <Field
-                                name="DepositFloat"
+                                name="DepositFloat"ssn
                                 className={styles.input}
                                 placeholder="Deposit"
                               />

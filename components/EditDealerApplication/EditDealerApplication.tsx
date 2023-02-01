@@ -46,11 +46,11 @@ const validationSchema = Yup.object({
   FirstName: Yup.string().trim().required('First name is required'),
   LastName: Yup.string().trim().required('Last name is required'),
   MiddleName: Yup.string().trim(),
-  SSN: Yup.string()
-    .required()
-    .matches(/^[0-9]+$/, 'Must be only digits')
-    .min(9, 'Must be exactly 9 digits')
-    .max(9, 'Must be exactly 9 digits'),
+  // SSN: Yup.string()
+  //   .required()
+  //   .matches(/^[0-9]+$/, 'Must be only digits')
+  //   .min(9, 'Must be exactly 9 digits')
+  //   .max(9, 'Must be exactly 9 digits'),
   DOB: Yup.string()
     .required('Date of birth is required')
     .test('DOB', 'Please choose a valid date of birth', (value) => {
