@@ -506,6 +506,7 @@ export const EditDealerContent: FC<Props> = ({
         <PaymentsModal
           onClose={togglePaymentsModal}
           onSubmit={onSchedulePayments}
+          application={application}
         />
       )}
       <DealerHeader title="Admin" />

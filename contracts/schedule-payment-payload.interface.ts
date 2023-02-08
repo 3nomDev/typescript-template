@@ -4,4 +4,10 @@ export interface SchedulePaymentPayloadInterface {
   Frequency: string;
   FirstPaymentDate: Date;
   NumberOfPayments: number;
+  AmountFinanced:number;
+  SellingPrice:number;
+  Deposit:number;
+  HoldBack:number;
+  LeaseLengthMonths:number;
+  BuyoutOption:number
 }

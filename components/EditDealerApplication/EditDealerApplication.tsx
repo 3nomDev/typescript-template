@@ -107,6 +107,7 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
   const user = useSelector(userSelector);
   const documents = useSelector(documentSelector);
   const vehicleDetails = useSelector(vehicleInfoSelector);
+  const [formhasbeenReset, setFormHasBeenReset] = useState(false)
 
   const userId = user?.ID;
   const statusStyle = {
@@ -122,7 +123,7 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
 
   const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
 
-  console.log(vehicleDetails);
+
   let noteData = {};
   // useEffect(() => {
   //   if (application !== null && id !== undefined && application !== undefined) {
@@ -319,7 +320,8 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
     }
   };
 
-  const lookUpVehicle = (vin) => {
+  const lookUpVehicle = (e, vin) => {
+    e.preventDefault()
     dispatch(getVehicleInfoByVin(vin));
   };
 
@@ -536,7 +538,8 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
                   cx(styles.errorInput, styles.input) as StyleType,
                   styles.input as StyleType
                 );
-              console.log(errors);
+
+              console.log(values);
               return (
                 <div className={styles.formWrapper}>
                   {addNote && (
@@ -984,7 +987,7 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
                             />
                             {values.VIN !== '' ? (
                               <FontAwesomeIcon
-                                onClick={() => lookUpVehicle(values.VIN)}
+                                onClick={(e) => lookUpVehicle(e, values.VIN)}
                                 icon={faSearch as IconProp}
                                 style={{ cursor: 'pointer' }}
                               />

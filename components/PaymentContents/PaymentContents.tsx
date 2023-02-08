@@ -171,7 +171,7 @@ export const PaymentContents: FC<Props> = ({
               text="Payments remaining"
               value={
                 <span className={styles.currency}>
-                  {paymentsRemaining + '/wks'}
+                  {paymentsRemaining }
                 </span>
               }
             />

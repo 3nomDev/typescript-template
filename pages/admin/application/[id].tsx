@@ -72,6 +72,7 @@ const EditDealerPage: FC = () => {
   const handleSchedulePayments = (
     payload: SchedulePaymentPayloadInterface
   ): void =>
+
     void dispatch(
       schedulePayment({
         ...payload,

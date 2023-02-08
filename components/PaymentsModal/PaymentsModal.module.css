@@ -1,16 +1,18 @@
 .wrapper {
     position: absolute;
-    width: 320px;
+    width: 100%;
     z-index: 1;
     top: 100px;
-    left: 48%;
+    left: 36%;
+    max-width: 500px;
     box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
     background-color: white;
+    color: #83786D;;
 }
 
 .header {
     padding: 15px;
-    color: white;
+    color: #83786D;;
     border-bottom: 1px solid #ededed;
     padding: 15px;
     display: flex;
@@ -28,8 +30,17 @@
     position: absolute;
     right: 5px;
     cursor: pointer;
-    color: black;
+    color: white;
     top: 5px;
+    background-color: #666666;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border-radius: 50%;
+}
+
+.fieldLabel{
+    color: black;
 }
 
 .body {
@@ -42,8 +53,9 @@
 }
 
 .select {
-    border: 1px solid black;
+    border: 1px solid #B2B2B2;
     padding: 5px;
+    outline: none;
 }
 
 .button {
