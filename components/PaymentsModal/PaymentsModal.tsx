@@ -14,7 +14,7 @@ interface Props {
 
 export const PaymentsModal: FC<Props> = ({ onClose, onSubmit, application }) => {
 
-  console.log
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
@@ -44,7 +44,7 @@ export const PaymentsModal: FC<Props> = ({ onClose, onSubmit, application }) => 
         }}
       >
         {({ values, submitForm, errors, touched }) => {
-          console.log(application)
+      
           return (
             <div className={styles.body}>
               <Form>

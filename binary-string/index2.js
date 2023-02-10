@@ -16,4 +16,3 @@ const getFlipWithStartingCharacter = (str, expected) => {
 
 
 let str = "0001010111";
-console.log(getFlipWithStartingCharacter(str, str.slice(0,1)));

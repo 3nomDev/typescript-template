@@ -22,7 +22,7 @@ export const DealerContent: FC = () => {
 
   const user = useSelector(userSelector);
   const dealers = useSelector(dealersSelector);
-
+  
   const router = useRouter();
 
   useEffect(() => void dispatch(loadDealers(user?.ID)), []);

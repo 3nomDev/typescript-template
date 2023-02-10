@@ -38,4 +38,6 @@ export interface UserActiveAccountsInterface {
   HowLong:string;
   SalesTax:number;
   TLCTrackerFee:number;
+  VIN:string;
+  DEPOSITFLOAT:string;
 }

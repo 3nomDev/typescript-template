@@ -13,11 +13,11 @@ const AssignCustomerToDealer: FC<Props> = ({ setAssignCustomer }) => {
   const [approvalCode, setApprovalCode] = useState(null);
   const dispatch = useDispatch();
   const user = useSelector(userSelector);
-  console.log(approvalCode);
+
 
   const addCustomer = () => {
     if (approvalCode) {
-      console.log('clicked');
+
       const data = {
         DealerID: user.DealerID,
         ApprovalCode: approvalCode,

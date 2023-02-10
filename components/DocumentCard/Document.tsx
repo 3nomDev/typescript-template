@@ -80,7 +80,7 @@ export const Document: FC<Props> = ({ item, id, profileType }) => {
    
     const res = dispatch(getDocument(data));
     const response :any = await res;
-    console.log(response)
+ 
     let fileToOpen;
     if(response.payload !== undefined){
       fileToOpen = response?.payload[0];

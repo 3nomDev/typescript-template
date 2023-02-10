@@ -31,12 +31,12 @@ export const ApplicationsTable: FC<Props> = ({
   title,
 }) => {
   const [searchParam, setSearchParam] = useState<string>('');
-console.log(applications)
+
   const router = useRouter();
 
   const dispatch = useDispatch();
 
- console.log(searchParam)
+
 
   useEffect(() => {
     const result = applications.map((item) => {
@@ -57,7 +57,7 @@ console.log(applications)
       return { ...item, isShown: false };
     });
 
-    console.log(result)
+  
     switch (type) {
       case DashboardBoxEnum.Success:
         dispatch(setApprovedApplicationsAction(result));

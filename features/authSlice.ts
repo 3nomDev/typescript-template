@@ -31,6 +31,7 @@ const initialState: AuthState = {
   applicationDealers: [],
 };
 
+
 export const sendLoginRequest = createAsyncThunk(
   'auth/sendLoginRequest',
   async (userData: LoginPayloadInterface) => {

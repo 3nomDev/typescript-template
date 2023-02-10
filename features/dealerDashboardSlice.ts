@@ -61,7 +61,7 @@ export const loadDocumentTypes = createAsyncThunk(
 export const uploadDocument = createAsyncThunk(
   'dashboard/uploadDocument',
   async (data: any, thunkApi) => {
-    console.log(data);
+   
     let userid;
     let appid;
     if (data) {
@@ -89,7 +89,7 @@ export const uploadDocument = createAsyncThunk(
 export const getDocuments = createAsyncThunk(
   'dashboard/getDocuments',
   async (data: any) => {
-    console.log(Object.values(data));
+ 
     const res = await fetch('https://tlcfin.prestoapi.com/api/getdocuments', {
       method: 'POST',
       headers: {
@@ -142,7 +142,7 @@ export const loadApplications = createAsyncThunk(
 export const loadApplicationItem = createAsyncThunk(
   'dashboard/loadApplicationItem',
   async (data: any, thunkApi) => {
-    console.log(data);
+  
     const res = await fetch('https://tlcfin.prestoapi.com/api/application', {
       method: 'POST',
       headers: {
@@ -152,11 +152,11 @@ export const loadApplicationItem = createAsyncThunk(
       body: JSON.stringify({ id: Number(data.appId || data.id) }),
     });
     const response: ApplicationInterface[] = await res.json();
-    console.log(response[0]);
+  
     if (res.status === 200 && data.appId) {
       let dataToSend = { userid: data.userId, ApplicationID: data?.appId };
       let noteData = { id: data?.appId, status: response[0].StatusID };
-      console.log(noteData);
+    
       thunkApi.dispatch(getDocuments(dataToSend));
       thunkApi.dispatch(loadRejectionNotes(noteData));
     }
@@ -168,7 +168,7 @@ export const loadApplicationItem = createAsyncThunk(
 export const updateApplication = createAsyncThunk(
   'dashboard/updateApplication',
   async (payload: any, thunkApi) => {
-    console.log(payload);
+ 
     const res = await fetch(
       'https://tlcfin.prestoapi.com/api/updateapplication',
       {
@@ -184,7 +184,7 @@ export const updateApplication = createAsyncThunk(
 
     if (res.status === 200) {
       const appId = payload.ApplicationID;
-      console.log(appId);
+   
       thunkApi.dispatch(loadApplicationItem({ id: payload.ApplicationID }));
     }
 
@@ -202,7 +202,7 @@ export const updateApplication = createAsyncThunk(
 export const addApplication = createAsyncThunk(
   'dashboard/addApplication',
   async (payload: AddApplicationArgs, thunkApi) => {
-    console.log(payload);
+
     const res = await fetch('https://tlcfin.prestoapi.com/api/addapplication', {
       method: 'POST',
       headers: {
@@ -247,7 +247,7 @@ export const loadNotifications = createAsyncThunk(
 export const loadRejectionNotes = createAsyncThunk(
   'dashboard/loadRejectionNotes',
   async (data: {}) => {
-    console.log('********************getting notes', data);
+  
     const res = await fetch('https://tlcfin.prestoapi.com/api/notes', {
       method: 'POST',
       headers: {
@@ -267,7 +267,7 @@ export const AddNote = createAsyncThunk(
   async (data: any, thunkApi) => {
     let noteData = { id: data.ApplicationID, status: data.StatusID };
 
-    console.log('********************sending note********************', data);
+ 
     const res = await fetch('https://tlcfin.prestoapi.com/api/addnote', {
       method: 'POST',
       headers: {
@@ -278,7 +278,7 @@ export const AddNote = createAsyncThunk(
     });
 
     const results = await res.json();
-    console.log(results);
+   
     if (res.status === 200) {
       thunkApi.dispatch(loadRejectionNotes(noteData));
     }
@@ -288,7 +288,7 @@ export const AddNote = createAsyncThunk(
 export const AssignToDealer = createAsyncThunk(
   'dashboard/assignToDealer',
   async (data: any, thunkApi) => {
-    console.log(data)
+   
     const res = await fetch('https://tlcfin.prestoapi.com/api/assigndealer', {
       method: 'POST',
       headers: {

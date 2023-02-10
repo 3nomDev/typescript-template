@@ -31,7 +31,7 @@ import { DatePickerField } from '../DatePicker/DatePickerField';
 import { MaskedInput } from '../MaskedInput/MaskedInput';
 import Select from 'react-select';
 import { useRouter } from 'next/router';
-import { loadStates, stateSelector } from '../../features/adminDashboardSlice';
+import { loadStates, loadUserActiveAccount, stateSelector } from '../../features/adminDashboardSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus, faSearch } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -41,6 +41,7 @@ import { Oval } from 'react-loader-spinner';
 import Document from '../DocumentCard/Document';
 import { addNotification } from '../../features/notifications/notificationSlice';
 import moment from 'moment';
+import Link from 'next/link';
 
 const validationSchema = Yup.object({
   FirstName: Yup.string().trim().required('First name is required'),
@@ -107,7 +108,7 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
   const user = useSelector(userSelector);
   const documents = useSelector(documentSelector);
   const vehicleDetails = useSelector(vehicleInfoSelector);
-  const [formhasbeenReset, setFormHasBeenReset] = useState(false)
+ const [userApplication, setUserApplication] = useState({})
 
   const userId = user?.ID;
   const statusStyle = {
@@ -124,23 +125,12 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
   const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
 
 
-  let noteData = {};
-  // useEffect(() => {
-  //   if (application !== null && id !== undefined && application !== undefined) {
-  //     noteData = {
-  //       id: application.ApplicationID,
-  //       status: application.StatusID,
-  //     };
-  //     dispatch(loadRejectionNotes(noteData));
-  //   }
-  // }, [application]);
-
-  const calcFinanced = (num1, num2) => {
+    const calcFinanced = (num1, num2) => {
     return num1 - num2;
   };
 
   const handleSubmit = (values: Partial<ApplicationInterface>): void => {
-    console.log(values);
+   
     dispatch(
       updateApplication({
         Address: values.Address,
@@ -205,6 +195,10 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
     // if (application && userId) dispatch(getDocuments(data));
     dispatch(loadDocumentTypes());
   }, []);
+
+  useEffect(() =>{
+getActiveAccountInfo()
+  },[approvalCode])
 
   const decryptFile = (event) => {
     let fileBlob = event.target.result;
@@ -325,6 +319,14 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
     dispatch(getVehicleInfoByVin(vin));
   };
 
+  const getActiveAccountInfo =  async () => {
+    
+    let result = await dispatch(loadUserActiveAccount(approvalCode))
+   setUserApplication(result.payload)
+  }
+
+
+ 
   return (
     <div className={styles.wrapper}>
       {showNotes && notes.length && (
@@ -372,6 +374,11 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
                 >
                   Add Note
                 </button>
+            {Object.values(userApplication).length  > 0 &&   <Link href={`/dealercustomerpayment/${application?.ApplicationID}`}>
+                <button   className={styles.addNoteButton}>
+                  See Payments
+                </button>
+               </Link>}
               </div>
             </div>
           </div>
@@ -539,7 +546,7 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
                   styles.input as StyleType
                 );
 
-              console.log(values);
+             
               return (
                 <div className={styles.formWrapper}>
                   {addNote && (

@@ -93,6 +93,7 @@ export const CreateAppForm: FC<Props> = ({ states }) => {
 
 
   const user = useSelector(userSelector);
+
   const userId = user?.ID;
   const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
 
@@ -100,7 +101,7 @@ export const CreateAppForm: FC<Props> = ({ states }) => {
   const documents = useSelector(documentSelector);
   const ipAddress = useSelector(ipAddressSelector)
   const newStates = [{Short:'', State:'Choose an option'},...states ]
-  console.log(ipAddress);
+  
   let id;
   if (typeof window !== 'undefined') {
     id = JSON.parse(localStorage.getItem('userInfo')).ID;
@@ -161,7 +162,7 @@ dispatch(getIpAddress())
   };
 
   const handleSubmit = (values) => {
-    console.log(values);
+  
     dispatch(
       addApplication({
         Address: values.Address,
@@ -227,7 +228,7 @@ dispatch(getIpAddress())
         onSubmit={handleSubmit}
       >
         {({ submitForm, errors, touched, values }) => {
-          console.log(errors);
+       
 
           const firstNameHasError = errors.FirstName && touched.FirstName;
           const lastNameHasError = errors.LastName && touched.LastName;

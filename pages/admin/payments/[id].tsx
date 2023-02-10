@@ -59,28 +59,6 @@ const EditDealerPage: FC = () => {
   const userId = user?.ID;
   let id = router.query.id;
 
-  // const fakePayments = [
-  //   {
-  //     Amount: 1000,
-  //     Status: 'Complete',
-  //   },
-  //   {
-  //     Amount: 300,
-  //     Status: 'Pending',
-  //   },
-  //   {
-  //     Amount: 300,
-  //     Status: 'Complete',
-  //   },
-  //   {
-  //     Amount: 200,
-  //     Status: 'Complete',
-  //   },
-  //   {
-  //     Amount: 1000,
-  //     Status: 'Pending',
-  //   },
-  // ];
 
   useEffect(
     () => (id ? void dispatch(loadPaymentsByAppId(id.toString())) : () => {}),

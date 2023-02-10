@@ -36,7 +36,7 @@
 
     // Driver code to test above method
     let str = "0001010111";
-    console.log(minFlipToMakeStringAlternate(str));
+  
 
     // This code is contributed by avanitrachhadiya2155
 

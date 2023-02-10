@@ -24,11 +24,11 @@ const IndexPage: React.FC = () => {
     }
   }, []);
 
-  console.log(approvalCode);
+
   const handleSubmit = async (values: AddUserPayloadInterface) => {
     try {
       let response: any = await dispatch(addUser({ payload: values }));
-      console.log(response);
+  
 
       if (response.meta.requestStatus === 'fulfilled') {
         if (response.payload === 'Account Exists') {

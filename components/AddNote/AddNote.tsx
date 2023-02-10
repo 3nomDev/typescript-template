@@ -34,7 +34,7 @@ const AddNotePopup: FC<Props> = ({
   const user = useSelector(userSelector);
 
   const handleformchange = (e) => {
-    console.log(e.target.value)
+ 
     if (e.target.checked) {
       setIsProposal(true);
     } else {
@@ -62,7 +62,7 @@ const AddNotePopup: FC<Props> = ({
   for (let i = 1; i <= days; i++) {
     dayOptions.push(i.toString());
   }
-console.log(isProposal)
+
   return (
     <div className={styles.popUpBackground}>
       <div className={styles.popUpWrapper}>

@@ -36,7 +36,7 @@ export const CustomerList: FC<Props> = ({ type }) => {
   const { pending } = useSelector(adminDashboardSelector);
 
   useEffect(() => {
-    console.log(searchParam);
+  
     const result = activeAccounts.map((item) => {
       if (
         item.ApplicationID.toString().includes(searchParam) ||

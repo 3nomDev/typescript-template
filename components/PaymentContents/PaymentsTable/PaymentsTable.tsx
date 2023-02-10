@@ -23,13 +23,6 @@ const {
   userActiveAccount
 } = useSelector(adminDashboardSelector);
 
-// const {ScheduledDate } = userPayments
-// console.log(userPayments)
-// console.log(ScheduledDate)
-
-// const formatedDate = moment(ScheduledDate).format('MM/DD/YYYY')
-// console.log(formatedDate)
-
   return (
     <table className={styles.table}>
       <thead>

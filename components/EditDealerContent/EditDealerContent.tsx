@@ -296,7 +296,7 @@ export const EditDealerContent: FC<Props> = ({
         UserNotes: userDenialNote,
         UserApproved: userApproved,
       };
-      console.log(data);
+     
 
       dispatch(AddRejectionNote(data));
       setLeaseApproved(false);

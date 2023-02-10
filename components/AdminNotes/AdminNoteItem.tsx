@@ -8,7 +8,7 @@ interface Props {
 
 const AdminNoteItem = ({ note }) => {
 
-  console.log(note)
+  
   let data;
   if (note?.LeaseNotes.includes(':')) {
     data = JSON.parse(note?.LeaseNotes);

@@ -31,7 +31,6 @@ export const AdminDashboard: FC<Props> = (props) => {
   const { stats, notifications, dashboardApplications } = props;
   const router = useRouter();
 
-  console.log(dashboardApplications);
   const incompleteApplications = [];
   const awaitingApproveApplications = [];
   // const incompleteApplications = dashboardApplications.filter(

@@ -25,7 +25,7 @@ const Customerlist: FC= () => {
   const user = useSelector(userSelector);
   const payments = useSelector(userPaymentsSelector);
 
-  console.log(payments , "from the customer list")
+
 
 //   const activeAccounts = useSelector(activeAccountsSelector);
   

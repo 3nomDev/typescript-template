@@ -29,6 +29,7 @@ const DealerLogin: FC = () => {
   const dispatch = useDispatch();
 
   const user = useSelector(userSelector);
+  
   const isAuthorized = useSelector(isAuthorizedSelector);
 
   const { pending, error, errorMessage } = useSelector(authSelector);

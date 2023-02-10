@@ -50,7 +50,7 @@ export const PaymentContents: FC<Props> = ({
   }
 
   const weekly = userPayments.map((payment) => payment.Amount)[0];
-  console.log(weekly);
+
 
   const {
     FirstName,
@@ -67,9 +67,12 @@ export const PaymentContents: FC<Props> = ({
     VehicleEngine,
     TLCTrackerFee,
     SalesTax,
-    ApplicationID
+    ApplicationID,
+    VIN
     
   } = userActiveAccount;
+
+console.log(userActiveAccount)
 
   let accountNumber = 0;
   if (userPayments.length && userPayments[0].AccountNumber) {
@@ -180,11 +183,11 @@ export const PaymentContents: FC<Props> = ({
             <div>
               <div className={styles.carDetailsPerks}>
                   <p>
-                {VehicleYear !== 0}  {VehicleMake}
+                {VehicleYear !== 0 && VehicleYear}  {VehicleMake}{" "}
                 {VehicleModel}
               </p>
               <p>
-                Vin:
+                Vin: {VIN}
               </p>
               </div>
             

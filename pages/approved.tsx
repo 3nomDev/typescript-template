@@ -13,7 +13,7 @@ const Approved: FC = () => {
 
   const approvalCode = useSelector(approvalCodeSelector);
 
-  console.log(approvalCode)
+
   const applicationDealers = useSelector(applicationDealersSelector);
 
   useEffect(() => void dispatch(loadApplicationDealers()), []);

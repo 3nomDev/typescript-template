@@ -18,10 +18,10 @@ const DealerApplication: FC = () => {
   const { applicationItem } = useSelector(dealerDashboardSelector);
 const userid = user?.ID
 const statusId= applicationItem?.StatusID
-console.log(statusId)
+
 
   const router = useRouter();
-  console.log(applicationItem)
+ 
 
   const { id } = router.query;
   const data = {appId: id, userId:userid}

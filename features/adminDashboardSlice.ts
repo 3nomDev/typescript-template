@@ -112,7 +112,7 @@ export const loadApprovedApplications = createAsyncThunk(
 export const loadDeclinedApplications = createAsyncThunk(
   'adminDashboard/loadDeclinedApplications',
   async (userId: string) => {
-    console.log(userId);
+  
     const res = await fetch(
       'https://tlcfin.prestoapi.com/api/getdeniedapplications',
       {
@@ -158,7 +158,10 @@ export const loadActiveAccounts = createAsyncThunk(
       },
       // body: JSON.stringify({ userid: Number(userId) }),
     });
-    const response: ActiveAccountsInterface[] = await res.json();
+
+
+    const response: ActiveAccountsInterface[] = await res.json();  
+   
     return response;
   }
 );
@@ -177,6 +180,7 @@ export const loadUserActiveAccount = createAsyncThunk(
       }
     );
     const response: UserActiveAccountsInterface = await res.json();
+    
     return response;
   }
 );
@@ -195,7 +199,7 @@ export const loadStates = createAsyncThunk(
 export const loadRejectionNotes = createAsyncThunk(
   'adminDashboard/loadRejectionNotes',
   async (data: {}) => {
-    console.log('********************getting notes', data);
+  
     const res = await fetch('https://tlcfin.prestoapi.com/api/notes', {
       method: 'POST',
       headers: {
@@ -407,7 +411,7 @@ export const loadDashboard = createAsyncThunk(
 export const loadApplication = createAsyncThunk(
   'adminDashboard/loadApplication',
   async (data: any, thunkApi) => {
-    console.log(data);
+   
     const res = await fetch('https://tlcfin.prestoapi.com/api/application', {
       method: 'POST',
       headers: {
@@ -420,7 +424,7 @@ export const loadApplication = createAsyncThunk(
     if (res.status === 200 && data.appId) {
       let dataToSend = { userid: data.userId, ApplicationID: data?.appId };
       let noteData = { id: data?.appId, status: response[0].StatusID };
-      console.log(noteData);
+   
       thunkApi.dispatch(getDocuments(dataToSend));
       // thunkApi. dispatch(loadRejectionNotes(noteData));
     }
@@ -465,7 +469,7 @@ export const loadDocumentTypes = createAsyncThunk(
 export const uploadDocument = createAsyncThunk(
   'adminDashboard/uploadDocument',
   async (data: any, thunkApi) => {
-    console.log(data);
+   
     let userid;
     let appid;
     if (data) {
@@ -493,7 +497,7 @@ export const uploadDocument = createAsyncThunk(
 export const getDocuments = createAsyncThunk(
   'adminDashboard/getDocuments',
   async (data: any) => {
-    console.log(Object.values(data));
+  
     const res = await fetch('https://tlcfin.prestoapi.com/api/getdocuments', {
       method: 'POST',
       headers: {
@@ -510,7 +514,7 @@ export const getDocuments = createAsyncThunk(
 export const getDocument = createAsyncThunk(
   'adminDashboard/getDocument',
   async (data: any) => {
-    console.log(Object.values(data));
+  
     const res = await fetch('https://tlcfin.prestoapi.com/api/getdocument', {
       method: 'POST',
       headers: {
