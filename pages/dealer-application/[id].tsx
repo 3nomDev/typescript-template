@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { isString } from '@rnw-community/shared';
@@ -16,11 +16,15 @@ const DealerApplication: FC = () => {
   const dispatch = useDispatch();
   const user = useSelector(userSelector);
   const { applicationItem } = useSelector(dealerDashboardSelector);
+  const [loadedValues, setLoadedValues] = useState()
 const userid = user?.ID
 const statusId= applicationItem?.StatusID
 
 
   const router = useRouter();
+  useEffect(() =>{
+    setLoadedValues(applicationItem)
+  },[applicationItem])
  
 
   const { id } = router.query;
@@ -33,7 +37,8 @@ const statusId= applicationItem?.StatusID
   return (
     <div className={styles.wrapper}>
       <Sidebar />
-      <EditDealerApplication initialValues={applicationItem} />
+     
+      <EditDealerApplication initialValues={applicationItem} loadedValues={loadedValues} setLoadedValues={setLoadedValues}/>
     </div>
   );
 };

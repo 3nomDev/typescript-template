@@ -77,9 +77,11 @@ const validationSchema = Yup.object({
   DepositFloat: Yup.number(),
   EmployerName: Yup.string(),
   HousingStatus: Yup.string(),
-  HowLong: Yup.string(),
+ 
   MiddleName: Yup.string(),
   VehicleColor: Yup.string().required('Color is required'),
+  HowLong: Yup.string().required('Time at this address is required'),
+  Term: Yup.string(),
   // SSN: Yup.string()
   //   .required()
   //   .matches(/^[0-9]+$/, 'Must be only digits')
@@ -404,6 +406,9 @@ export const EditDealerContent: FC<Props> = ({
     dispatch(getVehicleInfoByVin(vin));
   };
 
+  var howLongNUm = application?.HowLong.replace(/[^0-9]/g, '');
+  var howLongTerm = application?.HowLong.replace(/[^\D]+/g, '');
+
 
   const denailNotePopup = (
     <div className={styles.popUpBackground}>
@@ -489,6 +494,8 @@ export const EditDealerContent: FC<Props> = ({
     </ul>
   );
 
+  console.log(howLongNUm)
+  console.log(howLongTerm)
   
 
   return (
@@ -542,6 +549,8 @@ export const EditDealerContent: FC<Props> = ({
               VehicleTransmission:
                 vehicleDetails.TransmissionStyle ||
                 application?.VehicleTransmission,
+                Term: howLongTerm ? howLongTerm : '',
+                HowLong: howLongNUm ? howLongNUm : '',
 
             }}
           >
@@ -794,6 +803,7 @@ export const EditDealerContent: FC<Props> = ({
                             <div className={styles.inputBox}>
                               <p>SSN</p>
                               <Field
+                              // type="number"
                                 className={styles.input}
                                 name="SSN"
                                 placeholder="Social Security"
@@ -939,14 +949,23 @@ export const EditDealerContent: FC<Props> = ({
                                 </option>
                               </Field>
                             </div>
-                            <div className={styles.inputBox}>
-                              <p>Time at this address</p>
-                              <Field
+                            <div className={styles.inputBox} >
+                              <p>Time at this address (Months)</p>
+                              <div  style={{display:"flex"}}>
+                                     <Field
                                 type="number"
                                 name="HowLong"
                                 placeholder="Time at this address"
                                 className={styles.input}
                               />
+                               <Field as="select" className={styles.input} style={{marginLeft:"10px"}} name="Term">
+                             <option value="">Choose an option</option>
+
+                              <option value="Years">Years</option>
+                              <option value="Months">Months</option>
+                            </Field>
+                              </div>
+                         
                             </div>
                           </div>
                           <div className={styles.formRow}>

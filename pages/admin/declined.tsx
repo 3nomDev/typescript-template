@@ -21,13 +21,14 @@ const Declined: FC = () => {
   const user = useSelector(userSelector);
   const declinedApplications = useSelector(declinedApplicationsSelector);
  
+  console.log(declinedApplications)
 
   useEffect(() => void dispatch(loadDeclinedApplications(user?.ID)), []); 
   // console.log(declinedApplications)
   return (
     <div className={styles.wrapper}>
       <AdminSidebar />
-      <ApplicationsTable
+  <ApplicationsTable
         type={DashboardBoxEnum.Declined}
         title="Declined Applications"
         applications={declinedApplications}

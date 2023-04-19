@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { faUserPlus } from '@fortawesome/fontawesome-free-solid';
+import { faSearch, faUserPlus } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { Field, Form, Formik } from 'formik';
 import { cs } from '@rnw-community/shared';
@@ -24,6 +24,8 @@ import {
   getIpAddress,
   ipAddressSelector,
   loadApplications,
+  getVehicleInfoByVin,
+  vehicleInfoSelector,
 } from '../../features/dealerDashboardSlice';
 import Select from 'react-select';
 import Document from '../DocumentCard/Document';
@@ -32,6 +34,8 @@ import moment from 'moment';
 
 interface Props {
   states: StateInterface[];
+  loadedValues: {};
+  setLoadedValues: React.Dispatch<(prevState: undefined) => undefined>;
 }
 
 const validationSchema = Yup.object({
@@ -86,7 +90,7 @@ const validationSchema = Yup.object({
     .min(1, 'Years must be greater than 0'),
 });
 
-export const CreateAppForm: FC<Props> = ({ states }) => {
+export const CreateAppForm: FC<Props> = ({ states, loadedValues, setLoadedValues }) => {
   const dispatch = useDispatch();
   const router = useRouter();
   let approvalCode = router.query.id;
@@ -100,6 +104,7 @@ export const CreateAppForm: FC<Props> = ({ states }) => {
   const documentTypes = useSelector(documentTypesSelector);
   const documents = useSelector(documentSelector);
   const ipAddress = useSelector(ipAddressSelector)
+  const vehicleDetails = useSelector(vehicleInfoSelector);
   const newStates = [{Short:'', State:'Choose an option'},...states ]
   
   let id;
@@ -190,7 +195,7 @@ dispatch(getIpAddress())
         VIN: values.VIN,
         VehicleColor: values.VehicleColor,
         VehicleEngine: values.VehicleEngine,
-        VehicleHorsePower: values.VehicleHorsePower,
+        VehicleHorsePower: '5000',
         VehicleMake: values.VehicleMake,
         VehicleMileage: values.VehicleMileage,
         VehicleModel: values.VehicleModel,
@@ -200,13 +205,28 @@ dispatch(getIpAddress())
         YearsAtCurrentJob: values.YearsAtCurrentJob,
         userId: Number(user.ID),
         RemoteIP: ipAddress.toString(),
-        SSN:values.SSN
+        SSN:values.SSN,
+       
       })
     );
     dispatch(loadApplications(userId))
     moveScreen();
     router.push("/dealership")
   };
+
+  const lookUpVehicle = (e, vin, values) => {
+    e.preventDefault()
+    console.log(values)
+    setLoadedValues({ ...loadedValues, ...values });
+    dispatch(getVehicleInfoByVin(vin));
+  };
+
+  const calcFinanced = (num1, num2) => {
+    return num1 - num2;
+  };
+
+  console.log(loadedValues)
+
 
   return (
     <div className={styles.wrapper}>
@@ -223,13 +243,28 @@ dispatch(getIpAddress())
         
       </div>
       <Formik
-        initialValues={{ ...emptyApplication, approvalCode: '', color: '', PositionType:'', }}
+        initialValues={{...loadedValues, approvalCode: '', color: '', PositionType:'',  VIN:vehicleDetails.VIN ||  emptyApplication?.VIN,
+        VehicleYear:
+          vehicleDetails.ModelYear ,
+        VehicleMake: vehicleDetails.Make ,
+        VehicleModel: vehicleDetails.Model ,
+        VehicleEngine:
+          vehicleDetails.DisplacementL ,
+        VehicleTransmission:
+          vehicleDetails.TransmissionStyle 
+        }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
+        enableReinitialize
       >
-        {({ submitForm, errors, touched, values }) => {
+        {({ submitForm, errors, touched, values,setFieldValue }) => {
        
+       useEffect(()=>{
+                
+        setFieldValue("AmountFinanced", calcFinanced(values?.PurchasePrice, values?.DepositFloat)) 
+     
 
+       },[values.DepositFloat, touched.DepositFloat, setFieldValue])
           const firstNameHasError = errors.FirstName && touched.FirstName;
           const lastNameHasError = errors.LastName && touched.LastName;
           const cellPhoneHasErrors = errors.CellPhone && touched.CellPhone;
@@ -277,6 +312,8 @@ dispatch(getIpAddress())
            touched.HousingStatus && values.HousingStatus === ""
           const vehicleTransmissionHasErrors =
            touched.VehicleTransmission && values.VehicleTransmission === ""
+
+
 
           return (
             <div className={styles.formWrapper}>
@@ -537,13 +574,22 @@ dispatch(getIpAddress())
                           </div>}
                       </div>
                       <div className={styles.inputBox}>
-                        <p>Time at this address</p>
-                        <Field
-                          type="number"
-                          name="HowLong"
-                          placeholder="Time at this address"
-                          className={styles.input}
-                        />
+                      <div style={{display:"flex"}}>
+                              <Field
+                              type="string"
+                              name="HowLong"
+                              min="0"
+                              placeholder="Time at this address"
+                              className={styles.input}
+                            />
+                             <Field as="select" className={styles.input} style={{marginLeft:"10px"}} name="Term" >
+                             <option value="">Choose an option</option>
+
+                              <option value="Years">Years</option>
+                              <option value="Months">Months</option>
+                            </Field>
+                            </div>
+                            
                         {howLongHasErrors && (
                           <div className={styles.error}>{errors.HowLong}</div>
                         )}
@@ -679,10 +725,22 @@ dispatch(getIpAddress())
                           <span className={styles.required}>*</span>
                         </p>
                         <Field
-                          type="number"
+                          type="text"
                           name="VIN"
                           className={styles.input}
                         />
+                        {values.VIN !== '' ? (
+                              <FontAwesomeIcon
+                                onClick={(e) => lookUpVehicle(e, values.VIN, values)}
+                                icon={faSearch as IconProp}
+                                style={{ cursor: 'pointer' }}
+                              />
+                            ) : (
+                              <FontAwesomeIcon
+                                icon={faSearch as IconProp}
+                                color="red"
+                              />
+                            )}{' '}
                         {vinHasErrors && (
                           <div className={styles.error}>{errors.VIN}</div>
                         )}

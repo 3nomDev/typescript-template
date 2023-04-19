@@ -559,7 +559,7 @@ export const updateApplication = createAsyncThunk(
       EmployerName: payload.EmployerName,
       FirstName: payload.FirstName,
       HousingStatus: payload.HousingStatus,
-      HowLong: payload.HowLong,
+      HowLong: payload.HowLong + payload.Term,
       LastName: payload.LastName,
       MiddleName: payload.MiddleName,
       MonthlyHousingPayment: payload.MonthlyHousingPayment,
@@ -830,12 +830,12 @@ export const dealerDashboardSlice = createSlice({
       .addCase(loadConditionalApplications.fulfilled, (state, { payload }) => {
         state.pending = false;
         state.conditionalApplications = payload;
-        state.conditionalApplications = state.conditionalApplications.map(
+        state.conditionalApplications = state.conditionalApplications.length ? state.conditionalApplications.map(
           (item) => ({
             ...item,
             isShown: true,
           })
-        );
+        ) : [];
       })
       .addCase(loadApprovedApplications.rejected, (state, { payload }) => {
         state.pending = false;
@@ -848,10 +848,10 @@ export const dealerDashboardSlice = createSlice({
       .addCase(loadDeclinedApplications.fulfilled, (state, { payload }) => {
         state.pending = true;
         state.declinedApplications = payload;
-        state.declinedApplications = state.declinedApplications.map((item) => ({
+        state.declinedApplications = state.declinedApplications.length ? state.declinedApplications.map((item) => ({
           ...item,
           isShown: true,
-        }));
+        })) : [];
       })
       .addCase(loadPendingApplications.pending, (state) => {
         state.pending = true;
@@ -877,12 +877,12 @@ export const dealerDashboardSlice = createSlice({
       .addCase(loadIncompleteApplications.fulfilled, (state, { payload }) => {
         state.pending = false;
         state.incompleteApplications = payload;
-        state.incompleteApplications = state.incompleteApplications.map(
+        state.incompleteApplications = state.incompleteApplications.length ? state.incompleteApplications.map(
           (item) => ({
             ...item,
             isShown: true,
           })
-        );
+        ) : [];
       })
       .addCase(loadIncompleteApplications.rejected, (state, { payload }) => {
         state.pending = false;

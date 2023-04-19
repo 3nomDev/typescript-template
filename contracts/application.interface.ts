@@ -44,6 +44,7 @@ export interface ApplicationInterface {
   State: string;
   Status: string;
   StatusID: number;
+  Term:string;
   TAXID: string;
   VIN: string;
   VehicleColor: string;

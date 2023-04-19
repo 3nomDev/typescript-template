@@ -7,8 +7,9 @@ import {
   faTimesCircle,
   faTrash,
   faCommentAlt,
+  faQuestionCircle,
 } from '@fortawesome/fontawesome-free-solid';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { Icon, IconProp } from '@fortawesome/fontawesome-svg-core';
 import { useDispatch } from 'react-redux';
 import {
   adminDashboardSelector,
@@ -19,6 +20,8 @@ import { useRouter } from 'next/router';
 import { userSelector } from '../../features/authSlice';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
+import { faCircleCheck } from '@fortawesome/pro-regular-svg-icons';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 interface Props {
   item;
@@ -96,14 +99,20 @@ export const Document: FC<Props> = ({ item, id, profileType }) => {
   };
 
   const openFile = (document) => {
-    var w = window.open('about:blank');
-    setTimeout(function () {
+    if(document){
+        var w = window.open('about:blank');
+        if(w !== null){
+            setTimeout(function () {
       //FireFox seems to require a setTimeout for this to work.
       w.document.body.appendChild(w.document.createElement('iframe')).src =
         document.Content;
       w.document.getElementsByTagName('iframe')[0].style.width = '100%';
       w.document.getElementsByTagName('iframe')[0].style.height = '100%';
     }, 0);
+        }
+  
+    }
+  
   };
 
   const handleInputChange = (e) => {
@@ -174,44 +183,85 @@ export const Document: FC<Props> = ({ item, id, profileType }) => {
         </a>
         <p>{moment(item.DateAdded).format('MM/DD/YYYY')}</p>
         {item.ApprovedBy !== 0 ? (
-          <div>
-            <h3>
+          <div style={{display:"flex"}}>
+            {
+               <>
+          <OverlayTrigger overlay={<Tooltip>
+          {item.Status === 'Approved' ? ` Approved by ${item.ApprovedByName}` : 'Declined'}
+          </Tooltip>}>
+
+     <FontAwesomeIcon icon={item.Status === 'Approved' ? faCircleCheck : faTimesCircle as IconProp}  color={item.Status === 'Approved' ? "#50D00D" : "red"} size="lg" />
+          </OverlayTrigger>
+
+
+      
+         
+              </>
+            }
+            {/* <h3>
               Approved by {item.ApprovedByName}{' '}
-              {/* <FontAwesomeIcon
-                icon={faTrash as IconProp}
-                className={styles.trash}
-                onClick={() => handleDocStatusChange('delete', item)}
-              /> */}
-            </h3>
+             
+            </h3> */}
           </div>
         ) : (
    
           <div>
             
             {' '}
-            {profileType !== 'dealer' && <><FontAwesomeIcon
+            {profileType !== 'dealer' && <>
+            <OverlayTrigger overlay={<Tooltip>
+              Approve
+            </Tooltip>}>
+<FontAwesomeIcon
               icon={faCheckCircle as IconProp}
               className={styles.checkMark}
               onClick={() => handleDocStatusChange('approve', item)}
             />
-            <FontAwesomeIcon
+            </OverlayTrigger>
+            
+           <OverlayTrigger overlay={<Tooltip>Decline</Tooltip>}>
+<FontAwesomeIcon
               icon={faTimesCircle as IconProp}
               className={styles.xmark}
               onClick={() => handleDocStatusChange('deny', item)}
             />
+           </OverlayTrigger>
+           
+            
             {item.Notes && (
-              <FontAwesomeIcon
+              <OverlayTrigger overlay={<Tooltip>View Notes</Tooltip>}>
+                  <FontAwesomeIcon
                 icon={faCommentAlt as IconProp}
                 className={styles.note}
                 onClick={() => handleDenialNote(item)}
               />
-            )}
+              </OverlayTrigger>
             
-            <FontAwesomeIcon
+            )}
+            <OverlayTrigger overlay={<Tooltip>Delete</Tooltip>}>
+               <FontAwesomeIcon
               icon={faTrash as IconProp}
               className={styles.trash}
               onClick={() => handleDocStatusChange('delete', item)}
-            /></>
+            />
+            </OverlayTrigger>
+           
+            
+            
+            </>
+            }{
+              profileType === 'dealer' && <>
+          <OverlayTrigger overlay={<Tooltip>
+          {item.Status === 'Approved' ? 'Approved' : item.Status === 'Declined' ? "Declined" : item.Status === 'Pending' ? 'Pending' : null}
+          </Tooltip>}>
+
+     <FontAwesomeIcon icon={item.Status === 'Approved' ? faCircleCheck : item.Status === 'Pending' ? faQuestionCircle : faTimesCircle as IconProp} color={item.Status === 'Approved' ? "green" : item.Status === "Pending" ? '#ef4b0c' : "red"} size="lg" />
+          </OverlayTrigger>
+
+
+      
+         
+              </>
             }
             
           </div>

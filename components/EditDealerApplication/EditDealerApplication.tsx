@@ -31,7 +31,11 @@ import { DatePickerField } from '../DatePicker/DatePickerField';
 import { MaskedInput } from '../MaskedInput/MaskedInput';
 import Select from 'react-select';
 import { useRouter } from 'next/router';
-import { loadStates, loadUserActiveAccount, stateSelector } from '../../features/adminDashboardSlice';
+import {
+  loadStates,
+  loadUserActiveAccount,
+  stateSelector,
+} from '../../features/adminDashboardSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus, faSearch } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -42,6 +46,7 @@ import Document from '../DocumentCard/Document';
 import { addNotification } from '../../features/notifications/notificationSlice';
 import moment from 'moment';
 import Link from 'next/link';
+import AutoSave from '../Autosave';
 
 const validationSchema = Yup.object({
   FirstName: Yup.string().trim().required('First name is required'),
@@ -66,7 +71,8 @@ const validationSchema = Yup.object({
   State: Yup.string().trim().required('State is required'),
   PostalCode: Yup.string().trim().required('Zip code is required'),
   HousingStatus: Yup.string().trim().required('Housing status is required'),
-  HowLong: Yup.number().required('Time at this address is required'),
+  HowLong: Yup.string().required('Time at this address is required'),
+  Term: Yup.string(),
   EmployerName: Yup.string().trim().required('Company name is required'),
   WorkPhone: Yup.string().trim().required('Work phone is required'),
   Position: Yup.string().trim().required('Position is required'),
@@ -90,9 +96,15 @@ const validationSchema = Yup.object({
 
 interface Props {
   initialValues: ApplicationInterface;
+  loadedValues: {};
+  setLoadedValues: React.Dispatch<(prevState: undefined) => undefined>;
 }
 
-export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
+export const EditDealerApplication: FC<Props> = ({
+  initialValues,
+  loadedValues,
+  setLoadedValues,
+}) => {
   const dispatch = useDispatch();
   const router = useRouter();
   let approvalCode = router.query.id;
@@ -108,7 +120,8 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
   const user = useSelector(userSelector);
   const documents = useSelector(documentSelector);
   const vehicleDetails = useSelector(vehicleInfoSelector);
- const [userApplication, setUserApplication] = useState({})
+  const [userApplication, setUserApplication] = useState({});
+  const [copyOfValues] = useState([initialValues]);
 
   const userId = user?.ID;
   const statusStyle = {
@@ -124,13 +137,14 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
 
   const [documentToSend, setDocumentToSend] = useState<any>({ userID: userId });
 
-
-    const calcFinanced = (num1, num2) => {
+  const calcFinanced = (num1, num2) => {
     return num1 - num2;
   };
 
+  var howLongNUm = initialValues?.HowLong.replace(/[^0-9]/g, '');
+  var howLongTerm = initialValues?.HowLong.replace(/[^\D]+/g, '');
+
   const handleSubmit = (values: Partial<ApplicationInterface>): void => {
-   
     dispatch(
       updateApplication({
         Address: values.Address,
@@ -145,7 +159,7 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
         EmployerName: values.EmployerName,
         FirstName: values.FirstName,
         HousingStatus: values.HousingStatus,
-        HowLong: values.HowLong,
+        HowLong: values.HowLong + values.Term,
         LastName: values.LastName,
         MiddleName: values.MiddleName,
         MonthlyHousingPayment: values.MonthlyHousingPayment,
@@ -181,7 +195,8 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
       value: item.ID,
     }));
 
-  const uploadFile = (document) => {
+  const uploadFile = (values) => {
+    setLoadedValues({ ...loadedValues, ...values });
     dispatch(uploadDocument(documentToSend));
   };
 
@@ -196,9 +211,9 @@ export const EditDealerApplication: FC<Props> = ({ initialValues }) => {
     dispatch(loadDocumentTypes());
   }, []);
 
-  useEffect(() =>{
-getActiveAccountInfo()
-  },[approvalCode])
+  useEffect(() => {
+    getActiveAccountInfo();
+  }, [approvalCode]);
 
   const decryptFile = (event) => {
     let fileBlob = event.target.result;
@@ -243,7 +258,7 @@ getActiveAccountInfo()
 
   const saveNote = () => {
     const approved = application.StatusID === 3 ? true : false;
-    noteData = { id: application.ApplicationID, status: application.StatusID };
+
     if (!noteOptions) {
       dispatch(
         addNotification({
@@ -314,19 +329,26 @@ getActiveAccountInfo()
     }
   };
 
-  const lookUpVehicle = (e, vin) => {
-    e.preventDefault()
+  const lookUpVehicle = (e, vin, values) => {
+    e.preventDefault();
+    console.log(values);
+    setLoadedValues({ ...loadedValues, ...values });
     dispatch(getVehicleInfoByVin(vin));
   };
 
-  const getActiveAccountInfo =  async () => {
-    
-    let result = await dispatch(loadUserActiveAccount(approvalCode))
-   setUserApplication(result.payload)
-  }
+  const getActiveAccountInfo = async () => {
+    let result = await dispatch(loadUserActiveAccount(approvalCode));
+    setUserApplication(result.payload);
+  };
 
+  const handleBack = (e) => {
+    e.preventDefault();
+    router.back();
+  };
+  
 
  
+
   return (
     <div className={styles.wrapper}>
       {showNotes && notes.length && (
@@ -349,6 +371,7 @@ getActiveAccountInfo()
         <div className={styles.content}>
           <div className={styles.title}>
             <div className={styles.titleContent}>
+              {/* <div> <button>Back</button></div> */}
               <h1>
                 <FontAwesomeIcon
                   icon={faUserPlus as IconProp}
@@ -374,11 +397,15 @@ getActiveAccountInfo()
                 >
                   Add Note
                 </button>
-            {Object.values(userApplication).length  > 0 &&   <Link href={`/dealercustomerpayment/${application?.ApplicationID}`}>
-                <button   className={styles.addNoteButton}>
-                  See Payments
-                </button>
-               </Link>}
+                {Object.values(userApplication).length > 0 && (
+                  <Link
+                    href={`/dealercustomerpayment/${application?.ApplicationID}`}
+                  >
+                    <button className={styles.addNoteButton}>
+                      See Payments
+                    </button>
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -389,19 +416,21 @@ getActiveAccountInfo()
             onSubmit={handleSubmit}
             enableReinitialize
             initialValues={{
-              ...initialValues,
-              DOB: new Date(initialValues?.DOB ?? '2004-04-04T00:00:00'),
-              SSN: '***-**-' + initialValues?.SSN,
-              VIN:vehicleDetails.VIN ||  initialValues?.VIN,
+              ...loadedValues,
+              DOB: new Date(loadedValues?.DOB ?? '2004-04-04T00:00:00'),
+              SSN: '***-**-' + loadedValues?.SSN,
+              VIN: vehicleDetails.VIN || loadedValues?.VIN,
               VehicleYear:
-                vehicleDetails.ModelYear || initialValues?.VehicleYear,
-              VehicleMake: vehicleDetails.Make || initialValues?.VehicleMake,
-              VehicleModel: vehicleDetails.Model || initialValues?.VehicleModel,
+                vehicleDetails.ModelYear || loadedValues?.VehicleYear,
+              VehicleMake: vehicleDetails.Make || loadedValues?.VehicleMake,
+              VehicleModel: vehicleDetails.Model || loadedValues?.VehicleModel,
               VehicleEngine:
-                vehicleDetails.DisplacementL || initialValues?.VehicleEngine,
+                vehicleDetails.DisplacementL || loadedValues?.VehicleEngine,
               VehicleTransmission:
                 vehicleDetails.TransmissionStyle ||
-                initialValues?.VehicleTransmission,
+                loadedValues?.VehicleTransmission,
+              Term: howLongTerm ? howLongTerm : '',
+              HowLong: howLongNUm ? howLongNUm : '',
 
               // AmountFinanced : calcFinanced(initialValues?.PurchasePrice, initialValues?.DepositFloat)
             }}
@@ -421,6 +450,11 @@ getActiveAccountInfo()
                   calcFinanced(values?.PurchasePrice, values?.DepositFloat)
                 );
               }, [values.DepositFloat, touched.DepositFloat, setFieldValue]);
+
+              console.log(values);
+              console.log(errors)
+              console.log(howLongTerm)
+
               const firstNameHasErrors = hasErrors(
                 touched.FirstName,
                 errors.FirstName
@@ -546,7 +580,6 @@ getActiveAccountInfo()
                   styles.input as StyleType
                 );
 
-             
               return (
                 <div className={styles.formWrapper}>
                   {addNote && (
@@ -558,8 +591,10 @@ getActiveAccountInfo()
                     />
                   )}
                   <Form className={styles.form}>
+                    {/* <AutoSave  /> */}
                     <div className={styles.personalDetails}>
                       <div className={styles.headerRight}>
+                        <button onClick={(e) => handleBack(e)}>Back</button>
                         <h1>Personal details</h1>
                         <p>01</p>
                       </div>
@@ -655,6 +690,7 @@ getActiveAccountInfo()
                               className={styles.input}
                               name="DLNumber"
                               placeholder="Driver license"
+                              // onChange={(e) => console.log(e.target.value)}
                             />
                             {driverLicenseHasErrors && (
                               <div className={styles.error}>
@@ -736,7 +772,7 @@ getActiveAccountInfo()
                                   Object.keys(documentToSend).length < 6
                                 }
                                 className={styles.uploadBtn}
-                                onClick={uploadFile}
+                                onClick={() => uploadFile(values)}
                               >
                                 Upload
                               </button>
@@ -838,14 +874,28 @@ getActiveAccountInfo()
                             )}
                           </div>
                           <div className={styles.inputBox}>
-                            <p>Time at this address</p>
-                            <Field
-                              type="number"
-                              name="HowLong"
-                              min="0"
-                              placeholder="Time at this address"
-                              className={styles.input}
-                            />
+                            <p>Time at this address (Months)</p>
+                            <div style={{ display: 'flex' }}>
+                              <Field
+                                type="string"
+                                name="HowLong"
+                                min="0"
+                                placeholder="Time at this address"
+                                className={styles.input}
+                              />
+                              <Field
+                                as="select"
+                                className={styles.input}
+                                style={{ marginLeft: '10px' }}
+                                name="Term"
+                              >
+                                <option value="">Choose an option</option>
+
+                                <option value="Years">Years</option>
+                                <option value="Months">Months</option>
+                              </Field>
+                            </div>
+
                             {TimeAtAddressHasErrors && (
                               <div className={styles.error}>
                                 {errors.HowLong}
@@ -994,7 +1044,9 @@ getActiveAccountInfo()
                             />
                             {values.VIN !== '' ? (
                               <FontAwesomeIcon
-                                onClick={(e) => lookUpVehicle(e, values.VIN)}
+                                onClick={(e) =>
+                                  lookUpVehicle(e, values.VIN, values)
+                                }
                                 icon={faSearch as IconProp}
                                 style={{ cursor: 'pointer' }}
                               />

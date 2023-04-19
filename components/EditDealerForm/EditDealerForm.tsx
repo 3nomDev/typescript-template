@@ -122,6 +122,25 @@ export const EditDealerForm: FC<Props> = ({
                   </div>
                 </div>
                 <div className={styles.infoBar}>
+                 <div style={{width:"50%"}}>
+                   <span className={styles.infoKey}>Contact First Name</span>
+                    <p className={styles.infoValue} >
+                      {dealerData.ContactFirstName}
+                    </p>
+                 </div>
+                   <div style={{width:"50%"}}>
+                    <span className={styles.infoKey}>Contact Last Name</span>
+                    <p className={styles.infoValue}>
+                      {dealerData.ContactLastName}
+                    </p>
+                   </div>
+                  
+                 
+                    
+                 
+                </div>
+                
+                <div className={styles.infoBar}>
                   <div className={styles.infoBox}>
                     <span className={styles.infoKey}>Contact position</span>
                     <p className={styles.infoValue}>
@@ -130,7 +149,7 @@ export const EditDealerForm: FC<Props> = ({
                   </div>
                 </div>
                 <div className={styles.infoBar}>
-                  <div className={styles.editButton} onClick={onEdit}>
+                  <div className={styles.editButton} onClick={onEdit} style={{cursor:"pointer"}}>
                     Edit
                   </div>
                 </div>

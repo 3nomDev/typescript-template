@@ -36,7 +36,7 @@ export const DealerRow: FC<Props> = ({
   }[Status];
 
   return (
-    <tr className={styles.tableRow}>
+    <tr className={styles.tableRow} onClick={onEditClick(ApplicationID.toString())}>
       <td>{FirstName?.concat(` ${LastName}`)}</td>
    {ApprovalCode &&    <td>{ApprovalCode}</td>}
       <td>{ApplicationID}</td>

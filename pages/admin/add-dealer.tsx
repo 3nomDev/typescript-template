@@ -15,17 +15,17 @@ import { userSelector } from '../../features/authSlice';
 
 export const initialDealerFormValues = {
   Name: '',
-  Address: '13',
-  City: '13',
-  State: '13',
-  License: '13',
-  Website: '13',
-  WorkPhone: '13',
-  EXT: '13',
-  ContactFirstName: '13',
-  ContactLastName: '13',
-  ContactPosition: '13',
-  EmailAddress: '13',
+  Address: '',
+  City: '',
+  State: '',
+  License: '',
+  Website: '',
+  WorkPhone: '',
+  EXT: '',
+  ContactFirstName: '',
+  ContactLastName: '',
+  ContactPosition: '',
+  EmailAddress: '',
   PostalCode: '',
 };
 

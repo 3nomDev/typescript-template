@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { isNotEmptyString, OnEventFn } from '@rnw-community/shared';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit } from '@fortawesome/fontawesome-free-solid';
+import { faArrowRight, faEdit } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import styles from './AdminDealerRow.module.css';
 import { DealerInterface } from '../../contracts';
@@ -38,7 +38,7 @@ export const AdminDealerRow: FC<Props> = ({
       <td>{isNotEmptyString(EmailAddress) ? EmailAddress : 'No data'}</td>
       <td>{isNotEmptyString(Address) ? Address : 'No data'}</td>
       <td className={styles.editRow} onClick={onEditPress(ID)}>
-        <FontAwesomeIcon icon={faEdit as IconProp} />
+        <FontAwesomeIcon icon={faArrowRight as IconProp} />
       </td>
     </tr>
   );

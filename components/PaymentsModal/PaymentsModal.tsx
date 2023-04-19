@@ -47,7 +47,7 @@ export const PaymentsModal: FC<Props> = ({ onClose, onSubmit, application }) => 
       
           return (
             <div className={styles.body}>
-              <Form>
+              <Form style={{padding:"20px"}}>
                 <span className={styles.fieldLabel}>Selling Price</span>
                 <Field type="number" name="SellingPrice" className={styles.select} />
                 <span className={styles.fieldLabel}>Deposit</span>

@@ -36,7 +36,7 @@ export const ApplicationsTable: FC<Props> = ({
 
   const dispatch = useDispatch();
 
-
+console.log(applications)
 
   useEffect(() => {
     const result = applications.map((item) => {
@@ -49,8 +49,8 @@ export const ApplicationsTable: FC<Props> = ({
         item.VehicleModel.toLowerCase().includes(searchParam) ||
         String(item.VehicleYear).toLowerCase().includes(searchParam) ||
         item.VIN.toLowerCase().includes(searchParam) ||
-        item.Status.toLowerCase().includes(searchParam)||
-        item.ApprovalCode.toLowerCase().includes(searchParam)
+        item.Status.toLowerCase().includes(searchParam)
+        // item.ApprovalCode.toLowerCase().includes(searchParam)
       ) {
         return { ...item, isShown: true };
       }

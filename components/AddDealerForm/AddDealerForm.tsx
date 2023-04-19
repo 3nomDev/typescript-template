@@ -16,12 +16,12 @@ const validationSchema = Yup.object({
   Name: Yup.string().trim().required('Name is required'),
   Address: Yup.string().trim().required('Address is required'),
   City: Yup.string().trim().required('City is required'),
-  EmailAddress: Yup.string().trim().required('EmailAddress is required'),
+  EmailAddress: Yup.string().trim().required('Email Address is required'),
   State: Yup.string().trim().required('State is required'),
   License: Yup.string().trim().required('License is required'),
   Website: Yup.string().trim().required('Website is required'),
   WorkPhone: Yup.string().trim().required('Phone number is required'),
-  EXT: Yup.string().trim().required('EXT is required'),
+  EXT: Yup.string().trim(),
   ContactFirstName: Yup.string().required('Contact first name is required'),
   ContactLastName: Yup.string().required('Contact last name is required'),
   ContactPosition: Yup.string().required('Required contact position'),
@@ -149,8 +149,10 @@ export const AddDealerForm: FC<Props> = ({
                     />
                     <div className={styles.inputBar}>
                       <div className={styles.phoneInputWrapper}>
+                        <p>Work Phone</p>
                         <MaskedInput
                           name="WorkPhone"
+                        
                           className={inputErrorStyle(phoneHasErrors)}
                           placeholder="Phone"
                         />
@@ -161,6 +163,7 @@ export const AddDealerForm: FC<Props> = ({
                         )}
                       </div>
                       <div className={styles.phoneInputWrapper}>
+                        <p>Extension</p>
                         <Field
                           name="EXT"
                           type="text"
@@ -180,12 +183,13 @@ export const AddDealerForm: FC<Props> = ({
                     />
                     <InputBar
                       name="EmailAddress"
-                      title="EmailAddress"
+                      title="Email Address"
                       hasError={EmailAddressHasErrors}
                       error={errors.EmailAddress}
                     />
                     <div className={styles.inputBar}>
                       <div className={styles.phoneInputWrapper}>
+                        <p>Contact First Name</p>
                         <Field
                           type="text"
                           name="ContactFirstName"
@@ -200,6 +204,7 @@ export const AddDealerForm: FC<Props> = ({
                       </div>
 
                       <div className={styles.phoneInputWrapper}>
+                        <p>Contact Last Name</p>
                         <Field
                           type="text"
                           name="ContactLastName"

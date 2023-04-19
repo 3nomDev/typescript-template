@@ -4,6 +4,7 @@ import { faBell } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import styles from '../NotificationTable/NotificationTable.module.css';
 import { NotificationInterface } from '../../contracts';
+import moment from 'moment'
 
 type Props = Partial<NotificationInterface>;
 
@@ -22,7 +23,7 @@ export const NotificationRow: FC<Props> = ({
       </td>
       <td>{FirstName.concat(` ${LastName}`)}</td>
       <td>{Description}</td>
-      <td>{DateAdded}</td>
+      <td>{moment(DateAdded).format('MM/DD/YYYY')}</td>
     </tr>
   );
 };

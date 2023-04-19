@@ -19,18 +19,20 @@ export const DealerContent: FC = () => {
   const dispatch = useDispatch();
 
   const [searchParam, setSearchParam] = useState<string>('');
+ 
 
   const user = useSelector(userSelector);
   const dealers = useSelector(dealersSelector);
-  
+
+
   const router = useRouter();
 
   useEffect(() => void dispatch(loadDealers(user?.ID)), []);
   useEffect(() => {
     const result = dealers.map((item) => {
       if (
-        item.ID.toString().toLowerCase().includes(searchParam) ||
-        item.Name.toLowerCase().includes(searchParam)
+        item.ID.toString().toLowerCase().includes(searchParam.toLowerCase()) ||
+        item.Name.toLowerCase().includes(searchParam.toLowerCase())
       ) {
         return { ...item, isShown: true };
       }

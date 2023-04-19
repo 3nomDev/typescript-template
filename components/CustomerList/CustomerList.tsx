@@ -77,7 +77,7 @@ export const CustomerList: FC<Props> = ({ type }) => {
             <thead className={styles.tableHeader}>
               <tr>
                 <th>Name</th>
-                <th>Approval code</th>
+                <th>Application ID</th>
                 <th>Phone</th>
 
                 <th>Status</th>
