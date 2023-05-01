@@ -386,7 +386,7 @@ howLongTerm = loadedValues?.HowLong.replace(/[^\D]+/g, '');
                   className={styles.icon}
                 />
                 Update Account (Profile # {application?.ApplicationID})
-                <p className={statusStyle}>{application?.Status}{application.Status === 'Declined' && '(See Notes)'}</p>
+                <p className={statusStyle}>{application?.Status}{application?.Status === 'Declined' && '(See Notes)'}</p>
                 <p>
                   {application?.FirstName} {application?.LastName}
                 </p>
