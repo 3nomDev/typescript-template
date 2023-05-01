@@ -35,7 +35,7 @@ const AssignCustomerToDealer: FC<Props> = ({ setAssignCustomer }) => {
           <h2 className={styles.popupHeader}>Register Customer</h2>
 
           <input
-            onChange={(e) => setApprovalCode(e.target.value)}
+            onChange={(e) => setApprovalCode(e.target.value.toUpperCase())}
             type="text"
             placeholder="Appoval Code"
           />

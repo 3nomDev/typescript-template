@@ -60,14 +60,25 @@ const EditDealerPage: FC = () => {
     );
   const handleApprove =
     (payload: Partial<ChangeApplicationStatusArgs>) => () => {
-      dispatch(
+      if(payload.leaseApproved === false || payload.userApproved === false){
+        dispatch(
+          changeApplicationStatus({
+            ...payload,
+            appid: Number(id),
+            userId: Number(user.ID),
+            statusid: 6,
+          })
+        );
+      }
+else { dispatch(
         changeApplicationStatus({
           ...payload,
           appid: Number(id),
           userId: Number(user.ID),
           statusid: 3,
         })
-      );
+      );}
+     
     };
   const handleSchedulePayments = (
     payload: SchedulePaymentPayloadInterface

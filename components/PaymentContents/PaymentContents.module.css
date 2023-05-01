@@ -57,6 +57,13 @@
     padding-right: 10px;
 }
 
+.clientBackBtn{
+      display: block;
+    font-size: 0;
+    line-height: 0;
+    color: #9A9A9A;
+}
+
 
 
 .dashboardActions {
@@ -89,8 +96,8 @@
 }
 
 .navItem button {
-    color: #495057;
-    background-color: #fff;
+    color: white;
+    background-color: #1f6b10;
     border-color: #dee2e6 #dee2e6 #fff;
     width: 140px;
     height: 55px;
@@ -102,8 +109,8 @@
 }
 
 .navItemInactive button {
-    background: #E6E6E6;
-    color: #9C9CA8;
+    background: #196c9c;
+    color: white;
 }
 .paymentDetailsWrapper {
     padding: 10px;

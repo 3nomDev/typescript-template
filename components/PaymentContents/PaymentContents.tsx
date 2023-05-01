@@ -90,7 +90,7 @@ console.log(userActiveAccount)
 
   const router = useRouter();
 
-  const handleBack = (): void => void router.back();
+  const handleBack = (): void => void router.push("/dealership");
 
   return (
     <div className={styles.wrapper}>
@@ -124,7 +124,7 @@ console.log(userActiveAccount)
             <button>Payments</button>
           </li>
           <li className={cx(styles.navItem, styles.navItemInactive)}>
-            <button>Client details</button>
+            <button onClick={() => router.back()} >Client details</button>
           </li>
         </ul>
         <div className={styles.paymentDetailsWrapper}>

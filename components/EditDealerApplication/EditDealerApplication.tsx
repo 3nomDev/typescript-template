@@ -72,7 +72,7 @@ const validationSchema = Yup.object({
   PostalCode: Yup.string().trim().required('Zip code is required'),
   HousingStatus: Yup.string().trim().required('Housing status is required'),
   HowLong: Yup.string().required('Time at this address is required'),
-  Term: Yup.string(),
+  Term: Yup.string().required(("Please Select a Timeframe")),
   EmployerName: Yup.string().trim().required('Company name is required'),
   WorkPhone: Yup.string().trim().required('Work phone is required'),
   Position: Yup.string().trim().required('Position is required'),
@@ -87,7 +87,7 @@ const validationSchema = Yup.object({
   VehicleModel: Yup.string().trim().required('Model is required'),
   VehicleMileage: Yup.number().required('Mileage is required'),
   VehicleEngine: Yup.string().required('Engine is required'),
-  VehicleTransmission: Yup.string().required('Transmission is required'),
+
   VehicleColor: Yup.string().trim().required('Color is required'),
   PurchasePrice: Yup.number().required('Purchase price is required'),
   DepositFloat: Yup.number().required('Deposit is required'),
@@ -140,9 +140,18 @@ export const EditDealerApplication: FC<Props> = ({
   const calcFinanced = (num1, num2) => {
     return num1 - num2;
   };
+var howLongNUm;
+var howLongTerm;
+if(initialValues && initialValues.HowLong === loadedValues?.HowLong ){
+howLongNUm = initialValues?.HowLong.replace(/[^0-9]/g, '');
+howLongTerm = initialValues?.HowLong.replace(/[^\D]+/g, '');
+} 
+else{
+  howLongNUm = loadedValues?.HowLong.replace(/[^0-9]/g, '');
+howLongTerm = loadedValues?.HowLong.replace(/[^\D]+/g, '');
 
-  var howLongNUm = initialValues?.HowLong.replace(/[^0-9]/g, '');
-  var howLongTerm = initialValues?.HowLong.replace(/[^\D]+/g, '');
+}
+ 
 
   const handleSubmit = (values: Partial<ApplicationInterface>): void => {
     dispatch(
@@ -198,6 +207,7 @@ export const EditDealerApplication: FC<Props> = ({
   const uploadFile = (values) => {
     setLoadedValues({ ...loadedValues, ...values });
     dispatch(uploadDocument(documentToSend));
+    setDocumentToSend('')
   };
 
   let id;
@@ -331,10 +341,11 @@ export const EditDealerApplication: FC<Props> = ({
 
   const lookUpVehicle = (e, vin, values) => {
     e.preventDefault();
-    console.log(values);
-    setLoadedValues({ ...loadedValues, ...values });
+  
+    setLoadedValues({ ...loadedValues, ...values,  HowLong: values.HowLong + values.Term, });
     dispatch(getVehicleInfoByVin(vin));
   };
+
 
   const getActiveAccountInfo = async () => {
     let result = await dispatch(loadUserActiveAccount(approvalCode));
@@ -345,9 +356,6 @@ export const EditDealerApplication: FC<Props> = ({
     e.preventDefault();
     router.back();
   };
-  
-
- 
 
   return (
     <div className={styles.wrapper}>
@@ -378,7 +386,7 @@ export const EditDealerApplication: FC<Props> = ({
                   className={styles.icon}
                 />
                 Update Account (Profile # {application?.ApplicationID})
-                <p className={statusStyle}>{application?.Status}</p>
+                <p className={statusStyle}>{application?.Status}{application.Status === 'Declined' && '(See Notes)'}</p>
                 <p>
                   {application?.FirstName} {application?.LastName}
                 </p>
@@ -431,6 +439,7 @@ export const EditDealerApplication: FC<Props> = ({
                 loadedValues?.VehicleTransmission,
               Term: howLongTerm ? howLongTerm : '',
               HowLong: howLongNUm ? howLongNUm : '',
+              MonthlyHousingPayment: loadedValues?.EmployerName === '' ? '' : loadedValues?.MonthlyHousingPayment,
 
               // AmountFinanced : calcFinanced(initialValues?.PurchasePrice, initialValues?.DepositFloat)
             }}
@@ -452,8 +461,8 @@ export const EditDealerApplication: FC<Props> = ({
               }, [values.DepositFloat, touched.DepositFloat, setFieldValue]);
 
               console.log(values);
-              console.log(errors)
-              console.log(howLongTerm)
+              console.log(errors);
+              console.log(howLongTerm);
 
               const firstNameHasErrors = hasErrors(
                 touched.FirstName,
@@ -572,6 +581,10 @@ export const EditDealerApplication: FC<Props> = ({
               const primaryAddressHasErrors = hasErrors(
                 touched.Address,
                 errors.Address
+              );
+              const Term = hasErrors(
+                touched.Term,
+                errors.Term
               );
               const inputErrorStyle = (hasError: boolean): StyleType =>
                 cs(
@@ -874,40 +887,51 @@ export const EditDealerApplication: FC<Props> = ({
                             )}
                           </div>
                           <div className={styles.inputBox}>
-                            <p>Time at this address (Months)</p>
                             <div style={{ display: 'flex' }}>
-                              <Field
-                                type="string"
-                                name="HowLong"
-                                min="0"
-                                placeholder="Time at this address"
-                                className={styles.input}
-                              />
-                              <Field
-                                as="select"
-                                className={styles.input}
-                                style={{ marginLeft: '10px' }}
-                                name="Term"
-                              >
-                                <option value="">Choose an option</option>
-
-                                <option value="Years">Years</option>
-                                <option value="Months">Months</option>
-                              </Field>
-                            </div>
-
-                            {TimeAtAddressHasErrors && (
-                              <div className={styles.error}>
+                              <div>
+                                <p style={{marginLeft:"15px"}}>Time at this address</p>
+                                <Field
+                                  type="string"
+                                  name="HowLong"
+                                  min="0"
+                                  placeholder="Time at this address"
+                                  className={styles.input}
+                                />
+                                 {TimeAtAddressHasErrors && (
+                              <div className={styles.error} style={{marginLeft:"15px"}}>
                                 {errors.HowLong}
                               </div>
                             )}
+                              </div>
+
+                              <div style={{marginLeft:"15px"}}>
+                                <p style={{marginLeft:"15px"}}>Months or Years</p>
+                                <Field
+                                  as="select"
+                                  className={styles.input}
+                                  style={{ marginLeft: '10px' }}
+                                  name="Term"
+                                >
+                                  <option value="">Choose an option</option>
+                                  <option value="Years">Years</option>
+                                  <option value="Months">Months</option>
+                                </Field>
+                                {Term && (
+                              <div className={styles.error} style={{marginLeft:"15px"}}>
+                                {errors.Term}
+                              </div>
+                            )}
+                              </div>
+                            </div>
+
+                           
                           </div>
                         </div>
                         <div className={styles.formRow}>
                           <div className={styles.inputBox}>
                             <p>Monthly Payment</p>
                             <Field
-                              type="number"
+                              type="string"
                               min="0"
                               name="MonthlyHousingPayment"
                               placeholder="Monthly Housing Payment"
@@ -1135,7 +1159,7 @@ export const EditDealerApplication: FC<Props> = ({
                             )}
                           </div>
                         </div>
-                        <div className={styles.formRow}>
+                        {/* <div className={styles.formRow}>
                           <div className={styles.inputBox}>
                             <p>Transmission</p>
                             <Field
@@ -1155,7 +1179,7 @@ export const EditDealerApplication: FC<Props> = ({
                               </div>
                             )}
                           </div>
-                        </div>
+                        </div> */}
                         <div className={styles.formRow}>
                           <div className={styles.inputBox}>
                             <p>Color</p>

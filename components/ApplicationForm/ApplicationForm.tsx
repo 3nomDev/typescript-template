@@ -279,7 +279,7 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
                     )}
                   </div>
                   <div className={styles.inputContainer}>
-                    <label htmlFor="MonthlyExpense">Monthly expenses</label>
+                    <label htmlFor="MonthlyExpense">Total Monthly expenses</label>
                     <Field
                       placeholder="Monthly expenses"
                       name="MonthlyExpense"

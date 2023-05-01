@@ -656,7 +656,7 @@ export const changeApplicationStatus = createAsyncThunk(
           UserNotes: payload.userNotes,
           UserApproved: payload.userApproved,
         };
-        thunkApi.dispatch(AddRejectionNote(approvalNote));
+        // thunkApi.dispatch(AddRejectionNote(approvalNote));
       }
 
       thunkApi.dispatch(loadApplication(payload.appid as unknown as string));

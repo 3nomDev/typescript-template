@@ -1,20 +1,27 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, } from 'react';
 import { OnEventFn } from '@rnw-community/shared';
 import styles from './ApplicationApproveModal.module.css';
 import { ChangeApplicationStatusArgs } from '../../contracts';
+import { AddRejectionNote, changeApplicationStatus } from '../../features/adminDashboardSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { userSelector } from '../../features/authSlice';
 
 interface Props {
   closeModal: OnEventFn<void | any>;
   onSave: (payload: Partial<ChangeApplicationStatusArgs>) => () => void;
+  application:{}
 }
 
-export const ApplicationApproveModal: FC<Props> = ({ closeModal, onSave }) => {
+export const ApplicationApproveModal: FC<Props> = ({ closeModal, application, onSave }) => {
   const [userApproved, setUserApproved] = useState(true);
   const [leaseApproved, setLeaseApproved] = useState(true);
 
   const [userNotes, setUserNotes] = useState('');
   const [leaseNotes, setLeaseNotes] = useState('');
+  const user = useSelector(userSelector);
 
+
+  const dispatch = useDispatch()
   const handlePersonalInfoCheckbox = (): void => setUserApproved(!userApproved);
   const handleVehicleInfoCheckbox = (): void =>
     setLeaseApproved(!leaseApproved);
@@ -26,9 +33,41 @@ export const ApplicationApproveModal: FC<Props> = ({ closeModal, onSave }) => {
   ): void => setLeaseNotes(e.target.value);
 
   const handleSave = (payload: Partial<ChangeApplicationStatusArgs>) => () => {
+ 
+    let date = new Date().toISOString();
+    // if(payload.leaseApproved === false || payload.userApproved === false){
+    //   void dispatch(
+    //   changeApplicationStatus({
+    //     statusid:6,
+    //     userId: Number(user.ID),
+    //     appid: Number(application.ApplicationID),
+    //   })
+    // );
+    // }
+    if(payload.leaseApproved === false || payload.userApproved === false){
+      console.log(payload)
+      let data = {
+      ApplicationID: application.ApplicationID,
+      DateAdded: date,
+      Deleted: false,
+      LastUpdated: date,
+      LeaseApproved: payload.leaseApproved,
+      LeaseNotes: payload.leaseNotes,
+      StatusID: 6,
+      UpdatedBy: user.ID,
+      UserNotes: payload.userNotes,
+      UserApproved: payload.userApproved,
+    };
+
+    dispatch(AddRejectionNote(data));
+    }
+    
+    
     closeModal(null);
     onSave(payload)();
   };
+
+
 
   return (
   <div className={styles.popUpBackground}>

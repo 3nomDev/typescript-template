@@ -32,8 +32,12 @@ export const DealerRow: FC<Props> = ({
     Declined: styles.red,
     Incomplete: styles.blue,
     Approved: styles.green,
+    Active: styles.cyan,
     'Conditional Approval': styles.orange,
   }[Status];
+
+
+  console.log(Status)
 
   return (
     <tr className={styles.tableRow} onClick={onEditClick(ApplicationID.toString())}>
@@ -48,7 +52,7 @@ export const DealerRow: FC<Props> = ({
       </td>
       <td>{PurchasePrice}</td>
       <td>{VIN}</td>
-      <td className={statusStyle}>{Status}</td>
+      <td className={statusStyle}>{Status && Status !== 'Active' ? Status : Status === 'Active' && 'Funded' }</td>
       <td >{moment(DateAdded).format('MM/DD/YYYY')}</td>
       <td
         className={styles.rowButton}

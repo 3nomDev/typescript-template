@@ -15,8 +15,6 @@ import {
   faChevronDown,
   faCaretDown,
   faSearch,
-  
-  
 } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
@@ -57,7 +55,10 @@ import { faFileAlt } from '@fortawesome/pro-regular-svg-icons';
 import AdminNotes from '../AdminNotes/AdminNotes';
 import AddNotePopup from '../AddNote/AddNote';
 import { addNotification } from '../../features/notifications/notificationSlice';
-import { getVehicleInfoByVin, vehicleInfoSelector } from '../../features/dealerDashboardSlice';
+import {
+  getVehicleInfoByVin,
+  vehicleInfoSelector,
+} from '../../features/dealerDashboardSlice';
 
 const validationSchema = Yup.object({
   FirstName: Yup.string().trim().required('First name is required'),
@@ -77,11 +78,11 @@ const validationSchema = Yup.object({
   DepositFloat: Yup.number(),
   EmployerName: Yup.string(),
   HousingStatus: Yup.string(),
- 
+
   MiddleName: Yup.string(),
   VehicleColor: Yup.string().required('Color is required'),
   HowLong: Yup.string().required('Time at this address is required'),
-  Term: Yup.string(),
+  Term: Yup.string().required(("Please Select a Timeframe")),
   // SSN: Yup.string()
   //   .required()
   //   .matches(/^[0-9]+$/, 'Must be only digits')
@@ -152,7 +153,6 @@ export const EditDealerContent: FC<Props> = ({
   });
   const [inputIsChecked, setInputIsChecked] = useState(false);
   const vehicleDetails = useSelector(vehicleInfoSelector);
-
 
   const [initialProposal] = useState({
     Amount: '',
@@ -276,15 +276,16 @@ export const EditDealerContent: FC<Props> = ({
   };
 
   const handleNoteOptions = (e: any, key) => {
-   if(e.target.value !== 'Propose Terms'){
-    setIsProposal(false)
-   }
+    if (e.target.value !== 'Propose Terms') {
+      setIsProposal(false);
+    }
     setNoteOptions(e.target.value);
   };
 
   const saveDenialNote = () => {
     dispatch(onChangeAppStatus(4));
     if (leaseDenialNote !== '' || userDenialNote !== '') {
+     
       let date = new Date().toISOString();
       let data = {
         ApplicationID: application.ApplicationID,
@@ -298,7 +299,6 @@ export const EditDealerContent: FC<Props> = ({
         UserNotes: userDenialNote,
         UserApproved: userApproved,
       };
-     
 
       dispatch(AddRejectionNote(data));
       setLeaseApproved(false);
@@ -313,6 +313,7 @@ export const EditDealerContent: FC<Props> = ({
 
   const saveNote = () => {
     const approved = application.StatusID === 3 ? true : false;
+    console.log('happening here')
     if (!noteOptions) {
       dispatch(
         addNotification({
@@ -337,6 +338,7 @@ export const EditDealerContent: FC<Props> = ({
         );
         return;
       } else {
+        console.log("saving from first condition")
         let date = new Date().toISOString();
         let data = {
           ApplicationID: application.ApplicationID,
@@ -358,6 +360,7 @@ export const EditDealerContent: FC<Props> = ({
         setPaymentProposal(initialProposal);
       }
     } else if (note !== '' && noteOptions !== 'Vehicle') {
+      console.log("saving from second condition")
       let date = new Date().toISOString();
       let data = {
         ApplicationID: application.ApplicationID,
@@ -376,6 +379,7 @@ export const EditDealerContent: FC<Props> = ({
       setNote('');
       setNotePopup(false);
     } else if (note !== '' && noteOptions === 'Vehicle') {
+      console.log("saving from third condition")
       let date = new Date().toISOString();
       let data = {
         ApplicationID: application.ApplicationID,
@@ -398,9 +402,9 @@ export const EditDealerContent: FC<Props> = ({
     }
   };
 
-  const calcFinanced = (num1, num2) =>{
-    return num1- num2;
-  }
+  const calcFinanced = (num1, num2) => {
+    return num1 - num2;
+  };
 
   const lookUpVehicle = (vin) => {
     dispatch(getVehicleInfoByVin(vin));
@@ -408,7 +412,6 @@ export const EditDealerContent: FC<Props> = ({
 
   var howLongNUm = application?.HowLong.replace(/[^0-9]/g, '');
   var howLongTerm = application?.HowLong.replace(/[^\D]+/g, '');
-
 
   const denailNotePopup = (
     <div className={styles.popUpBackground}>
@@ -494,9 +497,8 @@ export const EditDealerContent: FC<Props> = ({
     </ul>
   );
 
-  console.log(howLongNUm)
-  console.log(howLongTerm)
-  
+  console.log(howLongNUm);
+  console.log(howLongTerm);
 
   return (
     <div className={styles.wrapper}>
@@ -507,6 +509,7 @@ export const EditDealerContent: FC<Props> = ({
         <ApplicationApproveModal
           closeModal={toggleApproveModal}
           onSave={onApprove}
+          application={application}
         />
       )}
       {isPaymentsModalShown && (
@@ -539,9 +542,8 @@ export const EditDealerContent: FC<Props> = ({
               ...application,
               DOB: new Date(application?.DOB ?? '2004-04-04T00:00:00'),
               SSN: '***-**-' + application?.SSN,
-              VIN:vehicleDetails.VIN ||  application?.VIN,
-              VehicleYear:
-                vehicleDetails.ModelYear || application?.VehicleYear,
+              VIN: vehicleDetails.VIN || application?.VIN,
+              VehicleYear: vehicleDetails.ModelYear || application?.VehicleYear,
               VehicleMake: vehicleDetails.Make || application?.VehicleMake,
               VehicleModel: vehicleDetails.Model || application?.VehicleModel,
               VehicleEngine:
@@ -549,20 +551,18 @@ export const EditDealerContent: FC<Props> = ({
               VehicleTransmission:
                 vehicleDetails.TransmissionStyle ||
                 application?.VehicleTransmission,
-                Term: howLongTerm ? howLongTerm : '',
-                HowLong: howLongNUm ? howLongNUm : '',
-
+              Term: howLongTerm ? howLongTerm : '',
+              HowLong: howLongNUm ? howLongNUm : '',
+              // MonthlyHousingPayment:null
             }}
           >
             {({ submitForm, touched, errors, values, setFieldValue }) => {
-
-
-                  useEffect(()=>{
-                
-                    setFieldValue("AmountFinanced", calcFinanced(values?.PurchasePrice, values?.DepositFloat)) 
-                   
-     
-                   },[values.DepositFloat, touched.DepositFloat, setFieldValue])
+              useEffect(() => {
+                setFieldValue(
+                  'AmountFinanced',
+                  calcFinanced(values?.PurchasePrice, values?.DepositFloat)
+                );
+              }, [values.DepositFloat, touched.DepositFloat, setFieldValue]);
               const vinHasErrors = hasErrors(touched.VIN, errors.VIN);
               const firstNameHasErrors = hasErrors(
                 touched.FirstName,
@@ -581,6 +581,14 @@ export const EditDealerContent: FC<Props> = ({
                 errors.VehicleColor
               );
               const ssnHasErrors = hasErrors(touched.SSN, errors.SSN);
+              const Term = hasErrors(
+                touched.Term,
+                errors.Term
+              );
+              const TimeAtAddressHasErrors = hasErrors(
+                touched.HowLong,
+                errors.HowLong
+              );
               onSubmit;
 
               return (
@@ -803,7 +811,7 @@ export const EditDealerContent: FC<Props> = ({
                             <div className={styles.inputBox}>
                               <p>SSN</p>
                               <Field
-                              // type="number"
+                                // type="number"
                                 className={styles.input}
                                 name="SSN"
                                 placeholder="Social Security"
@@ -949,23 +957,41 @@ export const EditDealerContent: FC<Props> = ({
                                 </option>
                               </Field>
                             </div>
-                            <div className={styles.inputBox} >
-                              <p>Time at this address (Months)</p>
-                              <div  style={{display:"flex"}}>
-                                     <Field
-                                type="number"
-                                name="HowLong"
-                                placeholder="Time at this address"
-                                className={styles.input}
-                              />
-                               <Field as="select" className={styles.input} style={{marginLeft:"10px"}} name="Term">
-                             <option value="">Choose an option</option>
-
-                              <option value="Years">Years</option>
-                              <option value="Months">Months</option>
-                            </Field>
+                            <div className={styles.inputBox}>
+                            
+                              <div style={{ display: 'flex' }}>
+                                <div>
+                                  {' '}  <p>Time at this address </p>
+                                  <Field
+                                    type="number"
+                                    name="HowLong"
+                                    placeholder="Time at this address"
+                                    className={styles.input}
+                                  />
+                                    {TimeAtAddressHasErrors && (
+                              <div className={styles.error} style={{marginLeft:"15px"}}>
+                                {errors.HowLong}
                               </div>
-                         
+                            )}
+                                </div>
+                                <div>
+                                <p style={{marginLeft:"15px"}}>Months or Years</p>
+                                  <Field
+                                    as="select"
+                                    className={styles.input}
+                                    style={{ marginLeft: '10px' }}
+                                    name="Term"
+                                  >
+                                    <option value="">Choose an option</option>
+
+                                    <option value="Years">Years</option>
+                                    <option value="Months">Months</option>
+                                  </Field>
+                                  {Term &&  (<div className={styles.error} style={{marginLeft:"15px"}}>
+                                {errors.Term}
+                              </div>)}
+                                </div>
+                              </div>
                             </div>
                           </div>
                           <div className={styles.formRow}>
@@ -1069,18 +1095,18 @@ export const EditDealerContent: FC<Props> = ({
                                 name="VIN"
                                 className={styles.input}
                               />
-                                {values.VIN !== '' ? (
-                              <FontAwesomeIcon
-                                onClick={() => lookUpVehicle(values.VIN)}
-                                icon={faSearch as IconProp}
-                                style={{ cursor: 'pointer' }}
-                              />
-                            ) : (
-                              <FontAwesomeIcon
-                                icon={faSearch as IconProp}
-                                color="red"
-                              />
-                            )}
+                              {values.VIN !== '' ? (
+                                <FontAwesomeIcon
+                                  onClick={() => lookUpVehicle(values.VIN)}
+                                  icon={faSearch as IconProp}
+                                  style={{ cursor: 'pointer' }}
+                                />
+                              ) : (
+                                <FontAwesomeIcon
+                                  icon={faSearch as IconProp}
+                                  color="red"
+                                />
+                              )}
                               {vinHasErrors && (
                                 <div className={styles.error}>{errors.VIN}</div>
                               )}
@@ -1134,7 +1160,7 @@ export const EditDealerContent: FC<Props> = ({
                               />
                             </div>
                           </div>
-                          <div className={styles.formRow}>
+                          {/* <div className={styles.formRow}>
                             <div className={styles.inputBox}>
                               <p>Transmission</p>
                               <Field
@@ -1148,7 +1174,7 @@ export const EditDealerContent: FC<Props> = ({
                                 <option value="manual">Manual</option>
                               </Field>
                             </div>
-                          </div>
+                          </div> */}
                           <div className={styles.formRow}>
                             <div className={styles.inputBox}>
                               <p>Color</p>
@@ -1180,7 +1206,8 @@ export const EditDealerContent: FC<Props> = ({
                             <div className={styles.inputBox}>
                               <p>Deposit</p>
                               <Field
-                                name="DepositFloat"ssn
+                                name="DepositFloat"
+                                ssn
                                 className={styles.input}
                                 placeholder="Deposit"
                               />
