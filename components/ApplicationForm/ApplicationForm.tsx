@@ -212,6 +212,7 @@ export const ApplicationForm: FC<Props> = ({ onSubmit }) => {
                   <div className={styles.inputContainer}>
                     <label htmlFor="State">State</label>
                     <Field name="State" as="select"  className={inputErrorStyle(stateHasErrors)}>
+                      <option value="">Choose an option</option>
                       {states.map((item) => (
                         <option value={item.Short}>{item.State}</option>
                       ))}

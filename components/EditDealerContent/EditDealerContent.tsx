@@ -15,6 +15,7 @@ import {
   faChevronDown,
   faCaretDown,
   faSearch,
+  faQuestionCircle,
 } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
@@ -50,6 +51,8 @@ import {
 import { userSelector } from '../../features/authSlice';
 import { useSelector } from 'react-redux';
 import { NavItem } from 'react-bootstrap';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import Document from '../DocumentCard/Document';
 import { faFileAlt } from '@fortawesome/pro-regular-svg-icons';
 import AdminNotes from '../AdminNotes/AdminNotes';
@@ -82,7 +85,7 @@ const validationSchema = Yup.object({
   MiddleName: Yup.string(),
   VehicleColor: Yup.string().required('Color is required'),
   HowLong: Yup.string().required('Time at this address is required'),
-  Term: Yup.string().required(("Please Select a Timeframe")),
+  Term: Yup.string().required('Please Select a Timeframe'),
   // SSN: Yup.string()
   //   .required()
   //   .matches(/^[0-9]+$/, 'Must be only digits')
@@ -285,7 +288,6 @@ export const EditDealerContent: FC<Props> = ({
   const saveDenialNote = () => {
     dispatch(onChangeAppStatus(4));
     if (leaseDenialNote !== '' || userDenialNote !== '') {
-     
       let date = new Date().toISOString();
       let data = {
         ApplicationID: application.ApplicationID,
@@ -313,7 +315,7 @@ export const EditDealerContent: FC<Props> = ({
 
   const saveNote = () => {
     const approved = application.StatusID === 3 ? true : false;
-    console.log('happening here')
+    console.log('happening here');
     if (!noteOptions) {
       dispatch(
         addNotification({
@@ -338,7 +340,7 @@ export const EditDealerContent: FC<Props> = ({
         );
         return;
       } else {
-        console.log("saving from first condition")
+        console.log('saving from first condition');
         let date = new Date().toISOString();
         let data = {
           ApplicationID: application.ApplicationID,
@@ -360,7 +362,7 @@ export const EditDealerContent: FC<Props> = ({
         setPaymentProposal(initialProposal);
       }
     } else if (note !== '' && noteOptions !== 'Vehicle') {
-      console.log("saving from second condition")
+      console.log('saving from second condition');
       let date = new Date().toISOString();
       let data = {
         ApplicationID: application.ApplicationID,
@@ -379,7 +381,7 @@ export const EditDealerContent: FC<Props> = ({
       setNote('');
       setNotePopup(false);
     } else if (note !== '' && noteOptions === 'Vehicle') {
-      console.log("saving from third condition")
+      console.log('saving from third condition');
       let date = new Date().toISOString();
       let data = {
         ApplicationID: application.ApplicationID,
@@ -581,10 +583,7 @@ export const EditDealerContent: FC<Props> = ({
                 errors.VehicleColor
               );
               const ssnHasErrors = hasErrors(touched.SSN, errors.SSN);
-              const Term = hasErrors(
-                touched.Term,
-                errors.Term
-              );
+              const Term = hasErrors(touched.Term, errors.Term);
               const TimeAtAddressHasErrors = hasErrors(
                 touched.HowLong,
                 errors.HowLong
@@ -651,7 +650,28 @@ export const EditDealerContent: FC<Props> = ({
                           />
                           Save
                         </div>
+
                         <div className={styles.dropdownBtnWrapper}>
+                          <OverlayTrigger
+                            placement="top"
+                            overlay={
+                              <Tooltip id="button-tooltip-2">
+                                Deny Applications, Send Messages and Send
+                                Proposals here. 
+                              </Tooltip>
+                            }
+                          >
+                            <FontAwesomeIcon
+                              icon={faQuestionCircle as IconProp}
+                            
+                              style={{
+                                position: 'absolute',
+                                top: '-21px',
+                                color: '#1658eb',
+                              }}
+                            />
+                          </OverlayTrigger>
+
                           <button
                             className={styles.dropdownBtn}
                             onClick={() =>
@@ -958,24 +978,29 @@ export const EditDealerContent: FC<Props> = ({
                               </Field>
                             </div>
                             <div className={styles.inputBox}>
-                            
                               <div style={{ display: 'flex' }}>
                                 <div>
-                                  {' '}  <p>Time at this address </p>
+                                  {' '}
+                                  <p>Time at this address </p>
                                   <Field
                                     type="number"
                                     name="HowLong"
                                     placeholder="Time at this address"
                                     className={styles.input}
                                   />
-                                    {TimeAtAddressHasErrors && (
-                              <div className={styles.error} style={{marginLeft:"15px"}}>
-                                {errors.HowLong}
-                              </div>
-                            )}
+                                  {TimeAtAddressHasErrors && (
+                                    <div
+                                      className={styles.error}
+                                      style={{ marginLeft: '15px' }}
+                                    >
+                                      {errors.HowLong}
+                                    </div>
+                                  )}
                                 </div>
                                 <div>
-                                <p style={{marginLeft:"15px"}}>Months or Years</p>
+                                  <p style={{ marginLeft: '15px' }}>
+                                    Months or Years
+                                  </p>
                                   <Field
                                     as="select"
                                     className={styles.input}
@@ -987,9 +1012,14 @@ export const EditDealerContent: FC<Props> = ({
                                     <option value="Years">Years</option>
                                     <option value="Months">Months</option>
                                   </Field>
-                                  {Term &&  (<div className={styles.error} style={{marginLeft:"15px"}}>
-                                {errors.Term}
-                              </div>)}
+                                  {Term && (
+                                    <div
+                                      className={styles.error}
+                                      style={{ marginLeft: '15px' }}
+                                    >
+                                      {errors.Term}
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </div>

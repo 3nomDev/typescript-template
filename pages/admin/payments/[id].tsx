@@ -77,15 +77,21 @@ const EditDealerPage: FC = () => {
 
   const filterPaymentsByStatus = () => {
     let newArray = [];
-    newArray = userPayments
+    if(userPayments.length){
+       newArray = userPayments
       .filter((payment) => payment.Status.toLowerCase() === 'pending')
       .map((item) => item.Amount);
       setAmountRemaining(newArray.reduce((a, b) => a + b, 0));
+    }
+   
   };
 
 
 useEffect(() =>{
-setPaymentsRemaining(userPayments.filter(payment => payment.Status.toLowerCase() === 'pending').length)
+  if(userPayments.length){
+    setPaymentsRemaining(userPayments.filter(payment => payment.Status.toLowerCase() === 'pending').length)
+  }
+
 },[userPayments])
 
 
@@ -96,6 +102,8 @@ setPaymentsRemaining(userPayments.filter(payment => payment.Status.toLowerCase()
       <PaymentContents amountRemaining={amountRemaining} paymentsRemaining={paymentsRemaining}/>
     </div>
   );
+
+  console.log("on this page")
 
   const notLoaded = (
     <div className={styles.loaderWrapper}>

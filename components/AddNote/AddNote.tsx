@@ -5,6 +5,11 @@ import styles from './AddNote.module.css';
 import { useSelector } from 'react-redux';
 import { userSelector } from '../../features/authSlice';
 import Select from 'react-select';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faQuestion } from '@fortawesome/pro-regular-svg-icons';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { faQuestionCircle } from '@fortawesome/fontawesome-free-solid';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 interface Props {
   handleNoteOptions: any;
@@ -206,8 +211,18 @@ const AddNotePopup: FC<Props> = ({
                   name={item}
                   index={index}
                   handleformchange={handleformchange}
-                />
+                /> 
+               
               ))}
+              <OverlayTrigger  placement="top"
+                            overlay={
+                              <Tooltip id="button-tooltip-2">
+                                Choose if message pertains to the vehicle, the applicant or if you're sending a proposal.
+                              </Tooltip>
+                            }>
+               <FontAwesomeIcon icon={faQuestionCircle as IconProp} style={{marginLeft:"15px",color: '#1658eb'}}/>
+              </OverlayTrigger>
+
           </div>
 
           <div className={styles.popupBtnContainer}>

@@ -130,6 +130,7 @@ export const EditDealerApplication: FC<Props> = ({
     Approved: styles.green,
     Declined: styles.red,
     Incomplete: styles.red,
+    Funded: styles.cyan
   }[application?.Status];
 
   const pending = useSelector(pendingSelector);
@@ -357,6 +358,8 @@ howLongTerm = loadedValues?.HowLong.replace(/[^\D]+/g, '');
     router.back();
   };
 
+  console.log(application)
+
   return (
     <div className={styles.wrapper}>
       {showNotes && notes.length && (
@@ -386,7 +389,7 @@ howLongTerm = loadedValues?.HowLong.replace(/[^\D]+/g, '');
                   className={styles.icon}
                 />
                 Update Account (Profile # {application?.ApplicationID})
-                <p className={statusStyle}>{application?.Status}{application?.Status === 'Declined' && '(See Notes)'}</p>
+                <p className={statusStyle}>{application?.Status && application?.Status === 'Active' ? 'Funded' : application?.Status }{application?.Status === 'Declined' || application?.Status === 'Conditional Approval' && '(See Notes)' }</p>
                 <p>
                   {application?.FirstName} {application?.LastName}
                 </p>

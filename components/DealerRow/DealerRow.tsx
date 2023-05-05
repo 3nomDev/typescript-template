@@ -32,7 +32,7 @@ export const DealerRow: FC<Props> = ({
     Declined: styles.red,
     Incomplete: styles.blue,
     Approved: styles.green,
-    Active: styles.cyan,
+    Funded: styles.cyan,
     'Conditional Approval': styles.orange,
   }[Status];
 

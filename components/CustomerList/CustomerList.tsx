@@ -86,7 +86,7 @@ export const CustomerList: FC<Props> = ({ type }) => {
             </thead>
 
             <tbody className={styles.tableBody}>
-              {activeAccounts.map((item) => (
+              {activeAccounts.length > 0 && activeAccounts.map((item) => (
                 <CustomerRow
                   key={item.ID}
                   {...item}

@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
   faBell,
   faCheck,
@@ -29,16 +29,76 @@ interface Props {
 }
 export const AdminDashboard: FC<Props> = (props) => {
   const { stats, notifications, dashboardApplications } = props;
+  const [recentNotifications, setRecentNotifications] = useState([])
+  const [recentIncompleteApps, setRecentIncompleteApps] = useState([])
+  const [recentAwaitingApps, setRecentAwaitingeApps] = useState([])
   const router = useRouter();
 
-  const incompleteApplications = [];
-  const awaitingApproveApplications = [];
-  // const incompleteApplications = dashboardApplications.filter(
-  //   (item) => item.StatusID === 5
-  // );
-  // const awaitingApproveApplications = dashboardApplications.filter(
-  //   (item) => item.StatusID === 1
-  // );
+  let incompleteApplications = [];
+  let awaitingApproveApplications = [];
+
+  if(dashboardApplications.length){
+     incompleteApplications = dashboardApplications.filter(
+    (item) => item.StatusID === 5
+  );
+  awaitingApproveApplications = dashboardApplications.filter(
+    (item) => item.StatusID === 1
+  );
+  }
+
+console.log(notifications)
+  console.log(incompleteApplications)
+  console.log(awaitingApproveApplications)
+  
+  function filterRecentNotications(notifications) {
+    const now = new Date();
+    const cutoffDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
+    return notifications.filter(obj => {
+      const objDate = new Date(obj.DateAdded);
+   
+      return objDate >= cutoffDate && objDate <= now;
+    });
+
+  }
+  function filterRecentIncompleteApps(incompleteApplications) {
+    const now = new Date();
+    const cutoffDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
+    return incompleteApplications.filter(obj => {
+      const objDate = new Date(obj.LastUpdated);
+   
+      return objDate >= cutoffDate && objDate <= now;
+    });
+
+  }
+  function filterRecentAwaitingeApps(awaitingApproveApplications) {
+    const now = new Date();
+    const cutoffDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
+    return awaitingApproveApplications.filter(obj => {
+      const objDate = new Date(obj.LastUpdated);
+   
+      return objDate >= cutoffDate && objDate <= now;
+    });
+
+  }
+
+
+
+  useEffect(() =>{
+const filteredNotificcations = filterRecentNotications(notifications)
+setRecentNotifications(filteredNotificcations)
+  },[notifications])
+
+  useEffect(() => {
+    const filteredIncompleteApps = filterRecentIncompleteApps(incompleteApplications)
+    setRecentIncompleteApps(filteredIncompleteApps)
+  },[incompleteApplications.length])
+
+  useEffect(() => {
+    const filteredAwaitingApps = filterRecentAwaitingeApps(awaitingApproveApplications)
+    setRecentAwaitingeApps(filteredAwaitingApps)
+  },[awaitingApproveApplications.length])
+  
+
 
   const handleNavigate = (route: string) => () => void router.push(route);
   const handleEdit = (id: number) => () =>
@@ -94,12 +154,12 @@ export const AdminDashboard: FC<Props> = (props) => {
               onEdit={handleEdit}
               onNavigate={handleNavigate('/admin/pending')}
               icon={faEdit as IconProp}
-              applications={awaitingApproveApplications}
+              applications={recentAwaitingApps}
               text="Awaiting review"
               description={`${
                 awaitingApproveApplications.length < 1
                   ? 'No New Applications Last 7 Days'
-                  : `${awaitingApproveApplications.length} Applications`
+                  : `${awaitingApproveApplications.length }${awaitingApproveApplications.length === 1 ? 'Application' : 'Applications'}`
               }  `}
               type={DashboardBoxEnum.Pending}
             />
@@ -111,18 +171,18 @@ export const AdminDashboard: FC<Props> = (props) => {
               icon={faBell as IconProp}
               text="Notifications"
               type={DashboardBoxEnum.Notification}
-              notifications={notifications}
+              notifications={recentNotifications}
             />
             <DashboardBar
               onEdit={handleEdit}
-              applications={incompleteApplications}
+              applications={recentIncompleteApps}
               onNavigate={handleNavigate('/admin/incomplete')}
               icon={faMinusCircle as IconProp}
               text="New Incomplete Application"
               description={`${
                 incompleteApplications.length < 1
                   ? 'No New Applications Last 7 Days'
-                  : `${incompleteApplications.length} Applications`
+                  : `${incompleteApplications.length} ${incompleteApplications.length === 1 ?  'Application' : 'Applications'}`
               }  `}
               type={DashboardBoxEnum.Failed}
             />

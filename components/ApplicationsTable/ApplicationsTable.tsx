@@ -39,7 +39,7 @@ export const ApplicationsTable: FC<Props> = ({
 console.log(applications)
 
   useEffect(() => {
-    const result = applications.map((item) => {
+    if(applications.length > 0) {const result = applications.map((item) => {
       if (
         item.ApplicationID.toString().includes(searchParam) ||
         item.FirstName.toLowerCase().includes(searchParam) ||
@@ -80,7 +80,8 @@ console.log(applications)
       default:
         break;
     }
-    dispatch(setApplicationsAction(result));
+    dispatch(setApplicationsAction(result));}
+    
   }, [searchParam]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void =>
@@ -116,7 +117,7 @@ console.log(applications)
               </tr>
             </thead>
             <tbody className={styles.tableBody}>
-              {applications.map((item) => (
+              {applications.length > 0 && applications?.map((item) => (
                 <DealerRow
                   key={item.ID}
                   {...item}

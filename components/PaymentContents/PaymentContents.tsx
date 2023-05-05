@@ -22,9 +22,11 @@ import { UserPaymentsInterface } from '../../contracts/user-payments';
 import { useSelector } from 'react-redux';
 import * as CurrencyFormat from 'react-currency-format';
 import moment from 'moment';
+import { userSelector } from '../../features/authSlice';
 // interface UserPaymentProp {
 //   userPayments: UserPaymentsInterface[]
 // }
+
 
 interface Props {
   amountRemaining: any;
@@ -43,15 +45,16 @@ export const PaymentContents: FC<Props> = ({
   let lastPayment;
   let total;
   let salesTax;
-
+let weekly;
   if (userPayments.length) {
     startPayment = userPayments && userPayments[0].ScheduledDate;
     lastPayment = userPayments && userPayments.slice(-1)[0].ScheduledDate;
+    weekly = userPayments?.map((payment) => payment.Amount)[0];
   }
 
-  const weekly = userPayments.map((payment) => payment.Amount)[0];
 
-
+const user = useSelector(userSelector)
+console.log(user)
   const {
     FirstName,
     LastName,
@@ -89,8 +92,15 @@ console.log(userActiveAccount)
   const dispatch = useAppDispatch();
 
   const router = useRouter();
+  let handleBack;
 
-  const handleBack = (): void => void router.push("/dealership");
+  if(user && user.ProfileTypeID === '2'){
+    handleBack = (): void => void router.push('/dealership');
+  }
+  else{
+    handleBack = (): void => void router.back();
+  }
+ 
 
   return (
     <div className={styles.wrapper}>

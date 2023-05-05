@@ -14,6 +14,7 @@ import {
 } from '../../contracts';
 import { getTextStyle } from '../DashboardBox/DashboardBox';
 import { NotificationBar } from '../NotificationBar/NotificationBar';
+import moment from 'moment';
 
 interface Props {
   icon: IconProp;
@@ -36,6 +37,8 @@ export const DashboardBar: FC<Props> = ({
   notifications,
   applications,
 }) => {
+
+  console.log(applications)
   return (
     <div className={styles.wrapper}>
       <div className={styles.innerWrapper}>
@@ -77,11 +80,11 @@ export const DashboardBar: FC<Props> = ({
           </thead>
           <tbody>
             {applications.map((item) => (
-              <tr>
+              <tr onClick={onEdit(item.ID)} style={{cursor:"pointer", color:"#6c757d"}}>
                 <td>{item.ID}</td>
                 <td>{item.Name}</td>
-                <td>{item.Description}</td>
-                <td>{item.LastUpdated}</td>
+                <td>{item.Dealer}</td>
+                <td>{moment(item.LastUpdated).format('MM/DD/YYYY')}</td>
                 <td className={styles.rowButton} onClick={onEdit(item.ID)}>
                   <FontAwesomeIcon icon={faArrowRight as IconProp} />
                 </td>

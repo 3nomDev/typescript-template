@@ -25,6 +25,7 @@ export const withAuth =
     useEffect(() => {
       if (!isDefined(user) && !isDefined(localStorage.getItem('user'))) {
         router.push('/dealer-login');
+          console.log('logout stuff ')
         dispatch(
           addNotification({
             type: 'error',
@@ -40,6 +41,7 @@ export const withAuth =
       if (isDefined(token)) {
         const parsedJwt = parseJwt(token);
         if (parsedJwt.exp * 1000 < Date.now()) {
+        
           dispatch(logoutAction());
         }
       } else {

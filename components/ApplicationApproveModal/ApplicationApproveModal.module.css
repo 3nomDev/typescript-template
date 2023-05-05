@@ -93,6 +93,7 @@
     height: 135px;
     width: 100%;
     border: 1px solid black;
+    padding-left: 15px;
 }
 
 .footer {

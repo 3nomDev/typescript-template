@@ -7,8 +7,9 @@
     display: flex;
 }
 .leftSide {
-    width: auto;
+    width: 50%;
     margin-right: 15px;
+    
 }
 .dashboardWrapper {
     padding: 10px 20px;
@@ -38,8 +39,9 @@
 .barWrapper {
     display: flex;
     flex-direction: column;
-
+width: 50%;
 }
+
 
 
 .responsive {

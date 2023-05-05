@@ -107,7 +107,7 @@ export const ApplicationApproveModal: FC<Props> = ({ closeModal, application, on
           <p>Vehicle Information Approved</p>
         </div>
         {!leaseApproved && (
-          <div className={styles.textArea}>
+          <div className={styles.textArea} >
             <p>Vehicle Information Notes ( Required )</p>
             <textarea value={leaseNotes} onChange={handleLeaseNotesChange} />
           </div>

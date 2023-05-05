@@ -53,6 +53,10 @@
     color:red;
 }
 
+.cyan{
+    color: rgb(11, 142, 194) !important;
+}
+
 .dashboardBar {
     display: flex;
     align-items: center;

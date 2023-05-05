@@ -819,10 +819,13 @@ export const dealerDashboardSlice = createSlice({
       .addCase(loadApprovedApplications.fulfilled, (state, { payload }) => {
         state.pending = false;
         state.approvedApplications = payload;
-        state.approvedApplications = state.approvedApplications.map((item) => ({
+        if(state.approvedApplications.length >0){
+          state.approvedApplications = state.approvedApplications.map((item) => ({
           ...item,
           isShown: true,
         }));
+        }
+        
       })
       .addCase(loadConditionalApplications.pending, (state) => {
         state.pending = true;

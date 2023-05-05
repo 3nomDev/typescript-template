@@ -5,6 +5,7 @@ import { Sidebar } from '../../components';
 import { PaymentContents } from '../../components';
 import { loadActiveAccounts, loadPaymentsByAppId, loadUserActiveAccount } from '../../features/adminDashboardSlice';
 import styles from '../styles/dealercustomerpayment.module.css';
+import { withAuth } from '../../hocs';
 
 const DealerCustomerPayment = () => {
   const [amountRemaining, setAmountRemaining] = useState(0);
@@ -40,21 +41,27 @@ const DealerCustomerPayment = () => {
   }, [appId]);
 
   useEffect(() => {
-    setPaymentsRemaining(
+    if(userPayments.length){
+      setPaymentsRemaining(
       userPayments.filter(
         (payment) => payment.Status.toLowerCase() === 'pending'
       ).length
     );
+    }
+    
   }, [userPayments]);
 
   useEffect(() => filterPaymentsByStatus(), [userPayments]);
 
   const filterPaymentsByStatus = () => {
     let newArray = [];
-    newArray = userPayments
+    if(userPayments.length){
+      newArray = userPayments
       .filter((payment) => payment.Status.toLowerCase() === 'pending')
       .map((item) => item.Amount);
     setAmountRemaining(newArray.reduce((a, b) => a + b, 0));
+    }
+    
   };
 
 
@@ -70,4 +77,4 @@ const DealerCustomerPayment = () => {
   );
 };
 
-export default DealerCustomerPayment;
+export default withAuth(DealerCustomerPayment) ;
