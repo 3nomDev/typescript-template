@@ -1,0 +1,6 @@
+.wrapper {
+    display: flex;
+    overflow-x: hidden;
+    position: relative;
+
+}

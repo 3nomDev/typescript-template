@@ -45,6 +45,21 @@ export const sendLoginRequest = createAsyncThunk(
     return response;
   }
 );
+export const addUserLogin = createAsyncThunk(
+  'auth/addUserLogin',
+  async (userData: LoginPayloadInterface) => {
+
+    console.log(userData)
+    const res = await fetch('https://tlcfin.prestoapi.com/api/addnewlogin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json',    authorization: `Bearer ${localStorage.getItem('accessToken')}` },
+      body: JSON.stringify({ ...userData }),
+    });
+
+    const response: UserInterface = await res.json();
+    return response;
+  }
+);
 
 export const addUser = createAsyncThunk(
   'dashboard/addUser',

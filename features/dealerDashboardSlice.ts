@@ -359,7 +359,7 @@ export const dealerDashboardSlice = createSlice({
       .addCase(loadNotifications.fulfilled, (state, { payload }) => {
         // state.pending = false;
         state.notifications = payload;
-        state.notifications = state.notifications.map((item) => ({
+        state.notifications = state.notifications.length && state.notifications.map((item) => ({
           ...item,
           isShown: true,
         }));

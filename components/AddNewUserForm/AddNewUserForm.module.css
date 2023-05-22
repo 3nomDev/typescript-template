@@ -1,0 +1,73 @@
+.wrapper {
+    flex:1;
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+.contents {
+    padding: 20px;
+}
+
+
+.dealerForm {
+    display: flex;
+    flex-direction: column;
+   width:  670px;
+    margin: 0 auto;
+}
+
+.inputBar {
+    display: flex;
+    padding: 15px 20px;
+    justify-content: space-between;
+    background: #F8F8F8;
+    margin: 5px 0;
+}
+
+.input {
+    border: 1px solid #B2B2B2;
+    margin-top: 5px;
+    padding: 10px 10px;
+    border-radius: 8px;
+}
+
+.phoneInput {
+    flex: 1;
+    margin-right:  40px;
+}
+
+.form{
+    box-shadow: 0 0 7px -2px gray;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.saveButton {
+    display: block;
+    background: #154F85;
+    border-color: #154F85;
+    color: white;
+    min-width: 6rem;
+    padding: 0.7rem 3rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin:15px 0;
+}
+
+.errorInput {
+    border: 2px solid red;
+}
+
+.errorText {
+    color: red;
+}
+
+.phoneInputWrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.loader {
+    margin: 20px auto;
+    width: 100px;
+}

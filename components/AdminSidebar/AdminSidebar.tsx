@@ -15,7 +15,7 @@ import {
   faList
 } from '@fortawesome/fontawesome-free-solid';
 
-import {faMonitorHeartRate, faFileSignature, faFileCheck, faFileExclamation, faFileXmark, faFileCircleQuestion} from '@fortawesome/pro-regular-svg-icons'
+import {faMonitorHeartRate, faFileSignature, faFileCheck, faFileExclamation, faFileXmark, faFileCircleQuestion, faPerson} from '@fortawesome/pro-regular-svg-icons'
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import styles from '../Sidebar/sidebar.module.css';
@@ -110,6 +110,17 @@ export const AdminSidebar: FC = () => {
             className={styles.icon}
           />
           <p className={styles.text}>Dealers</p>
+        </div>
+      </Link>
+
+      <Link href="/admin/addNewUser">
+        <div className={styles.link}>
+          <FontAwesomeIcon
+            icon={faPerson as IconProp}
+            color="white"
+            className={styles.icon}
+          />
+          <p className={styles.text}>Add New User</p>
         </div>
       </Link>
 
