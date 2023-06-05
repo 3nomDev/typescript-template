@@ -51,7 +51,7 @@ const DealerLogin: FC = () => {
         <div className={styles.left}>
           <h3>Login</h3>
           <p>
-            Welcome to lorem ipsum dolor sit amet, consetetur sadispscing elitr.
+            Welcome to TLC financing. Please login to continue.
           </p>
           <Formik
             validationSchema={validationSchema}

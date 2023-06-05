@@ -46,9 +46,9 @@ export const Layout: FC = ({ children }) => {
                       <Link className={styles.navItem} href="#action3">
                         Financing Info
                       </Link>
-                      <Link className={styles.navItem} href="#action4">
+                      <a className={styles.navItem} href="https://tlcfinancingny.com/blog/" target="_blank">
                         Blog
-                      </Link>
+                      </a>
                       <Link className={styles.navItem} href="/contactUs">
                         Contact Us
                       </Link>
@@ -73,22 +73,22 @@ export const Layout: FC = ({ children }) => {
               <Link className={styles.navItem} href="/">
                         Home
                       </Link>
-                      <Link className={styles.navItem} href="/inventory">
+                      <a className={styles.navItem} href="https://tlcfinancingny.com/cars/" target="_blank" style={{color:"black"}}>
                         Inventory
-                      </Link>
-                      <Link className={styles.navItem} href="/login">
+                      </a>
+                      <a className={styles.navItem} href="https://tlcfinancingny.com/faq/" target="_blank" style={{color:"black"}}>
                         Financing Info
-                      </Link>
-                      <Link className={styles.navItem} href="#action4">
+                      </a>
+                      <a className={styles.navItem} href="https://tlcfinancingny.com/blog/" target="_blank" style={{color:"black"}}>
                         Blog
-                      </Link>
+                      </a>
                       <Link className={styles.navItem} href="/contactUs">
                         Contact Us
                       </Link>
                       <Link className={styles.navItem} href="/dealer-login">
                         Login
                       </Link>
-                      <Link className={styles.navItem} href="#action7">
+                      <Link className={styles.navItem} href="/">
                         Apply Now
                       </Link>
           </div>
