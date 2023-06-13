@@ -22,7 +22,7 @@ export const NotificationTable: FC<Props> = ({ notifications }) => {
     setSearchParam(e.target.value.toLowerCase());
 
   useEffect(() => {
-    const result = notifications.map((item) => {
+    const result = notifications?.map((item) => {
       if (
         item.FirstName.toLowerCase().includes(searchParam) ||
         item.LastName.toLowerCase().includes(searchParam) ||
@@ -51,7 +51,7 @@ export const NotificationTable: FC<Props> = ({ notifications }) => {
         </div>
 
         <h5 className={styles.applicants}>
-          Showing {notifications.length} notifications
+          Showing {notifications?.length} notifications
         </h5>
       </div>
       <div className={styles.searchbarContainer}>
@@ -73,7 +73,7 @@ export const NotificationTable: FC<Props> = ({ notifications }) => {
             </tr>
           </thead>
           <tbody>
-            {notifications.map((item) => (
+            {notifications?.map((item) => (
               <NotificationRow key={item.ID} {...item} />
             ))}
           </tbody>

@@ -898,7 +898,7 @@ export const dealerDashboardSlice = createSlice({
       .addCase(loadNotifications.fulfilled, (state, { payload }) => {
         state.pending = false;
         state.notifications = payload;
-        state.notifications = state.notifications.map((item) => ({
+        state.notifications = state.notifications.length && state.notifications.map((item) => ({
           ...item,
           isShown: true,
         }));
@@ -914,7 +914,7 @@ export const dealerDashboardSlice = createSlice({
       .addCase(loadDealers.fulfilled, (state, { payload }) => {
         state.pending = false;
         state.dealers = payload;
-        state.dealers = state.dealers.map((item) => ({
+        state.dealers = state.dealers.length && state.dealers.map((item) => ({
           ...item,
           isShown: true,
         }));

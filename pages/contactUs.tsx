@@ -17,7 +17,7 @@ const ContactUs = () => {
     APIKey: process.env.NEXT_PUBLIC_EMAILAPIKEY,
     cc: '',
     bcc: '',
-    ToAddress: 'mvanderloon@3nom.com',
+    ToAddress: 'admin@tlc.com',
     FromDisplayName: '',
     FromAddress: '',
     Subject: '',

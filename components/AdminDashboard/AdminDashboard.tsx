@@ -53,7 +53,7 @@ console.log(notifications)
   function filterRecentNotications(notifications) {
     const now = new Date();
     const cutoffDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
-    return notifications.filter(obj => {
+    return notifications?.filter(obj => {
       const objDate = new Date(obj.DateAdded);
    
       return objDate >= cutoffDate && objDate <= now;
@@ -63,7 +63,7 @@ console.log(notifications)
   function filterRecentIncompleteApps(incompleteApplications) {
     const now = new Date();
     const cutoffDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
-    return incompleteApplications.filter(obj => {
+    return incompleteApplications?.filter(obj => {
       const objDate = new Date(obj.LastUpdated);
    
       return objDate >= cutoffDate && objDate <= now;
@@ -73,7 +73,7 @@ console.log(notifications)
   function filterRecentAwaitingeApps(awaitingApproveApplications) {
     const now = new Date();
     const cutoffDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000); // 7 days ago
-    return awaitingApproveApplications.filter(obj => {
+    return awaitingApproveApplications?.filter(obj => {
       const objDate = new Date(obj.LastUpdated);
    
       return objDate >= cutoffDate && objDate <= now;

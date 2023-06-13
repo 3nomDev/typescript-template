@@ -199,7 +199,7 @@ const AddNewUserForm = () => {
                         className={styles.input}
                         style={{ width: '100%' }}
                       >
-                        {states.map((item) => (
+                        {states?.map((item) => (
                           <option
                             key={item.State}
                             label={item.State}

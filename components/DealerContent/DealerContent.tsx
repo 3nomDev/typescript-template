@@ -29,7 +29,7 @@ export const DealerContent: FC = () => {
 
   useEffect(() => void dispatch(loadDealers(user?.ID)), []);
   useEffect(() => {
-    const result = dealers.map((item) => {
+    const result = dealers?.map((item) => {
       if (
         item.ID.toString().toLowerCase().includes(searchParam.toLowerCase()) ||
         item.Name.toLowerCase().includes(searchParam.toLowerCase())
@@ -63,7 +63,7 @@ export const DealerContent: FC = () => {
             />
             Add new
           </div>
-          <span>Showing {dealers.length} results</span>
+          <span>Showing {dealers?.length} results</span>
         </div>
 
         <SearchBar onChange={handleInputChange} inputValue={searchParam} />
@@ -82,7 +82,7 @@ export const DealerContent: FC = () => {
               </tr>
             </thead>
             <tbody>
-              {dealers.map((item) => (
+              {dealers?.length && dealers.map((item) => (
                 <AdminDealerRow
                   key={item.ID}
                   {...item}

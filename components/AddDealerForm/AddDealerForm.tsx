@@ -131,7 +131,7 @@ export const AddDealerForm: FC<Props> = ({
                           name="State"
                           defaultValue={states[0]?.State}
                         >
-                          {states.map((item) => (
+                          {states?.map((item) => (
                             <option
                               key={item.State}
                               label={item.State}
