@@ -90,6 +90,7 @@ const DealerLogin: FC = () => {
                   )}
                   <label>Password</label>
                   <Field
+                  type="password"
                     placeholder="password"
                     name="password"
                     className={inputErrorStyle(passwordHasErrors)}

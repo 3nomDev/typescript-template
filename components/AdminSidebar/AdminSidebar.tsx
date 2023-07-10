@@ -120,7 +120,7 @@ export const AdminSidebar: FC = () => {
             color="white"
             className={styles.icon}
           />
-          <p className={styles.text}>Add New User</p>
+          <p className={styles.text}>Create New Dealer/Admin</p>
         </div>
       </Link>
 

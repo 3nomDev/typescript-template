@@ -243,7 +243,7 @@ dispatch(getIpAddress())
         
       </div>
       <Formik
-        initialValues={{...loadedValues, approvalCode: '', color: '', PositionType:'',  VIN:vehicleDetails.VIN ||  emptyApplication?.VIN,
+        initialValues={{...loadedValues, approvalCode: '', color: '',  VIN:vehicleDetails.VIN ||  emptyApplication?.VIN,
         VehicleYear:
           vehicleDetails.ModelYear ,
         VehicleMake: vehicleDetails.Make ,
@@ -671,8 +671,8 @@ dispatch(getIpAddress())
                         >
                               <option value="">Choose an option</option>
 
-                          <option value="full-time">Full-time</option>
-                          <option value="part-time">Part Time</option>
+                          <option value="Full-time">Full-time</option>
+                          <option value="Part-time">Part Time</option>
                         </Field>
                         {PostionTypeHasErrors && (
                           <div className={styles.error}>
