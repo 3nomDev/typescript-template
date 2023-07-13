@@ -25,11 +25,14 @@ const AddNewUserForm = () => {
       .trim()
       .required('Drivers Licence number is required'),
     DLState: Yup.string().trim().required('State is required'),
+    Deleted: Yup.string(),
+    DealerID: Yup.number(),
     DOB: Yup.string().trim().required('Date of birth is required'),
     FirstName: Yup.string().trim().required('First name is required'),
     MiddleName: Yup.string().trim(),
-    EmailAddress:Yup.string().trim().required('Email address is required'),
+    EmailAddress: Yup.string().trim().required('Email address is required'),
     LastName: Yup.string().trim().required('Last name is required'),
+
     Password: Yup.string().trim().required('Please choose a password'),
     Password2: Yup.string()
       .trim()
@@ -54,6 +57,7 @@ const AddNewUserForm = () => {
     // DateAdded: '',
     DLNumber: '',
     DLState: '',
+    DealerID: '',
     DOB: '',
     FirstName: '',
     MiddleName: '',
@@ -65,7 +69,7 @@ const AddNewUserForm = () => {
     ProfileTypeID: '',
     TAXID: '',
     State: '',
-    EmailAddress:''
+    EmailAddress: '',
   };
   const dispatch = useDispatch();
 
@@ -138,7 +142,7 @@ const AddNewUserForm = () => {
                     </div>
                   </div>
                   <p>Email Address</p>
-                  <Field   className={styles.input} name="EmailAddress"></Field>
+                  <Field className={styles.input} name="EmailAddress"></Field>
                   <div
                     style={{
                       display: 'flex',
@@ -199,7 +203,9 @@ const AddNewUserForm = () => {
                         className={styles.input}
                         style={{ width: '100%' }}
                       >
+                        <option value="">Select an Option </option>
                         {states?.map((item) => (
+                          
                           <option
                             key={item.State}
                             label={item.State}
@@ -280,6 +286,7 @@ const AddNewUserForm = () => {
                       className={styles.input}
                       style={{ width: '100%' }}
                     >
+                         <option value="">Select an Option </option>
                       {states.map((item) => (
                         <option
                           key={item.State}
@@ -303,14 +310,20 @@ const AddNewUserForm = () => {
                   >
                     <div>
                       {' '}
-                      <p>Password  <FontAwesomeIcon icon={faEye as IconProp} color="gray" onClick={ () => setShowPassword(!showPassword)}/></p>
+                      <p>
+                        Password{' '}
+                        <FontAwesomeIcon
+                          icon={faEye as IconProp}
+                          color="gray"
+                          onClick={() => setShowPassword(!showPassword)}
+                        />
+                      </p>
                       <Field
                         className={styles.input}
                         name="Password"
                         style={{ marginRight: '10px' }}
                         type={showPassword ? 'text' : 'password'}
                       ></Field>{' '}
-                     
                       <p style={{ color: 'red' }}> {errors.Password}</p>{' '}
                     </div>
 
@@ -340,7 +353,15 @@ const AddNewUserForm = () => {
                       <p style={{ color: 'red' }}>{errors.ProfileTypeID}</p>
                     </div>
                   </div>
-
+                  <div>
+                    <p>Dealer ID (Only needed for dealer type)</p>
+                    <Field
+                      name="DealerID"
+                      className={styles.input}
+                      style={{ marginRight: '10px' }}
+                    ></Field>
+                    <p style={{ color: 'red' }}>{errors.DealerID}</p>
+                  </div>
                   <button
                     className={styles.saveButton}
                     type="submit"
