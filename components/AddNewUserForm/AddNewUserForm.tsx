@@ -12,6 +12,9 @@ import { addUserLogin } from '../../features/authSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye } from '@fortawesome/fontawesome-free-solid';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { addNotification } from '../../features/notifications/notificationSlice';
+import { useRouter } from 'next/router';
+
 const AddNewUserForm = () => {
   const validationSchema = Yup.object({
     Active: Yup.string().trim().required('Active is required'),
@@ -47,7 +50,7 @@ const AddNewUserForm = () => {
     State: Yup.string().trim().required('State is required'),
   });
 
-  const initialValues = {
+  let initialValues = {
     Active: '',
     Address: '',
     Address2: '',
@@ -72,14 +75,19 @@ const AddNewUserForm = () => {
     EmailAddress: '',
   };
   const dispatch = useDispatch();
+  const router = useRouter();
 
   useEffect(() => void dispatch(loadStates()), []);
   const states = useSelector(stateSelector);
 
-  const onSubmit = (values) => {
-    console.log(values);
+  const onSubmit = async (values) => {
     delete values.Password2;
-    dispatch(addUserLogin(values));
+
+    let res = await dispatch(addUserLogin(values));
+
+    if (res.payload) {
+      router.push('/admin');
+    }
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -205,7 +213,6 @@ const AddNewUserForm = () => {
                       >
                         <option value="">Select an Option </option>
                         {states?.map((item) => (
-                          
                           <option
                             key={item.State}
                             label={item.State}
@@ -286,7 +293,7 @@ const AddNewUserForm = () => {
                       className={styles.input}
                       style={{ width: '100%' }}
                     >
-                         <option value="">Select an Option </option>
+                      <option value="">Select an Option </option>
                       {states.map((item) => (
                         <option
                           key={item.State}

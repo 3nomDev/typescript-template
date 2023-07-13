@@ -31,7 +31,6 @@ const initialState: AuthState = {
   applicationDealers: [],
 };
 
-
 export const sendLoginRequest = createAsyncThunk(
   'auth/sendLoginRequest',
   async (userData: LoginPayloadInterface) => {
@@ -47,17 +46,42 @@ export const sendLoginRequest = createAsyncThunk(
 );
 export const addUserLogin = createAsyncThunk(
   'auth/addUserLogin',
-  async (userData: LoginPayloadInterface) => {
+  async (userData: LoginPayloadInterface, thunkApi) => {
+    let res;
+    try {
+      res = await fetch('https://tlcfin.prestoapi.com/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        body: JSON.stringify({ ...userData }),
+      });
 
-    console.log(userData)
-    const res = await fetch('https://tlcfin.prestoapi.com/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json',    authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-      body: JSON.stringify({ ...userData }),
-    });
+      const response: UserInterface = await res.json();
 
-    const response: UserInterface = await res.json();
-    return response;
+      if (res.status === 200) {
+        thunkApi.dispatch(
+          addNotification({
+            type: 'success',
+            autoHideDuration: 6000,
+            message: 'New Login Added',
+          })
+        );
+      }
+
+      return response;
+    } catch (error) {
+      if (res.status === 409) {
+        thunkApi.dispatch(
+          addNotification({
+            type: 'error',
+            autoHideDuration: 6000,
+            message: 'Email Already exists',
+          })
+        );
+      }
+    }
   }
 );
 
@@ -90,33 +114,31 @@ export const addUser = createAsyncThunk(
 export const sendApprovalEmail = createAsyncThunk(
   'dashboard/sendApprovalEmail',
   async (payload: any, thunkApi) => {
-   let email;
-    if(payload.fromContact === true){
-      email = payload.emailMessage
-    }
-    else {
+    let email;
+    if (payload.fromContact === true) {
+      email = payload.emailMessage;
+    } else {
       email = {
-      ToAddress:payload[0],
-      FromAddress:'admin@tlc.com',
-      FromDisplayName:'Tony Montana',
-    Subject:'Approval Code',
-    Body:payload[1],
-    APIKey:process.env.NEXT_PUBLIC_EMAILAPIKEY,
-    cc:"",
-    bcc:""
+        ToAddress: payload[0],
+        FromAddress: 'admin@tlc.com',
+        FromDisplayName: 'Tony Montana',
+        Subject: 'Approval Code',
+        Body: payload[1],
+        APIKey: process.env.NEXT_PUBLIC_EMAILAPIKEY,
+        cc: '',
+        bcc: '',
+      };
     }
-    }
- 
+
     const res = await fetch('https://sendmail.3nom.com/SendEmail', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        
       },
       body: JSON.stringify(email),
     });
     const response: [] = await res.json();
-return response
+    return response;
   }
 );
 
