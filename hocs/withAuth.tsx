@@ -24,7 +24,7 @@ export const withAuth =
 
     useEffect(() => {
       if (!isDefined(user) && !isDefined(localStorage.getItem('user'))) {
-        router.push('/dealer-login');
+        router.push('/login');
           console.log('logout stuff ')
         dispatch(
           addNotification({
@@ -45,11 +45,27 @@ export const withAuth =
           dispatch(logoutAction());
         }
       } else {
-        router.push('/dealer-login');
+        router.push('/login');
       }
     }, []);
 
     useEffect(() => {
+
+
+      if (
+        isDefined(user) &&
+        router.pathname.includes('user') &&
+        user?.ProfileTypeID !== '3' 
+      ) {
+        router.push('/');
+        dispatch(
+          addNotification({
+            type: 'error',
+            autoHideDuration: 6000,
+            message: 'You are not an user',
+          })
+        );
+      }
       if (
         isDefined(user) &&
         router.pathname.includes('admin') &&
@@ -65,9 +81,10 @@ export const withAuth =
         );
       }
 
+
       if (
         isDefined(user) &&
-        !router.pathname.includes('admin') &&
+        !router.pathname.includes('admin') && !router.pathname.includes('user') &&
         user?.ProfileTypeID !== '2'
       ) {
         router.push('/');

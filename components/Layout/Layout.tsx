@@ -85,8 +85,8 @@ export const Layout: FC = ({ children }) => {
                       <Link className={styles.navItem} href="/contactUs">
                         Contact Us
                       </Link>
-                      <Link className={styles.navItem} href="/dealer-login">
-                        Login
+                      <Link className={styles.navItem} href="/login">
+                      Login
                       </Link>
                       <Link className={styles.navItem} href="/">
                         Apply Now

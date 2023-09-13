@@ -43,6 +43,8 @@
     color:red;
 }
 
+
+
 .dashboardBar {
     display: flex;
     align-items: center;
@@ -371,6 +373,17 @@ font-weight: bold;
 
 }
 
+.loanInfo{
+    border: 1px solid #446EE2;
+    border-radius: 5px;
+    padding: 15px;
+    background-color: #0c63e4;
+    color: white;
+}
+
+.loanInfo:nth-child(1){
+    margin-right: 15px;
+}
 
 
 

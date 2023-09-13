@@ -71,7 +71,7 @@ export const DealerHeader: FC<Props> = ({ title = 'Dealer' }) => {
         />
       </div>
       {isLogoutPanelExpanded && (
-        <div onClick={handleLogout} className={styles.logoutPanel}>
+        <div onClick={() => {handleLogout(); router.push('/login') }} className={styles.logoutPanel}>
           <FontAwesomeIcon icon={faRightFromBracket as IconProp} className={styles.logOutIcon}/>Logout
         </div>
       )}

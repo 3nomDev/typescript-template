@@ -26,6 +26,7 @@ import {
 import { RootState } from '../app/store';
 
 import { addNotification } from './notifications/notificationSlice';
+import { LoanTermsInterface } from '../contracts/loanTerms.interface';
 
 type AdminDashboardState = {
   approvedApplications: ApplicationInterface[];
@@ -54,6 +55,8 @@ type AdminDashboardState = {
   document: SingleDocumentInterface;
   AddedRejectionNote: AddedRejectionNote;
   RejectionNotes: RejectionNotesInterface[];
+  loanTerms:[]
+  initialLoanTerms:[]
 };
 
 const initialState: AdminDashboardState = {
@@ -68,6 +71,8 @@ const initialState: AdminDashboardState = {
   dealerItem: null,
   states: [],
   notifications: [],
+  loanTerms:[],
+  initialLoanTerms:[],
   pending: false,
   stats: {
     'Incomplete Applications': 0,
@@ -766,6 +771,98 @@ export const schedulePayment = createAsyncThunk(
     }
   }
 );
+export const setupLoanTerm = createAsyncThunk(
+  'adminDashboard/setupLoanTerm',
+  async (payload: any,  thunkApi) => {
+
+    
+      const res = await fetch(
+      'https://tlcfin.prestoapi.com/api/sendloanterms',
+      {
+        method: 'POST',
+        body: JSON.stringify(payload.payload),
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      }
+    );
+    const result = await res.json();
+    if (result) {
+  thunkApi.dispatch(
+    addNotification({
+      autoHideDuration: 6000,
+      message: 'Loan Terms submitted',
+      type: 'info',
+    })
+  );
+
+    }
+    
+
+if(payload.payload.OfferType === "Proposal"){
+  thunkApi.dispatch(getInitialLoanTermsById(payload.payload.ApplicationID)) 
+}
+else{
+   thunkApi.dispatch(getLoanTermsById(payload.payload.ApplicationID)) 
+}
+  }
+);
+
+
+
+export const getLoanTermsById = createAsyncThunk(
+  'adminDashboard/getLoanTermsById',
+  async (payload: any, thunkApi) => {
+
+    console.log(payload)
+    const res = await fetch(
+      `https://tlcfin.prestoapi.com/api/getmostrecenttermsbyapplicationid`,
+      {
+        method: 'POST',
+    
+        headers: {
+          'Content-Type': 'application/json',
+         
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        body: JSON.stringify({ ApplicationID:Number(payload) }),
+      }
+    );
+
+    const result = await res.json();
+   console.log(result)
+
+    
+    return result[0]
+  }
+);
+export const getInitialLoanTermsById = createAsyncThunk(
+  'adminDashboard/getInitialLoanTermsById',
+  async (payload: any, thunkApi) => {
+
+    console.log(payload)
+    const res = await fetch(
+      `https://tlcfin.prestoapi.com/api/getloantermsbyloanid/${payload}`,
+      {
+        method: 'GET',
+    
+        headers: {
+          'Content-Type': 'application/json',
+         
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+    
+      }
+    );
+
+    const result = await res.json();
+   console.log(result)
+
+    
+    return result
+  }
+);
 
 export const dealerDashboardSlice = createSlice({
   name: 'adminDashboard',
@@ -1098,6 +1195,31 @@ export const dealerDashboardSlice = createSlice({
         state.pending = false;
         state.document = action.payload;
       })
+      .addCase(setupLoanTerm.pending, (state) => {
+        state.pending = true;
+      })
+
+      .addCase(setupLoanTerm.rejected,(state) =>{
+        state.pending = false;
+      })
+      .addCase(setupLoanTerm.fulfilled, (state, action) => {
+        state.pending = false;
+   
+      })
+      .addCase(getLoanTermsById.pending, (state,action) =>{
+        state.pending=true;
+      })
+      .addCase(getLoanTermsById.fulfilled, (state,action) =>{
+        state.pending=false;
+        state.loanTerms = action.payload
+      })
+      .addCase(getInitialLoanTermsById.pending, (state,action) =>{
+        state.pending=true;
+      })
+      .addCase(getInitialLoanTermsById.fulfilled, (state,action) =>{
+        state.pending=false;
+        state.initialLoanTerms = action.payload
+      })
       .addCase(loadRejectionNotes.pending, (state) => {
         // state.pending = true;
       })
@@ -1178,6 +1300,14 @@ export const notificationsSelector = (
 export const rejectionsNotesSelector = (
   state: RootState
 ): RejectionNotesInterface[] => state.adminDashboard.RejectionNotes;
+
+export const loanTermsSelector = (
+  state: RootState
+): LoanTermsInterface[] => state.adminDashboard.loanTerms;
+
+export const initialLoanTermsSelector = (
+  state: RootState
+): LoanTermsInterface[] => state.adminDashboard.initialLoanTerms;
 
 export const stateSelector = (state: RootState): StateInterface[] =>
   state.adminDashboard.states;

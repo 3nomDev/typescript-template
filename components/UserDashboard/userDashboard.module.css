@@ -1,0 +1,164 @@
+.wrapper {
+    width: 100%;
+    padding:20px 30px;
+    height: 100vh;
+    overflow-y: scroll;
+    overflow-x: scroll;
+
+}
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 35px 0;
+}
+.icon {
+    font-size: 30px;
+    margin-right: 35px;
+}
+.titleLeft {
+   display: flex;
+}
+.applicants {
+    color: #9B9BA7;
+    font-size: 15px;
+    font-weight: 600;
+}
+.titleLeft h3 {
+    color: #154F85;
+    font-weight: 500;
+    font-size: 1.8rem;
+}
+.searchbarContainer {
+    background-color: #f2f2f2;
+    padding: 20px;
+    display: flex;
+    
+    flex-direction: column;
+    align-items: center;
+}
+.searchbar {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    height: 38px;
+    width: 15rem;
+    padding-left: 15px;
+}
+
+.tableHeader th {
+    color: #717181;
+    padding: 1rem 2.2rem;
+    font-size: .9rem;
+    line-height: 1.21;
+    font-weight: 500;
+    background: #F9F9FB;
+    border-bottom: 1px solid black;
+}
+
+
+.table {
+    margin-top: 40px;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.2rem;
+
+}
+.table td {
+    color: #717181;
+    font-size: .8rem;
+font-weight: 400;
+}
+.tableWrapper {
+    overflow-x: auto;
+}
+
+.overflow {
+    overflow-x: auto;
+}
+
+.assignBtn{
+    background-color: #154F85;
+    color: white;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+.passwordForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 40px auto;
+    text-align: left;
+    box-shadow: 0 0 3px 3px gray;
+    border-radius: 5px;
+    padding: 15px;
+    justify-content: center;
+
+
+}
+
+.contents{
+    justify-content: center;
+    display: flex;
+    margin-top: 3em;
+    flex-direction: column;
+}
+
+.btnHolder{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.passInput{
+    border: 1px solid grey;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.saveBtn{
+    /* width: 40px; */
+    background-color: rgb(69, 69, 187);
+    color:white;
+    margin-top: 15px;
+    border-radius: 5px;
+    padding: 5px 15px;
+
+}
+.editBtn{
+    /* width: 40px; */
+    background-color: rgb(19, 180, 132);
+    color:white;
+    margin-top: 15px;
+    border-radius: 5px;
+    padding: 5px 15px;
+
+}
+
+.userInfoBox{
+    box-shadow: 0 0 3px 3px gray;
+    border-radius: 5px;
+    padding: 15px;
+    width: 25%;
+    align-items: center;
+    margin: 0 auto;
+
+}
+
+.newPasswordPopup{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 40px auto;
+    text-align: left;
+ 
+    padding: 15px;
+    justify-content: center;
+
+}
+@media (min-width:1024px){
+    .searchbarContainer{
+       flex-direction: row;
+    }
+}

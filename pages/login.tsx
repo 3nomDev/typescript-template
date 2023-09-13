@@ -42,6 +42,7 @@ const DealerLogin: FC = () => {
   useEffect(() => {
     if (user?.ProfileTypeID === '2') router.replace('/dealership');
     if (user?.ProfileTypeID === '1') router.replace('/admin');
+    if (user?.ProfileTypeID === '3') router.replace('/user');
   }, [user]);
 
   return (

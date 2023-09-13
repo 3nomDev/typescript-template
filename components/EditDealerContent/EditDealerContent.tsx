@@ -47,6 +47,10 @@ import {
   rejectionsNotesSelector,
   pendingSelector,
   AddRejectionNote,
+  loanTermsSelector,
+  getLoanTermsById,
+  initialLoanTermsSelector,
+  getInitialLoanTermsById,
 } from '../../features/adminDashboardSlice';
 import { userSelector } from '../../features/authSlice';
 import { useSelector } from 'react-redux';
@@ -54,7 +58,7 @@ import { NavItem } from 'react-bootstrap';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import Document from '../DocumentCard/Document';
-import { faFileAlt } from '@fortawesome/pro-regular-svg-icons';
+import { faFileAlt, faFileContract } from '@fortawesome/pro-regular-svg-icons';
 import AdminNotes from '../AdminNotes/AdminNotes';
 import AddNotePopup from '../AddNote/AddNote';
 import { addNotification } from '../../features/notifications/notificationSlice';
@@ -62,6 +66,8 @@ import {
   getVehicleInfoByVin,
   vehicleInfoSelector,
 } from '../../features/dealerDashboardSlice';
+import { LoanTermsPopup } from '../LoanTermsPopup/LoanTermsPopup';
+import LoanDealInfo from '../LoanDealnfo/LoanDealInfo';
 
 const validationSchema = Yup.object({
   FirstName: Yup.string().trim().required('First name is required'),
@@ -129,7 +135,10 @@ export const EditDealerContent: FC<Props> = ({
   const notes = useSelector(rejectionsNotesSelector);
   const loading = useSelector(pendingSelector);
   const ref = useRef();
-
+  const loanTerms = useSelector(loanTermsSelector);
+  const initialLoanTerms = useSelector(initialLoanTermsSelector);
+  console.log(loanTerms);
+  console.log(initialLoanTerms);
   const userId = user?.ID;
   const isApproved = application?.Status === 'Approved';
 
@@ -147,6 +156,7 @@ export const EditDealerContent: FC<Props> = ({
   const [leaseApproved, setLeaseApproved] = useState(false);
   const [userApproved, setUserApproved] = useState(false);
   const [showButtonDropdown, setShowButtonDropdown] = useState(false);
+  const [showLoanTermsPopup, setShowLoanTermsPopup] = useState(false);
   const [paymentProposal, setPaymentProposal] = useState({
     Amount: '',
     Frequency: '',
@@ -155,6 +165,23 @@ export const EditDealerContent: FC<Props> = ({
     NumberOfPayments: '',
   });
   const [inputIsChecked, setInputIsChecked] = useState(false);
+  const [isEditable, setIsEditable] = useState(false);
+  const [dealCountered, setDealCountered] = useState(true);
+  const [editableText, setEditableText] = useState({
+    PTI: { title: 'PTI', value: '10.9%' },
+    AIRA: { title: 'AIRA', value: '10.9%' },
+    LoanTerm: { title: 'Loan Term', value: '36 months' },
+    FrontEndTotal: { title: 'Front End Total', value: '$500' },
+    BackendTotal: { title: 'Back End Total', value: '$1000' },
+    DownPayment: { title: 'Down Payment', value: '$2000' },
+    Monthly: { title: 'Monthly', value: '$600' },
+    NetFinanced: { title: 'Net Financed', value: '10.9%' },
+    NetCheck: { title: 'Net Check', value: '$23,000' },
+    LendBuzzFees: { title: 'Lend Buzz fees', value: '$2,000' },
+    LoanAmount: { title: 'Loan Amount', value: '$30,000' },
+  });
+
+  // })
   const vehicleDetails = useSelector(vehicleInfoSelector);
 
   const [initialProposal] = useState({
@@ -203,6 +230,8 @@ export const EditDealerContent: FC<Props> = ({
     if (application !== null && id !== undefined && application !== undefined) {
       noteData = { id: Number(id), status: application.StatusID };
       dispatch(loadRejectionNotes(noteData));
+      dispatch(getLoanTermsById(application.ApplicationID));
+      dispatch(getInitialLoanTermsById(application?.ApplicationID));
     }
   }, [application]);
 
@@ -499,9 +528,6 @@ export const EditDealerContent: FC<Props> = ({
     </ul>
   );
 
-  console.log(howLongNUm);
-  console.log(howLongTerm);
-
   return (
     <div className={styles.wrapper}>
       {showNotes && notes.length > 0 && (
@@ -511,6 +537,13 @@ export const EditDealerContent: FC<Props> = ({
         <ApplicationApproveModal
           closeModal={toggleApproveModal}
           onSave={onApprove}
+          application={application}
+        />
+      )}
+      {showLoanTermsPopup && (
+        <LoanTermsPopup
+          setShowLoanTermsPopup={setShowLoanTermsPopup}
+          user={user}
           application={application}
         />
       )}
@@ -657,13 +690,12 @@ export const EditDealerContent: FC<Props> = ({
                             overlay={
                               <Tooltip id="button-tooltip-2">
                                 Deny Applications, Send Messages and Send
-                                Proposals here. 
+                                Proposals here.
                               </Tooltip>
                             }
                           >
                             <FontAwesomeIcon
                               icon={faQuestionCircle as IconProp}
-                            
                               style={{
                                 position: 'absolute',
                                 top: '-21px',
@@ -714,6 +746,18 @@ export const EditDealerContent: FC<Props> = ({
                             Approve
                           </div>
                         )}
+                        {!isApproved && (
+                          <div
+                            className={cx(styles.button)}
+                            style={{ backgroundColor: 'slategray' }}
+                            onClick={() => setShowLoanTermsPopup(true)}
+                          >
+                            <FontAwesomeIcon
+                              icon={faFileContract as IconProp}
+                            />{' '}
+                            Send Terms
+                          </div>
+                        )}
 
                         {isApproved && (
                           <div
@@ -731,9 +775,12 @@ export const EditDealerContent: FC<Props> = ({
                     </div>
                   )}
 
-                  <div className={styles.formWrapper}>
+                  <div
+                    className={styles.formWrapper}
+                    style={{ display: 'flex' }}
+                  >
                     {/* <h1>Personal details</h1> */}
-                    <Form className={styles.form}>
+                    <Form className={styles.form} style={{ width: '95%' }}>
                       <div className={styles.personalDetails}>
                         <div className={styles.headerRight}>
                           <h1>Personal details</h1>
@@ -1256,6 +1303,64 @@ export const EditDealerContent: FC<Props> = ({
                         </div>
                       </div>
                     </Form>
+                    {!isApproved && Object.keys(initialLoanTerms).length > 1 && (
+                      <div>
+                        <h1
+                          style={{ textAlign: 'center', marginBottom: '15px' }}
+                        >
+                          Deal Summary
+                        </h1>
+                        <div style={{ display: 'flex' }}>
+                          {Object.keys(initialLoanTerms).length > 1 && (
+                            <div
+                              style={{ marginRight: '15px' }}
+                              className={styles.loanInfo}
+                            >
+                              <p>Initial Deal</p>
+                              <LoanDealInfo
+                                requestedDeal={initialLoanTerms}
+                                title="Current Deal"
+                              />
+                            </div>
+                          )}
+                          {loanTerms &&
+                            Object.keys(loanTerms).length > 1 &&
+                            loanTerms?.OfferType !== 'Proposal' && (
+                              <div className={styles.loanInfo}>
+                                <p>Requested Deal</p>
+
+                                <LoanDealInfo
+                                  requestedDeal={loanTerms}
+                                  title="Current Deal"
+                                />
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    )}
+                    {isApproved && (
+                      <div>
+                        <h1
+                          style={{ textAlign: 'center', marginBottom: '15px' }}
+                        >
+                          Deal Summary
+                        </h1>
+                        <div style={{ display: 'flex' }}>
+                          {Object.keys(initialLoanTerms).length > 1 &&
+                            loanTerms.OfferType !== 'Proposal' && (
+                              <div className={styles.loanInfo}>
+                                <p>Deal Terms</p>
+
+                                <LoanDealInfo
+                                  requestedDeal={loanTerms}
+                                  title="Current Deal"
+                                  status="Approved"
+                                />
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </>
               );

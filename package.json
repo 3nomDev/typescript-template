@@ -36,6 +36,7 @@
     "eslint-plugin-unused-imports": "^2.0.0",
     "formik": "^2.2.9",
     "framer-motion": "^6.2.8",
+    "generate-password": "^1.7.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.3",
     "nanoid": "^3.3.2",

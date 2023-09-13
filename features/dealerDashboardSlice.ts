@@ -164,6 +164,31 @@ export const loadApplicationItem = createAsyncThunk(
     return response[0];
   }
 );
+export const loadApplicationByGuid = createAsyncThunk(
+  'dashboard/loadApplicationByGuid',
+  async (data: any, thunkApi) => {
+  console.log(data)
+    const res = await fetch('https://tlcfin.prestoapi.com/api/getappbyguidid', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+      body: JSON.stringify({ GUID: data }),
+    });
+    const response: ApplicationInterface[] = await res.json();
+  
+    if (res.status === 200 && data.appId) {
+      let dataToSend = { userid: data.userId, ApplicationID: data?.appId };
+      let noteData = { id: data?.appId, status: response[0].StatusID };
+    
+      thunkApi.dispatch(getDocuments(dataToSend));
+      thunkApi.dispatch(loadRejectionNotes(noteData));
+    }
+
+    return response[0];
+  }
+);
 
 export const updateApplication = createAsyncThunk(
   'dashboard/updateApplication',
@@ -375,6 +400,16 @@ export const dealerDashboardSlice = createSlice({
       })
       .addCase(loadApplicationItem.fulfilled, (state, { payload }) => {
         // state.pending = false;
+        state.applicationItem = payload;
+        state.VehicleInfo = [];
+
+      })
+      .addCase(loadApplicationByGuid.pending, (state) => {
+        state.pending = true;
+        state.VehicleInfo = [];
+      })
+      .addCase(loadApplicationByGuid.fulfilled, (state, { payload }) => {
+        state.pending = false;
         state.applicationItem = payload;
         state.VehicleInfo = [];
 

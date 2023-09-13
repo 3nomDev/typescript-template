@@ -356,6 +356,7 @@ const AddNewUserForm = () => {
                         <option value="">Select an option</option>
                         <option value="1">Admin</option>
                         <option value="2">Dealer</option>
+                        <option value="3">User</option>
                       </Field>
                       <p style={{ color: 'red' }}>{errors.ProfileTypeID}</p>
                     </div>

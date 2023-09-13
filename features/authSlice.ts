@@ -84,6 +84,34 @@ export const addUserLogin = createAsyncThunk(
     }
   }
 );
+export const editUserInfo = createAsyncThunk(
+  'auth/edituserinfo',
+  async (userData: LoginPayloadInterface, thunkApi) => {
+    console.log(userData)
+    delete userData.token;
+    delete userData.expMinutes
+    delete userData.LastUpdated
+
+    let res;
+    try {
+      res = await fetch(`https://tlcfin.prestoapi.com/api/account/${userData.ID}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        body: JSON.stringify( userData ),
+      });
+
+      const response: UserInterface = await res.json();
+
+      return response;
+    } catch (error) {
+      console.log(error)
+
+    }
+  }
+);
 
 export const addUser = createAsyncThunk(
   'dashboard/addUser',

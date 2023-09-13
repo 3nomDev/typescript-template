@@ -1,0 +1,144 @@
+.wrapper {
+    display: flex;
+    z-index: 2;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 8rem;
+    background-color: white;
+    border-radius: 18px;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: min-content;
+    /* height: 900px; */
+    width: 90%;
+    max-width: 450px;
+    overflow: auto;
+    
+}
+.popUpBackground{
+    background-color: #b7b4b4cc;
+    position: absolute;
+    height: 100vh;
+    top: 0;
+    width: 100vw;
+    left: 0;
+    display: flex;
+    z-index: 2;
+}
+
+
+.header {
+    padding: 15px;
+    color: white;
+    border-bottom: 1px solid #ededed;
+    background: transparent linear-gradient(0deg, #58A2E1 0%, #4285D4 23%, #2A64C5 49%, #3251A8 100%) 0% 0% no-repeat padding-box;
+    padding: 15px;
+    display: flex;
+    justify-content: center; 
+    font-weight: bold;
+
+    border-radius: 15px 15px 0px 0px;
+}
+
+.header h1{
+    text-align: center;
+}
+
+.header span {
+    cursor: pointer;;
+}
+
+.row {
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50%;
+    padding: 3rem
+
+}
+
+
+.circle {
+    border-radius: 50%;
+    padding: 5px;
+    width: 45px;
+    height: 41px;
+    align-items: center;
+    text-align: center;
+    background: transparent linear-gradient(0deg, #58A2E1 0%, #4285D4 23%, #2A64C5 49%, #3251A8 100%) 0% 0% no-repeat padding-box;
+    color: white;
+    font-size: 20px;
+}
+
+.checkbox {
+    height: 25px;
+    width: 25px;
+    margin: 0 20px;
+}
+
+.row p {
+    font-size: 15px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid black;
+}
+.textArea {
+    padding: 10px 30px;
+}
+
+.textArea textarea {
+    height: 135px;
+    width: 100%;
+    border: 1px solid black;
+    padding-left: 15px;
+}
+
+.footer {
+    display: flex;
+    width: 80%;
+    margin: 20px auto;
+}
+
+.cancelBtn {
+    padding: 10px;
+    cursor: pointer;
+    flex:1;
+    border-radius: 8px;
+    background-color: #5c636a;
+    text-align: center;
+    color: white;
+}
+
+.saveBtn {
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    flex:1;
+    border-radius: 8px;
+    background-color: #0a58ca;
+    margin-left: 10px;
+    text-align: center;
+}
+
+.loanForm{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    overflow: auto;
+    height: 700px;
+
+}
+
+.loanForm label{
+    font-weight: bolder;
+}
+
+.error{
+    color:red
+}

@@ -5,7 +5,7 @@ import cx from 'classnames';
 import { cs, StyleType } from '@rnw-community/shared';
 import { useDispatch, useSelector } from 'react-redux';
 import { hasErrors } from '../../utils/hasErrors';
-import styles from './EditDealerApplication.module.css';
+import styles from './UserApplication.module.css';
 import { ApplicationInterface, DocumentTypeInterface } from '../../contracts';
 import { DealerHeader } from '../DealerHeader/DealerHeader';
 import {
@@ -32,13 +32,9 @@ import { MaskedInput } from '../MaskedInput/MaskedInput';
 import Select from 'react-select';
 import { useRouter } from 'next/router';
 import {
-  getLoanTermsById,
   loadStates,
   loadUserActiveAccount,
-  loanTermsSelector,
-  initialLoanTermsSelector,
   stateSelector,
-  getInitialLoanTermsById,
 } from '../../features/adminDashboardSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus, faSearch } from '@fortawesome/fontawesome-free-solid';
@@ -51,10 +47,6 @@ import { addNotification } from '../../features/notifications/notificationSlice'
 import moment from 'moment';
 import Link from 'next/link';
 import AutoSave from '../Autosave';
-import { faFileContract } from '@fortawesome/pro-regular-svg-icons';
-import LoanDealInfo from '../LoanDealnfo/LoanDealInfo';
-import { LoanTermsPopup } from '../LoanTermsPopup/LoanTermsPopup';
-import { LoanTermsInterface } from '../../contracts/loanTerms.interface';
 
 const validationSchema = Yup.object({
   FirstName: Yup.string().trim().required('First name is required'),
@@ -80,7 +72,7 @@ const validationSchema = Yup.object({
   PostalCode: Yup.string().trim().required('Zip code is required'),
   HousingStatus: Yup.string().trim().required('Housing status is required'),
   HowLong: Yup.string().required('Time at this address is required'),
-  Term: Yup.string().required('Please Select a Timeframe'),
+  Term: Yup.string().required(("Please Select a Timeframe")),
   EmployerName: Yup.string().trim().required('Company name is required'),
   WorkPhone: Yup.string().trim().required('Work phone is required'),
   Position: Yup.string().trim().required('Position is required'),
@@ -108,7 +100,7 @@ interface Props {
   setLoadedValues: React.Dispatch<(prevState: undefined) => undefined>;
 }
 
-export const EditDealerApplication: FC<Props> = ({
+ const UserApplication: FC<Props> = ({
   initialValues,
   loadedValues,
   setLoadedValues,
@@ -120,7 +112,6 @@ export const EditDealerApplication: FC<Props> = ({
   const [addNote, setAddNote] = useState(false);
   const [note, setNote] = useState('');
   const [noteOptions, setNoteOptions] = useState('');
-  const [showLoanTermsPopup, setShowLoanTermsPopup] = useState(false);
 
   const states = useSelector(stateSelector);
   const application = useSelector(singleApplicationSelector);
@@ -128,13 +119,9 @@ export const EditDealerApplication: FC<Props> = ({
   let loggeduser = useSelector(userSelector);
   const user = useSelector(userSelector);
   const documents = useSelector(documentSelector);
-  const loanTerms = useSelector(loanTermsSelector);
-  const initialLoanTerms = useSelector(initialLoanTermsSelector);
   const vehicleDetails = useSelector(vehicleInfoSelector);
   const [userApplication, setUserApplication] = useState({});
   const [copyOfValues] = useState([initialValues]);
-  const isApproved = application?.Status === 'Approved';
-  //  console.log(application)
 
   const userId = user?.ID;
   const statusStyle = {
@@ -143,7 +130,7 @@ export const EditDealerApplication: FC<Props> = ({
     Approved: styles.green,
     Declined: styles.red,
     Incomplete: styles.red,
-    Funded: styles.cyan,
+    Funded: styles.cyan
   }[application?.Status];
 
   const pending = useSelector(pendingSelector);
@@ -154,22 +141,27 @@ export const EditDealerApplication: FC<Props> = ({
   const calcFinanced = (num1, num2) => {
     return num1 - num2;
   };
-  var howLongNUm;
-  var howLongTerm;
-  if (initialValues && initialValues.HowLong === loadedValues?.HowLong) {
-    howLongNUm = initialValues?.HowLong.replace(/[^0-9]/g, '');
-    howLongTerm = initialValues?.HowLong.replace(/[^\D]+/g, '');
-  } else {
-    howLongNUm = loadedValues?.HowLong.replace(/[^0-9]/g, '');
-    howLongTerm = loadedValues?.HowLong.replace(/[^\D]+/g, '');
-  }
+var howLongNUm;
+var howLongTerm;
+if(initialValues && initialValues.HowLong === loadedValues?.HowLong ){
+howLongNUm = initialValues?.HowLong.replace(/[^0-9]/g, '');
+howLongTerm = initialValues?.HowLong.replace(/[^\D]+/g, '');
+} 
+else{
+  howLongNUm = loadedValues?.HowLong.replace(/[^0-9]/g, '');
+howLongTerm = loadedValues?.HowLong.replace(/[^\D]+/g, '');
+
+}
+ 
 
   const handleSubmit = (values: Partial<ApplicationInterface>): void => {
+
+    console.log(values)
     dispatch(
       updateApplication({
         Address: values.Address,
         AmountFinanced: values.AmountFinanced,
-        ApplicationID: values.ApplicationID,
+        ApplicationID: values.ID,
         CellPhone: values.CellPhone,
         City: values.City,
         DLNumber: values.DLNumber,
@@ -218,7 +210,7 @@ export const EditDealerApplication: FC<Props> = ({
   const uploadFile = (values) => {
     setLoadedValues({ ...loadedValues, ...values });
     dispatch(uploadDocument(documentToSend));
-    setDocumentToSend('');
+    setDocumentToSend('')
   };
 
   let id;
@@ -235,12 +227,6 @@ export const EditDealerApplication: FC<Props> = ({
   useEffect(() => {
     getActiveAccountInfo();
   }, [approvalCode]);
-
-  useEffect(() => {
-    if (application?.ApplicationID)
-      dispatch(getLoanTermsById(application?.ApplicationID));
-    dispatch(getInitialLoanTermsById(application?.ApplicationID));
-  }, [application]);
 
   const decryptFile = (event) => {
     let fileBlob = event.target.result;
@@ -358,14 +344,11 @@ export const EditDealerApplication: FC<Props> = ({
 
   const lookUpVehicle = (e, vin, values) => {
     e.preventDefault();
-
-    setLoadedValues({
-      ...loadedValues,
-      ...values,
-      HowLong: values.HowLong + values.Term,
-    });
+  
+    setLoadedValues({ ...loadedValues, ...values,  HowLong: values.HowLong + values.Term, });
     dispatch(getVehicleInfoByVin(vin));
   };
+
 
   const getActiveAccountInfo = async () => {
     let result = await dispatch(loadUserActiveAccount(approvalCode));
@@ -377,10 +360,9 @@ export const EditDealerApplication: FC<Props> = ({
     router.back();
   };
 
-  console.log(initialLoanTerms);
 
-  // console.log(application)
-  // console.log(user)
+  console.log(loadedValues)
+  
 
   return (
     <div className={styles.wrapper}>
@@ -388,7 +370,7 @@ export const EditDealerApplication: FC<Props> = ({
         <AdminNotes notes={notes} setShowNotes={setShowNotes} />
       )}
 
-      <DealerHeader />
+      <DealerHeader title="User" />
       {pending && (
         <div className={styles.loaderWrapper}>
           <Oval
@@ -399,14 +381,6 @@ export const EditDealerApplication: FC<Props> = ({
             color="black"
           />
         </div>
-      )}
-      {showLoanTermsPopup && (
-        <LoanTermsPopup
-          setShowLoanTermsPopup={setShowLoanTermsPopup}
-          user={user}
-          loanTerms={loanTerms}
-          application={application}
-        />
       )}
       {!pending && (
         <div className={styles.content}>
@@ -419,28 +393,13 @@ export const EditDealerApplication: FC<Props> = ({
                   className={styles.icon}
                 />
                 Update Account (Profile # {application?.ApplicationID})
-                <p className={statusStyle}>
-                  {application?.Status && application?.Status === 'Active'
-                    ? 'Funded'
-                    : application?.Status}
-                  {application?.Status === 'Declined' ||
-                    (application?.Status === 'Conditional Approval' &&
-                      '(See Notes)')}
-                </p>
+                <p className={statusStyle}>{application?.Status && application?.Status === 'Active' ? 'Funded' : application?.Status }{application?.Status === 'Declined' || application?.Status === 'Conditional Approval' && '(See Notes)' }</p>
                 <p>
                   {application?.FirstName} {application?.LastName}
                 </p>
               </h1>
 
-              <div>
-                {!isApproved && Object.keys(initialLoanTerms).length > 1 &&(
-                  <button
-                    className={styles.termsBtn}
-                    onClick={() => setShowLoanTermsPopup(true)}
-                  >
-                    Counter Deal
-                  </button>
-                )}
+              {/* <div>
                 <button
                   className={styles.notesButton}
                   onClick={() => setShowNotes(true)}
@@ -462,7 +421,7 @@ export const EditDealerApplication: FC<Props> = ({
                     </button>
                   </Link>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -487,10 +446,7 @@ export const EditDealerApplication: FC<Props> = ({
                 loadedValues?.VehicleTransmission,
               Term: howLongTerm ? howLongTerm : '',
               HowLong: howLongNUm ? howLongNUm : '',
-              MonthlyHousingPayment:
-                loadedValues?.EmployerName === ''
-                  ? ''
-                  : loadedValues?.MonthlyHousingPayment,
+              MonthlyHousingPayment: loadedValues?.EmployerName === '' ? '' : loadedValues?.MonthlyHousingPayment,
 
               // AmountFinanced : calcFinanced(initialValues?.PurchasePrice, initialValues?.DepositFloat)
             }}
@@ -511,9 +467,9 @@ export const EditDealerApplication: FC<Props> = ({
                 );
               }, [values.DepositFloat, touched.DepositFloat, setFieldValue]);
 
-              // console.log(values);
-              // console.log(errors);
-              // console.log(howLongTerm);
+              console.log(values);
+              console.log(errors);
+              console.log(howLongTerm);
 
               const firstNameHasErrors = hasErrors(
                 touched.FirstName,
@@ -633,7 +589,10 @@ export const EditDealerApplication: FC<Props> = ({
                 touched.Address,
                 errors.Address
               );
-              const Term = hasErrors(touched.Term, errors.Term);
+              const Term = hasErrors(
+                touched.Term,
+                errors.Term
+              );
               const inputErrorStyle = (hasError: boolean): StyleType =>
                 cs(
                   hasError,
@@ -642,7 +601,7 @@ export const EditDealerApplication: FC<Props> = ({
                 );
 
               return (
-                <div className={styles.formWrapper} style={{ display: 'flex' }}>
+                <div className={styles.formWrapper}>
                   {addNote && (
                     <AddNotePopup
                       setAddNote={setAddNote}
@@ -651,7 +610,7 @@ export const EditDealerApplication: FC<Props> = ({
                       handleNoteOptions={handleNoteOptions}
                     />
                   )}
-                  <Form className={styles.form} style={{ width: '95%' }}>
+                  <Form className={styles.form}>
                     {/* <AutoSave  /> */}
                     <div className={styles.personalDetails}>
                       <div className={styles.headerRight}>
@@ -937,9 +896,7 @@ export const EditDealerApplication: FC<Props> = ({
                           <div className={styles.inputBox}>
                             <div style={{ display: 'flex' }}>
                               <div>
-                                <p style={{ marginLeft: '15px' }}>
-                                  Time at this address
-                                </p>
+                                <p style={{marginLeft:"15px"}}>Time at this address</p>
                                 <Field
                                   type="string"
                                   name="HowLong"
@@ -947,20 +904,15 @@ export const EditDealerApplication: FC<Props> = ({
                                   placeholder="Time at this address"
                                   className={styles.input}
                                 />
-                                {TimeAtAddressHasErrors && (
-                                  <div
-                                    className={styles.error}
-                                    style={{ marginLeft: '15px' }}
-                                  >
-                                    {errors.HowLong}
-                                  </div>
-                                )}
+                                 {TimeAtAddressHasErrors && (
+                              <div className={styles.error} style={{marginLeft:"15px"}}>
+                                {errors.HowLong}
+                              </div>
+                            )}
                               </div>
 
-                              <div style={{ marginLeft: '15px' }}>
-                                <p style={{ marginLeft: '15px' }}>
-                                  Months or Years
-                                </p>
+                              <div style={{marginLeft:"15px"}}>
+                                <p style={{marginLeft:"15px"}}>Months or Years</p>
                                 <Field
                                   as="select"
                                   className={styles.input}
@@ -972,15 +924,14 @@ export const EditDealerApplication: FC<Props> = ({
                                   <option value="Months">Months</option>
                                 </Field>
                                 {Term && (
-                                  <div
-                                    className={styles.error}
-                                    style={{ marginLeft: '15px' }}
-                                  >
-                                    {errors.Term}
-                                  </div>
-                                )}
+                              <div className={styles.error} style={{marginLeft:"15px"}}>
+                                {errors.Term}
+                              </div>
+                            )}
                               </div>
                             </div>
+
+                           
                           </div>
                         </div>
                         <div className={styles.formRow}>
@@ -1305,60 +1256,6 @@ export const EditDealerApplication: FC<Props> = ({
                       SAVE
                     </button>
                   </Form>
-
-                  {!isApproved && Object.keys(initialLoanTerms).length > 1 &&  (
-                    <div>
-                      <h1 style={{ textAlign: 'center', marginBottom: '15px' }}>
-                        Deal Summary
-                      </h1>
-                      <div style={{ display: 'flex' }}>
-                        {Object.keys(initialLoanTerms).length > 1 && (
-                          <div
-                            style={{ marginRight: '15px' }}
-                            className={styles.loanInfo}
-                          >
-                            <p>Initial Deal</p>
-                            <LoanDealInfo
-                              requestedDeal={initialLoanTerms}
-                              title="Current Deal"
-                            />
-                          </div>
-                        )}
-                        {Object.keys(initialLoanTerms).length > 1 &&
-                          loanTerms?.OfferType !== 'Proposal' && (
-                            <div className={styles.loanInfo}>
-                              <p>Requested Deal</p>
-
-                              <LoanDealInfo
-                                requestedDeal={loanTerms}
-                                title="Current Deal"
-                              />
-
-                           
-                            </div>
-                          )}
-                      </div>
-                    </div>
-                  )}
-                  {isApproved && (
-                    <div>
-                      <h1 style={{ textAlign: 'center', marginBottom: '15px' }}>
-                        Deal Summary
-                      </h1>
-                      <div style={{ display: 'flex' }}>
-                        {Object.keys(initialLoanTerms).length > 1 &&
-                          loanTerms.OfferType !== 'Proposal' && (
-                            <div className={styles.loanInfo}>
-                              <LoanDealInfo
-                                requestedDeal={loanTerms}
-                                title="Current Deal"
-                                status="Approved"
-                              />
-                            </div>
-                          )}
-                      </div>
-                    </div>
-                  )}
                 </div>
               );
             }}
@@ -1368,3 +1265,6 @@ export const EditDealerApplication: FC<Props> = ({
     </div>
   );
 };
+
+
+export default UserApplication

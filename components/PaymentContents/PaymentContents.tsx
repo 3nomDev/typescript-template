@@ -23,19 +23,19 @@ import { useSelector } from 'react-redux';
 import * as CurrencyFormat from 'react-currency-format';
 import moment from 'moment';
 import { userSelector } from '../../features/authSlice';
-// interface UserPaymentProp {
-//   userPayments: UserPaymentsInterface[]
-// }
+
 
 
 interface Props {
   amountRemaining: any;
   paymentsRemaining: any;
+  title?:string
 }
 
 export const PaymentContents: FC<Props> = ({
   amountRemaining,
   paymentsRemaining,
+  title
 }) => {
   const { userActiveAccount, userPayments } = useSelector(
     adminDashboardSelector
@@ -104,7 +104,7 @@ console.log(userActiveAccount)
 
   return (
     <div className={styles.wrapper}>
-      <DealerHeader />
+      <DealerHeader title={title} />
       <div className={styles.contentWrapper}>
         <div className={styles.contentHeader}>
           <div className={styles.contentTitle}>

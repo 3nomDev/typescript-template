@@ -1,6 +1,6 @@
 const html = String.raw;
 
-export const emailtemplate = (approvalCode) =>
+export const emailtemplate = (approvalCode, username, password) =>
 html `<!DOCTYPE html>
 <html lang="en">
     <head>
@@ -26,7 +26,10 @@ html `<!DOCTYPE html>
             <table style="margin: 0 auto; width: 75%; line-height: 30px; color: #1d1d1d; font-size: 18px;">
                 <tr>
                     <td>Your approval code is:<span style="font-weight: bold;"> ${approvalCode}</span>. Please keep this safe for your records. Bring this code to one of our dealers to move to next step.</td>
-                </tr>
+             
+                    </tr>
+                    <tr><td>These are your login credentials</td></tr>
+                    <tr>   <td>Username=${username} Password=${password}</td></tr>
                 <br />
             </table>
         </table>
