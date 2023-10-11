@@ -6,7 +6,7 @@
     margin: 0 auto;
     margin-top: 8rem;
     background-color: white;
-    border-radius: 5px;
+    border-radius: 18px;
     height: -webkit-fit-content;
     height: -moz-fit-content;
     height: min-content;
@@ -38,6 +38,7 @@
     justify-content: center; 
     font-weight: bold;
 
+    border-radius: 15px 15px 0px 0px;
 }
 
 .header h1{

@@ -21,4 +21,5 @@ NetCheck?:number
 NetFinanced?:number
 OfferType?:string
 PTI?:number
+APR?:number
 }

@@ -23,7 +23,24 @@ const validationSchema = Yup.object({
     .matches(/^[0-9]+$/, 'Must be only digits')
     .min(9, 'Must be exactly 9 digits')
     .max(9, 'Must be exactly 9 digits'),
-  DOB: Yup.date().max(new Date(2004, 1, 1)).required(),
+  DOB: Yup.date()
+  .required('Birthdate is required')
+  .test('is-legal-age', 'You must be 21 years or older', function (birthdate) {
+    // Calculate age from the birthdate
+    const today = new Date();
+    let userAge = today.getFullYear() - birthdate?.getFullYear();
+    const birthMonth = birthdate?.getMonth();
+    const currentMonth = today.getMonth();
+
+    // If the birth month is after the current month or if it's the current month
+    // but the birth day is greater than today's day, subtract 1 from the age
+    if (birthMonth > currentMonth || (birthMonth === currentMonth && birthdate?.getDate() > today.getDate())) {
+      userAge--;
+    }
+
+    // Check if the user is 21 or older
+    return userAge >= 21;
+  }),
   MonthlyIncome: Yup.number().required('Monthly income is required'),
   MonthlyExpense: Yup.number().required('Monthly expenses is required'),
   EmailAddress: Yup.string().trim().required('Email Address is required'),

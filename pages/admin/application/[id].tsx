@@ -9,6 +9,8 @@ import {
   adminDashboardSelector,
   changeApplicationStatus,
   generatePdf,
+  getInitialLoanTermsById,
+  getLoanTermsById,
   loadApplication,
   loadContractTypes,
   loadDocumentTypes,
@@ -22,6 +24,7 @@ import {
   SchedulePaymentPayloadInterface,
 } from '../../../contracts';
 import { userSelector } from '../../../features/authSlice';
+import { loadRejectionNotes } from '../../../features/dealerDashboardSlice';
 
 const EditDealerPage: FC = () => {
   const router = useRouter();
@@ -35,13 +38,22 @@ const EditDealerPage: FC = () => {
 
   const { id } = router.query;
   const data = {appId: id, userId:userid}
+  console.log(id)
 
   useEffect(() => {
+    let noteData = {};
     if (isString(id)) {
       dispatch(loadContractTypes());
       dispatch(loadApplication(data));
       dispatch(loadDocumentTypes());
       dispatch(loadStates());
+      // noteData = { id: Number(id), status: applicationItem?.StatusID };
+      // dispatch(loadRejectionNotes(noteData));
+      dispatch(getLoanTermsById(id));
+      dispatch(getInitialLoanTermsById(id));
+    }
+    return () => {
+      dispatch(loadApplication(null))
     }
   }, [id]);
 

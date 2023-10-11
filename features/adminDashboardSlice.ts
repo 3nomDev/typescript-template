@@ -551,6 +551,8 @@ export const generatePdf = createAsyncThunk(
 export const updateApplication = createAsyncThunk(
   'adminDashboard/updateApplication',
   async (payload: UpdateApplicationInterface, thunkApi) => {
+
+    console.log(payload)
     const body = {
       Address: payload.Address,
       AmountFinanced: payload.AmountFinanced,
@@ -587,6 +589,7 @@ export const updateApplication = createAsyncThunk(
       WorkPhone: payload.WorkPhone,
       YearsAtCurrentJob: payload.YearsAtCurrentJob,
       userId: payload.userid,
+      CreditScore:Number(payload.CreditScore)
     };
 
     const response = await fetch(
@@ -775,7 +778,7 @@ export const setupLoanTerm = createAsyncThunk(
   'adminDashboard/setupLoanTerm',
   async (payload: any,  thunkApi) => {
 
-    
+    console.log(payload)
       const res = await fetch(
       'https://tlcfin.prestoapi.com/api/sendloanterms',
       {

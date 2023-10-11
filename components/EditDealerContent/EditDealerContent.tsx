@@ -137,8 +137,7 @@ export const EditDealerContent: FC<Props> = ({
   const ref = useRef();
   const loanTerms = useSelector(loanTermsSelector);
   const initialLoanTerms = useSelector(initialLoanTermsSelector);
-  console.log(loanTerms);
-  console.log(initialLoanTerms);
+
   const userId = user?.ID;
   const isApproved = application?.Status === 'Approved';
 
@@ -165,21 +164,8 @@ export const EditDealerContent: FC<Props> = ({
     NumberOfPayments: '',
   });
   const [inputIsChecked, setInputIsChecked] = useState(false);
-  const [isEditable, setIsEditable] = useState(false);
-  const [dealCountered, setDealCountered] = useState(true);
-  const [editableText, setEditableText] = useState({
-    PTI: { title: 'PTI', value: '10.9%' },
-    AIRA: { title: 'AIRA', value: '10.9%' },
-    LoanTerm: { title: 'Loan Term', value: '36 months' },
-    FrontEndTotal: { title: 'Front End Total', value: '$500' },
-    BackendTotal: { title: 'Back End Total', value: '$1000' },
-    DownPayment: { title: 'Down Payment', value: '$2000' },
-    Monthly: { title: 'Monthly', value: '$600' },
-    NetFinanced: { title: 'Net Financed', value: '10.9%' },
-    NetCheck: { title: 'Net Check', value: '$23,000' },
-    LendBuzzFees: { title: 'Lend Buzz fees', value: '$2,000' },
-    LoanAmount: { title: 'Loan Amount', value: '$30,000' },
-  });
+  const [isCounter, setIsCounter] = useState(Object.keys(initialLoanTerms).length > 1 ? true : false)
+
 
   // })
   const vehicleDetails = useSelector(vehicleInfoSelector);
@@ -218,22 +204,30 @@ export const EditDealerContent: FC<Props> = ({
     dispatch(uploadDocument(documentToSend));
   };
 
-  useEffect(() => {
-    const data = { userid: userId, ApplicationID: id };
-    if (id && userId) {
-      dispatch(getDocuments(data));
-    }
-  }, [id]);
+  // useEffect(() => {
+  //   const data = { userid: userId, ApplicationID: id };
+  //   if (id && userId) {
+  //     dispatch(getDocuments(data));
+  //   }
+  // }, [id]);
 
   useEffect(() => {
     let noteData = {};
     if (application !== null && id !== undefined && application !== undefined) {
       noteData = { id: Number(id), status: application.StatusID };
       dispatch(loadRejectionNotes(noteData));
-      dispatch(getLoanTermsById(application.ApplicationID));
-      dispatch(getInitialLoanTermsById(application?.ApplicationID));
+      // dispatch(getLoanTermsById(application.ApplicationID));
+      // dispatch(getInitialLoanTermsById(application?.ApplicationID));
     }
+ 
   }, [application]);
+
+  useEffect(() =>{
+    if(Object.keys(initialLoanTerms).length > 1){
+      setIsCounter(true)
+    }
+    
+  },[initialLoanTerms])
 
   useEffect(() => {
     const checkIfClickedOutside = (e) => {
@@ -527,7 +521,8 @@ export const EditDealerContent: FC<Props> = ({
       </li>
     </ul>
   );
-
+  console.log(isCounter)
+  console.log(Object.keys(initialLoanTerms).length > 1)
   return (
     <div className={styles.wrapper}>
       {showNotes && notes.length > 0 && (
@@ -545,6 +540,7 @@ export const EditDealerContent: FC<Props> = ({
           setShowLoanTermsPopup={setShowLoanTermsPopup}
           user={user}
           application={application}
+          isCounter={Object.keys(initialLoanTerms).length > 1}
         />
       )}
       {isPaymentsModalShown && (
@@ -746,7 +742,7 @@ export const EditDealerContent: FC<Props> = ({
                             Approve
                           </div>
                         )}
-                        {!isApproved && (
+                        {!isApproved && loanTerms?.OfferType !== "Accepted" && (
                           <div
                             className={cx(styles.button)}
                             style={{ backgroundColor: 'slategray' }}
@@ -1019,8 +1015,8 @@ export const EditDealerContent: FC<Props> = ({
                               >
                                 <option value="Rent">Rent</option>
                                 <option value="Own">Own</option>
-                                <option value="ParentsBasement">
-                                  Live in parents basement
+                                <option value="Other">
+                                 Other
                                 </option>
                               </Field>
                             </div>
@@ -1299,6 +1295,15 @@ export const EditDealerContent: FC<Props> = ({
                                 placeholder="Amount financed"
                               />
                             </div>
+                            <div className={styles.inputBox}>
+                        <p>Credit Score</p>
+                            <Field
+                              className={styles.input}
+                              name="CreditScore"
+                              placeholder="Credit Score"
+                            />
+                           
+                        </div>
                           </div>
                         </div>
                       </div>
@@ -1311,7 +1316,7 @@ export const EditDealerContent: FC<Props> = ({
                           Deal Summary
                         </h1>
                         <div style={{ display: 'flex' }}>
-                          {Object.keys(initialLoanTerms).length > 1 && (
+                          {Object.keys(initialLoanTerms).length > 1 && loanTerms?.OfferType !== "Accepted"  && (
                             <div
                               style={{ marginRight: '15px' }}
                               className={styles.loanInfo}
@@ -1324,10 +1329,10 @@ export const EditDealerContent: FC<Props> = ({
                             </div>
                           )}
                           {loanTerms &&
-                            Object.keys(loanTerms).length > 1 &&
-                            loanTerms?.OfferType !== 'Proposal' && (
+                            Object.keys(loanTerms).length > 1 &&  loanTerms?.OfferType !== "Proposal" &&
+                           (
                               <div className={styles.loanInfo}>
-                                <p>Requested Deal</p>
+                                <p>{loanTerms?.OfferType !== 'Accepted' ? 'Requested Deal' : 'Deal'}</p>
 
                                 <LoanDealInfo
                                   requestedDeal={loanTerms}
@@ -1347,7 +1352,7 @@ export const EditDealerContent: FC<Props> = ({
                         </h1>
                         <div style={{ display: 'flex' }}>
                           {Object.keys(initialLoanTerms).length > 1 &&
-                            loanTerms.OfferType !== 'Proposal' && (
+                            loanTerms?.OfferType !== 'Proposal' && (
                               <div className={styles.loanInfo}>
                                 <p>Deal Terms</p>
 

@@ -24,12 +24,33 @@ console.log(item)
     </div>}
     <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
        <label>AIRA:</label>
-   <p>${requestedDeal?.AIRA}</p>
+   <p>{requestedDeal?.AIRA}%</p>
+    </div>
+    <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
+       <label>APR:</label>
+   <p>{requestedDeal?.APR}%</p>
     </div>
    
     <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
        <label>PTI:</label>
-   <p>${requestedDeal?.PTI}</p>
+   <p>{requestedDeal?.PTI}%</p>
+    </div>
+    <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
+       <label>GPS:</label>
+   <p>${requestedDeal?.GPS}</p>
+    </div>
+    <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
+       <label>Sales Tax:</label>
+   <p>${requestedDeal?.SalesTax}</p>
+    </div>
+    <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
+       <label>Tags Fee:</label>
+   <p>${requestedDeal?.Tags}</p>
+    </div>
+   
+    <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
+       <label>VSI:</label>
+   <p>${requestedDeal?.VSI}</p>
     </div>
    
     <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
@@ -71,7 +92,7 @@ console.log(item)
        <label>Net Check:</label>
    <p>${requestedDeal?.NetCheck}</p>
     </div>
-   {status !== "Approved" && <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
+   {status !== "Approved" && requestedDeal.OfferType !== "Accepted" && <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
        <label>Comments:</label>
    <p>{requestedDeal?.Comments}</p>
     </div>}

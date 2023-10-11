@@ -40,7 +40,7 @@ export const DealerRow: FC<Props> = ({
   console.log(Status)
 
   return (
-    <tr className={styles.tableRow} onClick={onEditClick(ApplicationID.toString())}>
+    <tr className={styles.tableRow} onClick={onEditClick(ApplicationID?.toString())}>
       <td>{FirstName?.concat(` ${LastName}`)}</td>
    {ApprovalCode &&    <td>{ApprovalCode}</td>}
       <td>{ApplicationID}</td>
@@ -56,7 +56,7 @@ export const DealerRow: FC<Props> = ({
       <td >{moment(DateAdded).format('MM/DD/YYYY')}</td>
       <td
         className={styles.rowButton}
-        onClick={onEditClick(ApplicationID.toString())}
+        onClick={onEditClick(ApplicationID?.toString())}
       >
         <FontAwesomeIcon icon={faArrowRight as IconProp} color="darkgrey" />
       </td>

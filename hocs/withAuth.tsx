@@ -22,6 +22,8 @@ export const withAuth =
 
     const router = useRouter();
 
+
+
     useEffect(() => {
       if (!isDefined(user) && !isDefined(localStorage.getItem('user'))) {
         router.push('/login');
@@ -38,6 +40,7 @@ export const withAuth =
 
     useEffect(() => {
       const token = localStorage.getItem('accessToken');
+
       if (isDefined(token)) {
         const parsedJwt = parseJwt(token);
         if (parsedJwt.exp * 1000 < Date.now()) {

@@ -59,6 +59,7 @@ export interface ApplicationInterface {
   YearsAtCurrentJob: number;
   isShown: boolean;
   Dealership: string;
+  CreditScore:number;
 }
 
 export const emptyApplication = {
@@ -112,4 +113,5 @@ export const emptyApplication = {
   YearsAtCurrentJob: 0,
   isShown: true,
   Dealership: '',
+  CreditScore:0
 };

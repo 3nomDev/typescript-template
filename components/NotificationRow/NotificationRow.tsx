@@ -21,7 +21,7 @@ export const NotificationRow: FC<Props> = ({
       <td className={styles.bell}>
         <FontAwesomeIcon icon={faBell as IconProp} color="lightgreen" />
       </td>
-      <td>{FirstName.concat(` ${LastName}`)}</td>
+      <td>{FirstName?.concat(` ${LastName}`)}</td>
       <td>{Description}</td>
       <td>{moment(DateAdded).format('MM/DD/YYYY')}</td>
     </tr>
