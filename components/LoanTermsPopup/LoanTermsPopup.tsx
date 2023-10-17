@@ -24,7 +24,7 @@ interface LoanTermsFormValues {
   NetFinanced: string;
   NetCheck: string;
   HamiltonFee: number;
-  LoanAmount: string;
+  LoanAmount: number;
   Comments: string;
   LoanOriginationFee: number;
   LoanTermPaymentAmount: string;
@@ -41,7 +41,7 @@ interface Props {
 
 const validationSchema = Yup.object().shape({
   AIRA: Yup.number()
-    .required('AIRA is required')
+   
     .min(0, 'AIRA must be a positive number'),
   APR: Yup.number()
     .required('APR is required')
@@ -63,8 +63,7 @@ const validationSchema = Yup.object().shape({
     .required('Front End Total is required')
     .min(0, 'Front End Total must be a positive number'),
   BackEnd: Yup.number()
-    .required('Back End Total is required')
-    .min(0, 'Back End Total must be a positive number'),
+  .min(0, 'Back End Total must be a positive number'),
   DownPayment: Yup.number()
     .required('Down Payment is required')
     .min(0, 'Down Payment must be a positive number'),
@@ -103,22 +102,9 @@ export const LoanTermsPopup: React.FC<Props> = ({
   isCounter,
 }) => {
   const dispatch = useDispatch();
-
-  
-  // const  calculateAPR = (creditScore) => {
-  //   if (creditScore >= 560 && creditScore <= 649) {
-  //     return 18.99;
-  //   } else if (creditScore >= 650 && creditScore <= 699) {
-  //     return 14.99;
-  //   } else if (creditScore >= 700 && creditScore <= 749) {
-  //     return 11.99;
-  //   } else if (creditScore >= 750 && creditScore <= 850) {
-  //     return 9.99;
-  //   } else {
-  //     // Handle cases where the credit score is outside the specified ranges
-  //     return null; // or return a default APR rate
-  //   }
-  // }
+  const [calculatedPayment, setCalculatedPayment] = useState(0);
+  const [calculatedTaxes, setCalculatedTaxes] = useState(0);
+  const [calculatedFrontEnd, setCalculatedFrontEnd] = useState(0);
 
   function calculateAPR(creditScore) {
     switch (true) {
@@ -135,43 +121,118 @@ export const LoanTermsPopup: React.FC<Props> = ({
         return null; // or return a default APR rate
     }
   }
-  
-console.log(isCounter)
-const  calculatePTI = (totalBills, totalIncome) => {
-  // Ensure MonthlyIncome is greater than zero to avoid division by zero
-  
-    const PTI = (totalBills / totalIncome) * 100;
-    
-    return PTI.toFixed(2);
-  
-}
 
-const calculateTotalLoan = (Gps,vsi,tags,loanFee,amtFinanced ) => {
-  let totalCost = Gps + vsi + tags + loanFee + amtFinanced
-  return totalCost
-}
-const calculatedLoanTotal = calculateTotalLoan(225,110,495, 450, application.AmountFinanced  )
+  const calculatePTI = (totalBills, totalIncome) => {
+    // Ensure MonthlyIncome is greater than zero to avoid division by zero
+
+    const PTI = (totalBills / totalIncome) * 100;
+
+    return PTI.toFixed(2);
+  };
+  function calculateMonthlyPMT(principal, annualInterestRate, loanTermMonths) {
+    // Convert annual interest rate to monthly rate
+    var monthlyInterestRate = annualInterestRate / 12 / 100; // Convert to decimal and monthly
+
+    // Calculate the monthly payment
+    var monthlyPayment =
+      (principal *
+        (monthlyInterestRate *
+          Math.pow(1 + monthlyInterestRate, loanTermMonths))) /
+      (Math.pow(1 + monthlyInterestRate, loanTermMonths) - 1);
+
+    return monthlyPayment;
+  }
+
+  function calculateWeeklyPMT(principal, annualInterestRate, loanTermWeeks) {
+    // Convert annual interest rate to weekly rate
+    var weeklyInterestRate = annualInterestRate / 52 / 100; // Convert to decimal and weekly
+
+    // Calculate the weekly payment
+    var weeklyPayment =
+      (principal *
+        (weeklyInterestRate *
+          Math.pow(1 + weeklyInterestRate, loanTermWeeks))) /
+      (Math.pow(1 + weeklyInterestRate, loanTermWeeks) - 1);
+
+    return weeklyPayment;
+  }
+
+  const calculateTotalLoan = (
+    Gps,
+    vsi,
+    tags,
+    loanFee,
+    amtFinanced,
+    orginFee
+  ) => {
+    let totalCost = Gps + vsi + tags + loanFee + amtFinanced + orginFee;
+    return totalCost;
+  };
+
+  const calculateFrontEnd = (
+    Gps,
+    vsi,
+    tags,
+    loanFee,
+    amtFinanced,
+    orginFee,
+    taxes
+  ) => {
+
+    let totalCost = Gps + vsi + tags + loanFee + amtFinanced + orginFee + taxes;
+    return totalCost;
+  };
+
+  const calculateSalesTax = (payment, termLength) => {
+    
+    if (application.State === 'NY') {
+      console.log('from New york ')
+      let taxes = payment * 0.08875 * termLength;
+    
+      return taxes;
+    }
+     else if (application.State === "FL"){
+      console.log('from florida')
+      let taxes = payment * 0.07 * termLength;
+    
+      return taxes;
+     }
+  };
+
+  const calculatedLoanTotal = calculateTotalLoan(
+    225,
+    110,
+    495,
+    450,
+    900,
+    application.AmountFinanced
+  );
+
   const calculatedAPR = calculateAPR(application.CreditScore);
-  const calculatedPTI = calculatePTI(application.MonthlyHousingPayment, application.MonthlyIncome)
+  const calculatedPTI = calculatePTI(
+    application.MonthlyHousingPayment,
+    application.MonthlyIncome
+  );
+
   const initialValues: LoanTermsFormValues = {
     PTI: calculatedPTI,
     AIRA: '',
     APR: calculatedAPR,
     LoanTerm: '',
-    FrontEnd: '',
+    FrontEnd: calculatedFrontEnd,
     BackEnd: '',
     DownPayment: application.DepositFloat || '',
     GPS: 225,
     VSI: 110,
     Tags: 495,
-    SalesTax: 0,
-    NetFinanced: application.AmountFinanced || '',
-    NetCheck: '',
+    SalesTax: calculatedTaxes,
+    NetFinanced: calculatedLoanTotal,
+    NetCheck: application.AmountFinanced || '',
     HamiltonFee: 450,
-    LoanAmount: calculatedLoanTotal,
+    LoanAmount: 0,
     Comments: '',
     LoanOriginationFee: 900,
-    LoanTermPaymentAmount: '',
+    LoanTermPaymentAmount: calculatedPayment,
     LoanTermType: '', // For the dropdown
     OfferType: '',
   };
@@ -179,13 +240,12 @@ const calculatedLoanTotal = calculateTotalLoan(225,110,495, 450, application.Amo
   const loanTerms = useSelector(loanTermsSelector);
   const [newApplication, setNewApplication] = useState<boolean>();
 
-  console.log(application);
-
+  // console.log(application);
 
   const handleSubmit = (values: LoanTermsFormValues) => {
-    console.log(values)
+    // console.log(values)
     let valuesToSend;
-
+    console.log(values);
     if (isCounter) {
       valuesToSend = {
         ...values,
@@ -193,6 +253,9 @@ const calculatedLoanTotal = calculateTotalLoan(225,110,495, 450, application.Amo
         ApplicationID: application.ApplicationID,
         Deleted: false,
         OfferType: 'Counter',
+        FrontEnd: calculatedFrontEnd,
+        SalesTax: calculatedTaxes,
+        LoanTermPaymentAmount: calculatedPayment,
       };
     } else {
       valuesToSend = {
@@ -201,6 +264,9 @@ const calculatedLoanTotal = calculateTotalLoan(225,110,495, 450, application.Amo
         ApplicationID: application.ApplicationID,
         Deleted: false,
         OfferType: 'Proposal',
+        FrontEnd: calculatedFrontEnd,
+        SalesTax: calculatedTaxes,
+        LoanTermPaymentAmount: calculatedPayment,
       };
     }
 
@@ -216,9 +282,53 @@ const calculatedLoanTotal = calculateTotalLoan(225,110,495, 450, application.Amo
     onSubmit: handleSubmit,
     validateOnChange: true, // Enable validation on change
     validateOnBlur: true, // Enable validation on blur
-  
-    
   });
+
+  useEffect(() => {
+    if (formik.values.LoanTerm && formik.values.LoanTermType) {
+      if (formik.values.LoanTermType === 'Weeks') {
+        let payment = calculateWeeklyPMT(
+          formik.values.NetCheck,
+          formik.values.APR,
+          formik.values.LoanTerm
+        );
+        setCalculatedPayment(payment);
+        let taxes = calculateSalesTax(payment, formik.values.LoanTerm);
+        setCalculatedTaxes(taxes);
+        let frontEndTotal = calculateFrontEnd(
+          225,
+          110,
+          495,
+          450,
+          900,
+          application.AmountFinanced,
+          taxes
+        );
+        setCalculatedFrontEnd(frontEndTotal);
+      } else {
+        let payment = calculateMonthlyPMT(
+          formik.values.NetCheck,
+          formik.values.APR,
+          formik.values.LoanTerm
+        );
+        setCalculatedPayment(payment);
+        let taxes = calculateSalesTax(payment, formik.values.LoanTerm);
+        setCalculatedTaxes(taxes);
+        let frontEndTotal = calculateFrontEnd(
+          225,
+          110,
+          495,
+          450,
+          900,
+          application.AmountFinanced,
+          taxes
+        );
+        setCalculatedFrontEnd(frontEndTotal);
+      }
+    }
+  }, [formik.values]);
+
+  console.log(application)
 
   return (
     <div className={styles.popUpBackground}>
@@ -248,6 +358,23 @@ const calculatedLoanTotal = calculateTotalLoan(225,110,495, 450, application.Amo
               ) : null}
             </div>
           </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <label htmlFor="AIRA" style={{ marginRight: '15px' }}>
+              Car Price
+            </label>
+            <div>
+              <input
+                // type="number"
+                id="PurchasePrice"
+                name="PurchasePrice"
+                value={application.PurchasePrice}
+                // onChange={formik.handleChange}
+                // onBlur={formik.handleBlur}
+                // style={{ border: '1px solid lightgrey', borderRadius: '5px' }}
+              />
+          
+            </div>
+          </div>
 
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <label htmlFor="APR" style={{ marginRight: '15px' }}>
@@ -255,13 +382,13 @@ const calculatedLoanTotal = calculateTotalLoan(225,110,495, 450, application.Amo
             </label>
             <div>
               <input
-                type="number"
+                // type="number"
                 id="APR"
                 name="APR"
                 value={formik.values.APR}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                style={{ border: '1px solid lightgrey', borderRadius: '5px' }}
+                // onChange={formik.handleChange}
+                // onBlur={formik.handleBlur}
+                // style={{ border: '1px solid lightgrey', borderRadius: '5px' }}
               />
               {formik.touched.APR && formik.errors.APR ? (
                 <div className={styles.error}>{formik.errors.APR}</div>
@@ -393,7 +520,7 @@ const calculatedLoanTotal = calculateTotalLoan(225,110,495, 450, application.Amo
                 type="number"
                 id="LoanTermPaymentAmount"
                 name="LoanTermPaymentAmount"
-                value={formik.values.LoanTermPaymentAmount}
+                value={calculatedPayment.toFixed(2)}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 style={{ border: '1px solid lightgrey', borderRadius: '5px' }}
@@ -417,7 +544,7 @@ const calculatedLoanTotal = calculateTotalLoan(225,110,495, 450, application.Amo
                 type="number"
                 id="FrontEnd"
                 name="FrontEnd"
-                value={formik.values.FrontEnd}
+                value={calculatedFrontEnd.toFixed(2)}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 style={{ border: '1px solid lightgrey', borderRadius: '5px' }}
@@ -637,7 +764,7 @@ const calculatedLoanTotal = calculateTotalLoan(225,110,495, 450, application.Amo
                 type="number"
                 id="SalesTax"
                 name="SalesTax"
-                value={formik.values.SalesTax}
+                value={calculatedTaxes.toFixed(2)}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 style={{ border: '1px solid lightgrey', borderRadius: '5px' }}

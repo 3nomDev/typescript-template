@@ -94,8 +94,34 @@ font-weight: 400;
     border-radius: 5px;
     padding: 15px;
     justify-content: center;
+    position: absolute;
+    top: 32%;
+    left: 49%;
+    z-index: 100;
 
 
+}
+
+.orange{
+    color:orange
+}
+
+.red{
+    color:red
+}
+.green{
+    color:green;
+}
+.black{
+    color: black;
+}
+
+.cancelBtn{
+    background-color: rgb(120, 120, 124);
+    color:white;
+    margin-top: 15px;
+    border-radius: 5px;
+    padding: 5px 15px;
 }
 
 .contents{
@@ -106,7 +132,7 @@ font-weight: 400;
 }
 
 .btnHolder{
-    width: 100%;
+    width: 50%;
     display: flex;
     justify-content: space-around;
 }
@@ -137,10 +163,11 @@ font-weight: 400;
 }
 
 .userInfoBox{
-    box-shadow: 0 0 3px 3px gray;
+    box-shadow: 0 0 2px 1px gray;
     border-radius: 5px;
     padding: 15px;
-    width: 25%;
+    /* width: 25%; */
+    width: 100%;
     align-items: center;
     margin: 0 auto;
 
@@ -156,6 +183,10 @@ font-weight: 400;
     padding: 15px;
     justify-content: center;
 
+}
+
+.infoContent{
+    width:50%;
 }
 @media (min-width:1024px){
     .searchbarContainer{

@@ -10,9 +10,10 @@ interface Props{
     index?:number;
     title?:string;
     status?:string;
+    application?:any
 }
 
-const LoanDealInfo:FC<Props> = ({requestedDeal, item, status}) => {
+const LoanDealInfo:FC<Props> = ({requestedDeal, item, status, application}) => {
 
   console.log(requestedDeal)
 console.log(item)
@@ -25,6 +26,14 @@ console.log(item)
     <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
        <label>AIRA:</label>
    <p>{requestedDeal?.AIRA}%</p>
+    </div>
+    <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
+       <label>Purchase Price:</label>
+   <p>${application?.PurchasePrice}</p>
+    </div>
+    <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
+       <label>Down Payment:</label>
+   <p>${requestedDeal?.DownPayment}</p>
     </div>
     <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
        <label>APR:</label>
@@ -41,7 +50,7 @@ console.log(item)
     </div>
     <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
        <label>Sales Tax:</label>
-   <p>${requestedDeal?.SalesTax}</p>
+   <p>${requestedDeal?.SalesTax?.toFixed(2)}</p>
     </div>
     <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
        <label>Tags Fee:</label>
@@ -64,25 +73,25 @@ console.log(item)
    
     <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
        <label>Loan Amount:</label>
-   <p>${requestedDeal?.LoanAmount}</p>
+   <p>${requestedDeal?.LoanAmount?.toFixed(2)}</p>
     </div>
    
     <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
        <label>Loan Origination Fee:</label>
-   <p>${requestedDeal?.LoanOriginationFee}</p>
+   <p>${requestedDeal?.LoanOriginationFee?.toFixed(2)}</p>
     </div>
    
     <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
        <label>Loan Payment Amount:</label>
-   <p>${requestedDeal?.LoanTermPaymentAmount}</p>
+   <p>${requestedDeal?.LoanTermPaymentAmount?.toFixed(2)}</p>
     </div>
     <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
        <label>Front End:</label>
-   <p>${requestedDeal?.FrontEnd}</p>
+   <p>${requestedDeal?.FrontEnd?.toFixed(2)}</p>
     </div>
     <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
        <label>Back End:</label>
-   <p>${requestedDeal?.BackEnd}</p>
+   <p>${requestedDeal?.BackEnd?.toFixed(2)}</p>
     </div>
     <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
        <label>Hanilton Fee:</label>
@@ -92,6 +101,11 @@ console.log(item)
        <label>Net Check:</label>
    <p>${requestedDeal?.NetCheck}</p>
     </div>
+    <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
+       <label>Net Financed:</label>
+   <p>${requestedDeal?.NetFinanced}</p>
+    </div>
+  
    {status !== "Approved" && requestedDeal.OfferType !== "Accepted" && <div style={{display:"flex", justifyContent:"space-between", margin:"15px 5px"}}>
        <label>Comments:</label>
    <p>{requestedDeal?.Comments}</p>

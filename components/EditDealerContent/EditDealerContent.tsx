@@ -1325,6 +1325,7 @@ export const EditDealerContent: FC<Props> = ({
                               <LoanDealInfo
                                 requestedDeal={initialLoanTerms}
                                 title="Current Deal"
+                                application={application}
                               />
                             </div>
                           )}
@@ -1336,6 +1337,8 @@ export const EditDealerContent: FC<Props> = ({
 
                                 <LoanDealInfo
                                   requestedDeal={loanTerms}
+                                application={application}
+
                                   title="Current Deal"
                                 />
                               </div>
