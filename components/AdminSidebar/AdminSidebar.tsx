@@ -124,6 +124,17 @@ export const AdminSidebar: FC = () => {
         </div>
       </Link>
 
+      <Link href="/admin/editUser">
+        <div className={styles.link}>
+          <FontAwesomeIcon
+            icon={faPerson as IconProp}
+            color="white"
+            className={styles.icon}
+          />
+          <p className={styles.text}>Edit Profile</p>
+        </div>
+      </Link>
+
       <Link href="/admin/notifications">
         <div className={styles.link}>
           <FontAwesomeIcon

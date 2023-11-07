@@ -47,6 +47,20 @@ export const DealerHeader: FC<Props> = ({ title = 'Dealer' }) => {
       ? router.push('/admin/notifications')
       : router.push('/dealer-notification');
 
+      console.log(user)
+
+      const logoutLogic = () =>{
+        if(user.ProfileTypeID === '3'){
+          handleLogout(); 
+
+          router.push('/user/login')
+        }
+        else {
+          handleLogout(); 
+          router.push('/login')
+        }
+      }
+
   return (
     <div className={styles.wrapper}>
       <h3 className={styles.pageTitle}>{title}</h3>
@@ -71,7 +85,7 @@ export const DealerHeader: FC<Props> = ({ title = 'Dealer' }) => {
         />
       </div>
       {isLogoutPanelExpanded && (
-        <div onClick={() => {handleLogout(); router.push('/login') }} className={styles.logoutPanel}>
+        <div onClick={logoutLogic} className={styles.logoutPanel}>
           <FontAwesomeIcon icon={faRightFromBracket as IconProp} className={styles.logOutIcon}/>Logout
         </div>
       )}

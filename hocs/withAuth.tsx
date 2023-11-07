@@ -22,7 +22,9 @@ export const withAuth =
 
     const router = useRouter();
 
-
+console.log(
+!router.pathname.includes('admin') && !router.pathname.includes('user') &&
+user?.ProfileTypeID !== '2')
 
     useEffect(() => {
       if (!isDefined(user) && !isDefined(localStorage.getItem('user'))) {
@@ -72,7 +74,7 @@ export const withAuth =
       if (
         isDefined(user) &&
         router.pathname.includes('admin') &&
-        user?.ProfileTypeID !== '1'
+        user?.ProfileTypeID !== '1' &&  user?.ProfileTypeID !== 1 
       ) {
         router.push('/');
         dispatch(
@@ -88,7 +90,7 @@ export const withAuth =
       if (
         isDefined(user) &&
         !router.pathname.includes('admin') && !router.pathname.includes('user') &&
-        user?.ProfileTypeID !== '2'
+        user?.ProfileTypeID !== '2' &&  user?.ProfileTypeID !== 2 
       ) {
         router.push('/');
         dispatch(

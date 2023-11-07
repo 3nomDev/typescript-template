@@ -19,17 +19,16 @@ import {
 import { editUserInfo, userSelector } from '../../features/authSlice';
 import AssignCustomerToDealer from '../AssignCustomerToDealer/AssignCustomerToDealer';
 import { addNotification } from '../../features/notifications/notificationSlice';
+import bcrypt from 'bcryptjs';
 
 export const UserDashboard: FC = () => {
-  const [searchParam, setSearchParam] = useState<string>('');
-  const [assignCustomer, setAssignCustomer] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [newPassword, setNewPassword] = useState('');
   const [firstLogin] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
   const user = useSelector(userSelector);
-
+  const saltRounds = 10;
   const { applicationItem } = useSelector(dealerDashboardSelector);
 
   const getStatus = (statusId) => {
@@ -62,7 +61,7 @@ export const UserDashboard: FC = () => {
       case 5:
         return styles.red;
       default:
-        styles.black
+        styles.black;
     }
     // 'Awaiting Approval': styles.orange,
     // 'Conditional Approval': styles.orange,
@@ -70,11 +69,8 @@ export const UserDashboard: FC = () => {
     // Declined: styles.red,
     // Incomplete: styles.red,
     // Funded: styles.cyan,
-  }
+  };
 
-  // const [infoToSend, setInfoToSend] = useState({...user})
-
-  const [loadedValues, setLoadedValues] = useState();
   const guidToSend = user?.ProfileGUID;
   const handleSubmit = () => {
     if (!newPassword) {
@@ -86,8 +82,10 @@ export const UserDashboard: FC = () => {
         })
       );
     } else {
-      const userData = { ...user, Password: newPassword };
-      console.log(userData);
+      // hashing the password to be stored
+      const hashedPass = bcrypt.hashSync(newPassword, saltRounds);
+      const userData = { ...user, Password: hashedPass };
+
       dispatch(editUserInfo(userData));
       setShowEditForm(false);
     }
@@ -96,11 +94,6 @@ export const UserDashboard: FC = () => {
   useEffect(() => {
     dispatch(loadApplicationByGuid(guidToSend));
   }, [user]);
-
-  console.log(user);
-
-  console.log(newPassword);
-  console.log(applicationItem);
 
   return (
     <div className={styles.wrapper}>
@@ -115,7 +108,12 @@ export const UserDashboard: FC = () => {
           <h3>Dashboard</h3>
         </div>
       </div>
-      <h1 >Current Loan Status :<span className={statusStyle(applicationItem?.StatusID)}>{getStatus(applicationItem?.StatusID)} </span> </h1>
+      <h1>
+        Current Loan Status :
+        <span className={statusStyle(applicationItem?.StatusID)}>
+          {getStatus(applicationItem?.StatusID)}{' '}
+        </span>{' '}
+      </h1>
       <div className={styles.contents}>
         {showEditForm && (
           <div className={styles.passwordForm}>
@@ -129,7 +127,12 @@ export const UserDashboard: FC = () => {
             <button onClick={handleSubmit} className={styles.saveBtn}>
               Save
             </button>
-            <button  onClick={() => setShowEditForm(!showEditForm)} className={styles.cancelBtn}>Cancel</button>
+            <button
+              onClick={() => setShowEditForm(!showEditForm)}
+              className={styles.cancelBtn}
+            >
+              Cancel
+            </button>
           </div>
         )}
         {firstLogin && (
@@ -153,29 +156,31 @@ export const UserDashboard: FC = () => {
           </div>
         )}
         <div className={styles.userInfoBox}>
-          <div className={styles.infoContent}> <h1 style={{ fontWeight: 'bolder', marginBottom: '15px' }}>
-            Profile Information
-          </h1>
-          <p>Fullname : {user?.FirstName + ' ' + user?.LastName}</p>
-          <p>Email : {user?.EmailAddress} </p>
-          <p>Phone : {user?.CellPhone}</p>
-          <p>Address: {user?.Address + user?.Address2}</p>
-          <p>City : {user?.City}</p>
-          <p>State: {user?.State}</p>
-          <p>Postal Code : {user?.PostalCode}</p>
-          <p style={{ fontWeight: 'bolder' }}>
-            Need to make a change to any of this info? Click the button below.
-          </p>
-          <div className={styles.btnHolder}>
-            <button className={styles.editBtn}>Edit Profile Info</button>
-            <button
-              className={styles.editBtn}
-              onClick={() => setShowEditForm(!showEditForm)}
-            >
-              Change Password
-            </button>
-          </div></div>
-         
+          <div className={styles.infoContent}>
+            {' '}
+            <h1 style={{ fontWeight: 'bolder', marginBottom: '15px' }}>
+              Profile Information
+            </h1>
+            <p>Fullname : {user?.FirstName + ' ' + user?.LastName}</p>
+            <p>Email : {user?.EmailAddress} </p>
+            <p>Phone : {user?.CellPhone}</p>
+            <p>Address: {user?.Address + user?.Address2}</p>
+            <p>City : {user?.City}</p>
+            <p>State: {user?.State}</p>
+            <p>Postal Code : {user?.PostalCode}</p>
+            <p style={{ fontWeight: 'bolder' }}>
+              Need to make a change to any of this info? Click the button below.
+            </p>
+            <div className={styles.btnHolder}>
+              <button className={styles.editBtn}>Edit Profile Info</button>
+              <button
+                className={styles.editBtn}
+                onClick={() => setShowEditForm(!showEditForm)}
+              >
+                Change Password
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -31,9 +31,11 @@ const initialState: AuthState = {
   applicationDealers: [],
 };
 
+
 export const sendLoginRequest = createAsyncThunk(
   'auth/sendLoginRequest',
   async (userData: LoginPayloadInterface) => {
+    console.log(userData)
     const res = await fetch('https://tlcfin.prestoapi.com/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -87,15 +89,17 @@ export const addUserLogin = createAsyncThunk(
 export const editUserInfo = createAsyncThunk(
   'auth/edituserinfo',
   async (userData: LoginPayloadInterface, thunkApi) => {
-    console.log(userData)
+
     delete userData.token;
     delete userData.expMinutes
     delete userData.LastUpdated
+   delete userData.ID
+    delete userData.DealerID
 
     let res;
     try {
-      res = await fetch(`https://tlcfin.prestoapi.com/api/account/${userData.ID}`, {
-        method: 'POST',
+      res = await fetch(`https://tlcfin.prestoapi.com/api/edituserpassword/${userData.ProfileGUID}`, {
+        method: 'PuT',
         headers: {
           'Content-Type': 'application/json',
           authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -104,7 +108,16 @@ export const editUserInfo = createAsyncThunk(
       });
 
       const response: UserInterface = await res.json();
-
+      console.log(res)
+      if (res.status === 200) {
+        thunkApi.dispatch(
+          addNotification({
+            type: 'success',
+            autoHideDuration: 6000,
+            message: 'Account Updated',
+          })
+        );
+      }
       return response;
     } catch (error) {
       console.log(error)
@@ -137,6 +150,25 @@ export const addUser = createAsyncThunk(
     }
 
     return response[0].ApprovalCode;
+  }
+);
+export const getUserByEmail = createAsyncThunk(
+  'dashboard/getUserByEmail',
+  async (payload,thunkApi) => {
+    const res = await fetch(`https://tlcfin.prestoapi.com/api/getuserbyemail/${payload}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+
+      },
+     
+    });
+   
+    const response = await res.json();
+
+
+
+    return response
   }
 );
 export const sendApprovalEmail = createAsyncThunk(
@@ -233,6 +265,15 @@ export const authSlice = createSlice({
       .addCase(loadApplicationDealers.fulfilled, (state, { payload }) => {
         state.pending = false;
         state.applicationDealers = payload;
+      })
+      .addCase(editUserInfo.pending, (state, { payload }) => {
+        state.pending = true;
+    
+      })
+      .addCase(editUserInfo.fulfilled, (state, { payload }) => {
+        state.pending = false;
+        state.user = payload
+    
       });
   },
 });

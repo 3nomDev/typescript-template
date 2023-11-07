@@ -1,6 +1,6 @@
 export interface LoanTermsInterface{
 AddedBy?:string
-AIRA?:number
+Lic_Reg?:number
 ApplicationID?:number
 BackEnd?:number
 Comments?:string
@@ -22,4 +22,5 @@ NetFinanced?:number
 OfferType?:string
 PTI?:number
 APR?:number
+
 }

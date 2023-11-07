@@ -1361,6 +1361,7 @@ console.log(isCounter)
                             <LoanDealInfo
                               requestedDeal={initialLoanTerms}
                               title="Current Deal"
+                              application={application}
                             />
                           </div>
                         )}
@@ -1371,6 +1372,7 @@ console.log(isCounter)
                             <LoanDealInfo
                               requestedDeal={loanTerms}
                               title="Current Deal"
+                              application={application}
                             />
                           </div>
                         )}

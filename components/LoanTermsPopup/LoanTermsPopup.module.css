@@ -12,7 +12,7 @@
     height: min-content;
     /* height: 900px; */
     width: 90%;
-    max-width: 500px;
+    max-width: 900px;
     overflow: auto;
     
 }
@@ -58,6 +58,11 @@
 
 }
 
+.sectionHeader{
+    font-size: 25px;
+    color: blue;
+    font-weight: bold;
+}
 
 .circle {
     border-radius: 50%;
